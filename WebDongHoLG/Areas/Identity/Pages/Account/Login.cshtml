@@ -1,0 +1,68 @@
+﻿@page
+@using WebDongHoLG.Areas.Identity.Pages.Account
+@model LoginModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="auth-container">
+    <div class="auth-image"></div>
+
+    <div class="auth-form">
+        <div class="auth-card">
+            <h3 class="mb-3">Welcome Back</h3>
+
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.UserNameOrEmail" class="form-control" placeholder="Username hoặc Email" />
+                    <label asp-for="Input.UserNameOrEmail">Username hoặc Email</label>
+                    <span asp-validation-for="Input.UserNameOrEmail" class="text-danger"></span>
+                </div>
+
+                <div class="form-floating mb-3">
+                    <input asp-for="Input.Password" id="passwordInput" class="form-control" type="password" placeholder="password" />
+                    <label asp-for="Input.Password">Password</label>
+                    <span asp-validation-for="Input.Password" class="text-danger"></span>
+                    <span class="toggle-password" onclick="togglePassword('passwordInput')">👁</span>
+                </div>
+
+                <div class="form-check mb-3">
+                    <input class="form-check-input" asp-for="Input.RememberMe" />
+                    <label class="form-check-label" asp-for="Input.RememberMe">Remember me</label>
+                </div>
+
+                <button type="submit" class="btn btn-login w-100">Log in</button>
+
+                <div class="auth-links">
+                    <a asp-page="./ForgotPassword">Forgot password?</a>
+                    <a asp-page="./Register" asp-route-returnUrl="@Model.ReturnUrl">Create account</a>
+                </div>
+            </form>
+
+            <hr />
+            <div class="external-logins">
+                <p class="text-center text-muted">Or login with</p>
+                <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
+                    <div>
+                        @foreach (var provider in Model.ExternalLogins!)
+                        {
+                            <button type="submit" class="btn btn-outline-dark w-100 mb-2" name="provider" value="@provider.Name" title="Log in using your @provider.DisplayName account">
+                                @if (provider.Name == "Google")
+                                {
+                                    <i class="fab fa-google text-danger me-2"></i>
+                                }
+                                Continue with @provider.DisplayName
+                            </button>
+                        }
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

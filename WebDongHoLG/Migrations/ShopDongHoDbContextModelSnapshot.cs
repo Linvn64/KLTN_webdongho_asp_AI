@@ -220,7 +220,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.BienTheSanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.BienTheSanPham", b =>
                 {
                     b.Property<int>("MaBienThe")
                         .ValueGeneratedOnAdd()
@@ -279,7 +279,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("BienTheSanPham", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.ChiTietDonHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.ChiTietDonHang", b =>
                 {
                     b.Property<int>("MaDonHang")
                         .HasColumnType("int")
@@ -304,7 +304,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("ChiTietDonHang", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.ChiTietGioHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.ChiTietGioHang", b =>
                 {
                     b.Property<int>("MaGioHang")
                         .HasColumnType("int")
@@ -325,7 +325,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("ChiTietGioHang", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DanhGium", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DanhGium", b =>
                 {
                     b.Property<int>("MaDanhGia")
                         .ValueGeneratedOnAdd()
@@ -365,7 +365,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("DanhGia");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DanhMucSanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DanhMucSanPham", b =>
                 {
                     b.Property<int>("IdDanhMuc")
                         .ValueGeneratedOnAdd()
@@ -390,7 +390,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("DanhMucSanPham", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DiaChiGiaoHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DiaChiGiaoHang", b =>
                 {
                     b.Property<int>("MaDiaChi")
                         .ValueGeneratedOnAdd()
@@ -426,7 +426,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("DiaChiGiaoHang", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DonHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DonHang", b =>
                 {
                     b.Property<int>("MaDonHang")
                         .ValueGeneratedOnAdd()
@@ -473,7 +473,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("DonHang", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.Faq", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.Faq", b =>
                 {
                     b.Property<int>("IdFaq")
                         .ValueGeneratedOnAdd()
@@ -501,7 +501,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("FAQ", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.GioHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.GioHang", b =>
                 {
                     b.Property<int>("MaGioHang")
                         .ValueGeneratedOnAdd()
@@ -528,7 +528,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("GioHang", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.HinhAnhBienThe", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.HinhAnhBienThe", b =>
                 {
                     b.Property<int>("IdHinhAnh")
                         .ValueGeneratedOnAdd()
@@ -562,7 +562,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("HinhAnhBienThe", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.Kho", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.Kho", b =>
                 {
                     b.Property<int>("IdKho")
                         .ValueGeneratedOnAdd()
@@ -587,7 +587,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("Kho", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.LichSuDonHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.LichSuDonHang", b =>
                 {
                     b.Property<int>("IdLichSu")
                         .ValueGeneratedOnAdd()
@@ -627,7 +627,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("LichSuDonHang", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.LichSuTuVanAi", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.LichSuTuVanAi", b =>
                 {
                     b.Property<int>("MaTuVan")
                         .ValueGeneratedOnAdd()
@@ -660,7 +660,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("LichSuTuVanAI", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.NguoiDung", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.NguoiDung", b =>
                 {
                     b.Property<int>("MaNguoiDung")
                         .ValueGeneratedOnAdd()
@@ -689,6 +689,9 @@ namespace WebDongHoLG.Migrations
                         .HasColumnType("nvarchar(100)")
                         .HasColumnName("hoTen");
 
+                    b.Property<string>("IdentityUserId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.Property<DateTime?>("NgayTao")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime")
@@ -707,10 +710,14 @@ namespace WebDongHoLG.Migrations
                     b.HasKey("MaNguoiDung")
                         .HasName("PK__NguoiDun__446439EA8A038624");
 
+                    b.HasIndex("IdentityUserId");
+
+                    b.HasIndex("UserId");
+
                     b.ToTable("NguoiDung", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.NhapKho", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.NhapKho", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -741,7 +748,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("NhapKho", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.SanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.SanPham", b =>
                 {
                     b.Property<int>("MaSp")
                         .ValueGeneratedOnAdd()
@@ -792,7 +799,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("SanPham", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.ThanhToan", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.ThanhToan", b =>
                 {
                     b.Property<int>("IdThanhToan")
                         .ValueGeneratedOnAdd()
@@ -829,7 +836,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("ThanhToan", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.ThongSoSanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.ThongSoSanPham", b =>
                 {
                     b.Property<int>("IdThongSo")
                         .ValueGeneratedOnAdd()
@@ -860,7 +867,7 @@ namespace WebDongHoLG.Migrations
                     b.ToTable("ThongSoSanPham", (string)null);
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.Voucher", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.Voucher", b =>
                 {
                     b.Property<int>("MaVoucher")
                         .ValueGeneratedOnAdd()
@@ -954,9 +961,9 @@ namespace WebDongHoLG.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.BienTheSanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.BienTheSanPham", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.SanPham", "MaSpNavigation")
+                    b.HasOne("WebDongHoLG.Models.SanPham", "MaSpNavigation")
                         .WithMany("BienTheSanPhams")
                         .HasForeignKey("MaSp")
                         .IsRequired()
@@ -965,15 +972,15 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaSpNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.ChiTietDonHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.ChiTietDonHang", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.BienTheSanPham", "MaBienTheNavigation")
+                    b.HasOne("WebDongHoLG.Models.BienTheSanPham", "MaBienTheNavigation")
                         .WithMany("ChiTietDonHangs")
                         .HasForeignKey("MaBienThe")
                         .IsRequired()
                         .HasConstraintName("FK__ChiTietDo__maBie__5EBF139D");
 
-                    b.HasOne("WebDongHoLG.Data.DonHang", "MaDonHangNavigation")
+                    b.HasOne("WebDongHoLG.Models.DonHang", "MaDonHangNavigation")
                         .WithMany("ChiTietDonHangs")
                         .HasForeignKey("MaDonHang")
                         .IsRequired()
@@ -984,15 +991,15 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaDonHangNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.ChiTietGioHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.ChiTietGioHang", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.BienTheSanPham", "MaBienTheNavigation")
+                    b.HasOne("WebDongHoLG.Models.BienTheSanPham", "MaBienTheNavigation")
                         .WithMany("ChiTietGioHangs")
                         .HasForeignKey("MaBienThe")
                         .IsRequired()
                         .HasConstraintName("FK__ChiTietGi__maBie__628FA481");
 
-                    b.HasOne("WebDongHoLG.Data.GioHang", "MaGioHangNavigation")
+                    b.HasOne("WebDongHoLG.Models.GioHang", "MaGioHangNavigation")
                         .WithMany("ChiTietGioHangs")
                         .HasForeignKey("MaGioHang")
                         .IsRequired()
@@ -1003,14 +1010,14 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaGioHangNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DanhGium", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DanhGium", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.NguoiDung", "MaNguoiDungNavigation")
+                    b.HasOne("WebDongHoLG.Models.NguoiDung", "MaNguoiDungNavigation")
                         .WithMany("DanhGia")
                         .HasForeignKey("MaNguoiDung")
                         .HasConstraintName("FK__DanhGia__maNguoi__6EF57B66");
 
-                    b.HasOne("WebDongHoLG.Data.SanPham", "MaSpNavigation")
+                    b.HasOne("WebDongHoLG.Models.SanPham", "MaSpNavigation")
                         .WithMany("DanhGia")
                         .HasForeignKey("MaSp")
                         .HasConstraintName("FK__DanhGia__maSp__6FE99F9F");
@@ -1020,9 +1027,9 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaSpNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DiaChiGiaoHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DiaChiGiaoHang", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.NguoiDung", "MaNguoiDungNavigation")
+                    b.HasOne("WebDongHoLG.Models.NguoiDung", "MaNguoiDungNavigation")
                         .WithMany("DiaChiGiaoHangs")
                         .HasForeignKey("MaNguoiDung")
                         .HasConstraintName("FK__DiaChiGia__maNgu__5165187F");
@@ -1030,19 +1037,19 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaNguoiDungNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DonHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DonHang", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.DiaChiGiaoHang", "MaDiaChiNavigation")
+                    b.HasOne("WebDongHoLG.Models.DiaChiGiaoHang", "MaDiaChiNavigation")
                         .WithMany("DonHangs")
                         .HasForeignKey("MaDiaChi")
                         .HasConstraintName("FK__DonHang__maDiaCh__59FA5E80");
 
-                    b.HasOne("WebDongHoLG.Data.NguoiDung", "MaNguoiDungNavigation")
+                    b.HasOne("WebDongHoLG.Models.NguoiDung", "MaNguoiDungNavigation")
                         .WithMany("DonHangs")
                         .HasForeignKey("MaNguoiDung")
                         .HasConstraintName("FK__DonHang__maNguoi__59063A47");
 
-                    b.HasOne("WebDongHoLG.Data.Voucher", "MaVoucherNavigation")
+                    b.HasOne("WebDongHoLG.Models.Voucher", "MaVoucherNavigation")
                         .WithMany("DonHangs")
                         .HasForeignKey("MaVoucher")
                         .HasConstraintName("FK__DonHang__MaVouch__5AEE82B9");
@@ -1054,9 +1061,9 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaVoucherNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.GioHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.GioHang", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.NguoiDung", "MaNguoiDungNavigation")
+                    b.HasOne("WebDongHoLG.Models.NguoiDung", "MaNguoiDungNavigation")
                         .WithMany("GioHangs")
                         .HasForeignKey("MaNguoiDung")
                         .HasConstraintName("FK__GioHang__maNguoi__5535A963");
@@ -1064,9 +1071,9 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaNguoiDungNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.HinhAnhBienThe", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.HinhAnhBienThe", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.BienTheSanPham", "MaBienTheNavigation")
+                    b.HasOne("WebDongHoLG.Models.BienTheSanPham", "MaBienTheNavigation")
                         .WithMany("HinhAnhBienThes")
                         .HasForeignKey("MaBienThe")
                         .HasConstraintName("FK__HinhAnhBi__maBie__4E88ABD4");
@@ -1074,9 +1081,9 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaBienTheNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.Kho", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.Kho", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.BienTheSanPham", "MaBienTheNavigation")
+                    b.HasOne("WebDongHoLG.Models.BienTheSanPham", "MaBienTheNavigation")
                         .WithMany("Khos")
                         .HasForeignKey("MaBienThe")
                         .IsRequired()
@@ -1085,9 +1092,9 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaBienTheNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.LichSuDonHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.LichSuDonHang", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.DonHang", "MaDonHangNavigation")
+                    b.HasOne("WebDongHoLG.Models.DonHang", "MaDonHangNavigation")
                         .WithMany("LichSuDonHangs")
                         .HasForeignKey("MaDonHang")
                         .HasConstraintName("FK__LichSuDon__maDon__72C60C4A");
@@ -1095,9 +1102,9 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaDonHangNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.LichSuTuVanAi", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.LichSuTuVanAi", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.NguoiDung", "MaNguoiDungNavigation")
+                    b.HasOne("WebDongHoLG.Models.NguoiDung", "MaNguoiDungNavigation")
                         .WithMany("LichSuTuVanAis")
                         .HasForeignKey("MaNguoiDung")
                         .HasConstraintName("FK__LichSuTuV__maNgu__75A278F5");
@@ -1105,9 +1112,23 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaNguoiDungNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.NhapKho", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.NguoiDung", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.BienTheSanPham", "MaBienTheNavigation")
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "IdentityUser")
+                        .WithMany()
+                        .HasForeignKey("IdentityUserId");
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.Navigation("IdentityUser");
+                });
+
+            modelBuilder.Entity("WebDongHoLG.Models.NhapKho", b =>
+                {
+                    b.HasOne("WebDongHoLG.Models.BienTheSanPham", "MaBienTheNavigation")
                         .WithMany("NhapKhos")
                         .HasForeignKey("MaBienThe")
                         .HasConstraintName("FK__NhapKho__MaBienT__68487DD7");
@@ -1115,9 +1136,9 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaBienTheNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.SanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.SanPham", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.DanhMucSanPham", "IdDanhMucNavigation")
+                    b.HasOne("WebDongHoLG.Models.DanhMucSanPham", "IdDanhMucNavigation")
                         .WithMany("SanPhams")
                         .HasForeignKey("IdDanhMuc")
                         .HasConstraintName("FK__SanPham__idDanhM__44FF419A");
@@ -1125,19 +1146,19 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("IdDanhMucNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.ThanhToan", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.ThanhToan", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.DonHang", "MaDonHangNavigation")
+                    b.HasOne("WebDongHoLG.Models.DonHang", "MaDonHangNavigation")
                         .WithOne("ThanhToan")
-                        .HasForeignKey("WebDongHoLG.Data.ThanhToan", "MaDonHang")
+                        .HasForeignKey("WebDongHoLG.Models.ThanhToan", "MaDonHang")
                         .HasConstraintName("FK__ThanhToan__maDon__6C190EBB");
 
                     b.Navigation("MaDonHangNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.ThongSoSanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.ThongSoSanPham", b =>
                 {
-                    b.HasOne("WebDongHoLG.Data.SanPham", "MaSpNavigation")
+                    b.HasOne("WebDongHoLG.Models.SanPham", "MaSpNavigation")
                         .WithMany("ThongSoSanPhams")
                         .HasForeignKey("MaSp")
                         .HasConstraintName("FK__ThongSoSan__maSp__47DBAE45");
@@ -1145,7 +1166,7 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("MaSpNavigation");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.BienTheSanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.BienTheSanPham", b =>
                 {
                     b.Navigation("ChiTietDonHangs");
 
@@ -1158,17 +1179,17 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("NhapKhos");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DanhMucSanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DanhMucSanPham", b =>
                 {
                     b.Navigation("SanPhams");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DiaChiGiaoHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DiaChiGiaoHang", b =>
                 {
                     b.Navigation("DonHangs");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.DonHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.DonHang", b =>
                 {
                     b.Navigation("ChiTietDonHangs");
 
@@ -1177,12 +1198,12 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("ThanhToan");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.GioHang", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.GioHang", b =>
                 {
                     b.Navigation("ChiTietGioHangs");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.NguoiDung", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.NguoiDung", b =>
                 {
                     b.Navigation("DanhGia");
 
@@ -1195,7 +1216,7 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("LichSuTuVanAis");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.SanPham", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.SanPham", b =>
                 {
                     b.Navigation("BienTheSanPhams");
 
@@ -1204,7 +1225,7 @@ namespace WebDongHoLG.Migrations
                     b.Navigation("ThongSoSanPhams");
                 });
 
-            modelBuilder.Entity("WebDongHoLG.Data.Voucher", b =>
+            modelBuilder.Entity("WebDongHoLG.Models.Voucher", b =>
                 {
                     b.Navigation("DonHangs");
                 });

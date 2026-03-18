@@ -1,0 +1,128 @@
+﻿html, body {
+    height: 100%;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient( 135deg, #fdfbfb, #ebedee );
+}
+
+/* MAIN LAYOUT */
+.register-layout {
+    flex-direction: row-reverse;
+}
+.auth-container {
+    display: flex;
+    min-height: 100vh;
+}
+
+/* LEFT IMAGE */
+
+.auth-image {
+    flex: 1;
+    min-height: 100vh;
+    background: url('/img/watch.jpg') center/cover no-repeat;
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient( rgba(0,0,0,0.35), rgba(0,0,0,0.55) );
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+}
+
+/* RIGHT FORM AREA */
+
+.auth-form {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* CARD */
+
+.auth-card {
+    width: 380px;
+    padding: 45px;
+    border-radius: 18px;
+    background: rgba(255,255,255,0.85);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    transition: all .3s ease;
+}
+
+    .auth-card:hover {
+        transform: translateY(-6px);
+    }
+
+/* INPUT */
+
+.form-control {
+    border-radius: 12px;
+    border: 1px solid #e5e7eb;
+}
+
+    .form-control:focus {
+        border-color: #a78bfa;
+        box-shadow: 0 0 0 0.2rem rgba(167,139,250,.2);
+    }
+
+/* BUTTON */
+
+.btn-login {
+    background: linear-gradient( 135deg, #ff7a7a, #ffb86c );
+    border: none;
+    padding: 12px;
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    transition: all .25s ease;
+}
+
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 20px rgba(255,122,122,.35);
+    }
+
+/* LINKS */
+
+.auth-links {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+    .auth-links a {
+        text-decoration: none;
+        color: #8b5cf6;
+        font-weight: 500;
+    }
+
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+
+.password-wrapper {
+    position: relative;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 12px;
+    top: 18px; /* fixed position inside input */
+
+    cursor: pointer;
+    font-size: 18px;
+    opacity: 0.6;
+}
+
+    .toggle-password:hover {
+        opacity: 1;
+    }

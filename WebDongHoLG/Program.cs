@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.UI.Services;  
 using WebDongHoLG.Data;
 
 
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddDbContext<ShopDongHoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 {
@@ -41,17 +44,18 @@ builder.Services.Configure<CookiePolicyOptions>(options =>
     options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
 });
 
-//var googleSection = builder.Configuration.GetSection("Authentication:Google");
-//builder.Services.AddAuthentication()
-//    .AddGoogle(options =>
-//    {
-//        options.ClientId = googleSection["ClientId"]!;
-//        options.ClientSecret = googleSection["ClientSecret"]!;
-//        options.CallbackPath = "/signin-google";
-//    });
+var googleSection = builder.Configuration.GetSection("Authentication:Google");
+builder.Services.AddAuthentication()
+    .AddGoogle(options =>
+    {
+        options.ClientId = googleSection["ClientId"]!;
+        options.ClientSecret = googleSection["ClientSecret"]!;
+        options.CallbackPath = "/signin-google";
+    });
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 
 var app = builder.Build();
 
@@ -73,6 +77,8 @@ app.UseAuthorization();
 
 app.UseSession();
 
+app.MapRazorPages();
+
 app.MapControllerRoute(
     name: "areas",
     pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
@@ -81,7 +87,7 @@ app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
 
-app.MapRazorPages();
 
+await app.EnsureSeedDataAsync();
 
 app.Run();

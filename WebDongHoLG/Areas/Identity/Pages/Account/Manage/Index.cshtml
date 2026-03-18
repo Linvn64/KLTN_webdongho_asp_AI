@@ -1,0 +1,92 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Hồ sơ cá nhân";
+    ViewData["ActivePage"] = ManageNavPages.Index;
+}
+
+
+<div class="card shadow-sm border-0">
+    <div class="card-body p-4">
+        <form id="profile-form" method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-md-4 text-center border-right">
+                    <div class="d-flex flex-column align-items-center p-3">
+                        <img id="avatar-preview" class="rounded-circle mt-3 shadow" width="150px" height="150px" style="object-fit: cover;"
+                             src="@(string.IsNullOrEmpty(Model.Input.CurrentAvatar) ? "/images/default-avatar.jpg" : "/avatarUploads/" + Model.Input.CurrentAvatar)">
+
+                        <span class="font-weight-bold mt-3">@Model.Input.HoTen</span>
+                        <span class="text-muted small">@Model.Username</span>
+
+                        <div class="mt-3">
+                            <label class="btn btn-outline-dark btn-sm shadow-sm">
+                                <i class="fas fa-camera"></i> Chọn ảnh mới
+                                <input type="file" asp-for="Input.ImageFile" hidden accept="image/*" onchange="previewImage(event)" />
+                            </label>
+                        </div>
+                        <span asp-validation-for="Input.ImageFile" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="p-3">
+                        <h4 class="mb-4 font-weight-bold text-primary">Thông tin chi tiết</h4>
+                        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Username" class="form-control" disabled />
+                            <label asp-for="Username">Email đăng nhập</label>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Input.HoTen" class="form-control" placeholder="Nhập họ tên" />
+                            <label asp-for="Input.HoTen">Họ và Tên</label>
+                            <span asp-validation-for="Input.HoTen" class="text-danger"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Input.PhoneNumber" class="form-control" placeholder="Số điện thoại" />
+                                    <label asp-for="Input.PhoneNumber">Số điện thoại</label>
+                                    <span asp-validation-for="Input.PhoneNumber" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating mb-3">
+                                    <select asp-for="Input.GioiTinh" class="form-select">
+                                        <option value="Nam">Nam</option>
+                                        <option value="Nữ">Nữ</option>
+                                        <option value="Khác">Khác</option>
+                                    </select>
+                                    <label asp-for="Input.GioiTinh">Giới tính</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <button id="update-profile-button" type="submit" class="w-100 btn btn-lg btn-success shadow-sm">
+                                <i class="fas fa-save"></i> Lưu thay đổi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('avatar-preview');
+                output.src = reader.result;
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
+}

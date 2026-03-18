@@ -378,9 +378,10 @@ public partial class ShopDongHoDbContext : IdentityDbContext<IdentityUser, Ident
                 .HasColumnName("sdt");
             entity.Property(e => e.UserId).HasMaxLength(450);
 
-            entity.HasOne<Microsoft.AspNetCore.Identity.IdentityUser>()
+            entity.HasOne<IdentityUser>()
                   .WithMany()
                   .HasForeignKey(e => e.UserId)
+                  .HasPrincipalKey(u => u.Id)
                   .OnDelete(DeleteBehavior.SetNull);
         });
 

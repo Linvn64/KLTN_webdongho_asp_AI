@@ -1,10 +1,28 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="wwwroot\dist\libs\countup.js\.vscode\tasks.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\dist\libs\clipboard\.github\ISSUE_TEMPLATE\bug_report.md" />
+    <None Include="wwwroot\dist\libs\clipboard\.github\ISSUE_TEMPLATE\documentation.md" />
+    <None Include="wwwroot\dist\libs\clipboard\.github\ISSUE_TEMPLATE\proposal.md" />
+    <None Include="wwwroot\dist\libs\clipboard\.github\PULL_REQUEST_TEMPLATE.md" />
+    <None Include="wwwroot\dist\libs\clipboard\.github\stale.yml" />
+    <None Include="wwwroot\dist\libs\clipboard\.github\workflows\publish.yml" />
+    <None Include="wwwroot\dist\libs\clipboard\.github\workflows\test.js.yml" />
+    <None Include="wwwroot\dist\libs\clipboard\.husky\pre-commit" />
+    <None Include="wwwroot\dist\libs\countup.js\.github\ISSUE_TEMPLATE.md" />
+    <None Include="wwwroot\dist\libs\countup.js\.github\PULL_REQUEST_TEMPLATE.md" />
+    <None Include="wwwroot\dist\libs\litepicker\dist\.DS_Store" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="8.0.25" />
@@ -15,11 +33,13 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.0.23" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.25" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.25">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.23" />
   </ItemGroup>
 
 </Project>
