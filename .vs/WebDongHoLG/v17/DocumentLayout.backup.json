@@ -1,0 +1,109 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|c:\\users\\admin\\anh linh\\.net\\webdongholg\\webdongholg\\migrations\\20260318063944_identity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|solutionrelative:webdongholg\\migrations\\20260318063944_identity.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|c:\\users\\admin\\anh linh\\.net\\webdongholg\\webdongholg\\data\\shopdonghodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|solutionrelative:webdongholg\\data\\shopdonghodbcontext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|c:\\users\\admin\\anh linh\\.net\\webdongholg\\webdongholg\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|solutionrelative:webdongholg\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|c:\\users\\admin\\anh linh\\.net\\webdongholg\\webdongholg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|solutionrelative:webdongholg\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|c:\\users\\admin\\anh linh\\.net\\webdongholg\\webdongholg\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{21FF4C50-1EB4-4D04-9773-410BDFF9D4E0}|WebDongHoLG\\WebDongHoLG.csproj|solutionrelative:webdongholg\\appsettings.development.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "20260318063944_identity.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\Migrations\\20260318063944_identity.cs",
+              "RelativeDocumentMoniker": "WebDongHoLG\\Migrations\\20260318063944_identity.cs",
+              "ToolTip": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\Migrations\\20260318063944_identity.cs*",
+              "RelativeToolTip": "WebDongHoLG\\Migrations\\20260318063944_identity.cs*",
+              "ViewState": "AgIAAPcAAAAAAAAAAAAAAPcAAAALAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-18T06:39:44.925Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "ShopDongHoDbContext.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\Data\\ShopDongHoDbContext.cs",
+              "RelativeDocumentMoniker": "WebDongHoLG\\Data\\ShopDongHoDbContext.cs",
+              "ToolTip": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\Data\\ShopDongHoDbContext.cs*",
+              "RelativeToolTip": "WebDongHoLG\\Data\\ShopDongHoDbContext.cs*",
+              "ViewState": "AgIAABoAAAAAAAAAAAAYwAcAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T11:58:50.956Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "appsettings.Development.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\appsettings.Development.json",
+              "RelativeDocumentMoniker": "WebDongHoLG\\appsettings.Development.json",
+              "ToolTip": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\appsettings.Development.json",
+              "RelativeToolTip": "WebDongHoLG\\appsettings.Development.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-17T10:22:15.188Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "Program.cs",
+              "DocumentMoniker": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\Program.cs",
+              "RelativeDocumentMoniker": "WebDongHoLG\\Program.cs",
+              "ToolTip": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\Program.cs",
+              "RelativeToolTip": "WebDongHoLG\\Program.cs",
+              "ViewState": "AgIAADwAAAAAAAAAAAAQwEMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-03-17T10:10:28.301Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\appsettings.json",
+              "RelativeDocumentMoniker": "WebDongHoLG\\appsettings.json",
+              "ToolTip": "C:\\Users\\Admin\\ANH LINH\\.NET\\WebDongHoLG\\WebDongHoLG\\appsettings.json",
+              "RelativeToolTip": "WebDongHoLG\\appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAIAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-03-17T10:09:13.873Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
