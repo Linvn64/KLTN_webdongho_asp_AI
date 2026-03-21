@@ -55,8 +55,9 @@ public partial class ShopDongHoDbContext : IdentityDbContext<IdentityUser, Ident
     public virtual DbSet<ThongSoSanPham> ThongSoSanPhams { get; set; }
 
     public virtual DbSet<Voucher> Vouchers { get; set; }
+    public DbSet<ThuongHieu> ThuongHieus { get; set; }
 
-   
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
 
@@ -419,9 +420,10 @@ public partial class ShopDongHoDbContext : IdentityDbContext<IdentityUser, Ident
             entity.Property(e => e.TenSanPham)
                 .HasMaxLength(255)
                 .HasColumnName("tenSanPham");
-            entity.Property(e => e.ThuongHieu)
-                .HasMaxLength(100)
-                .HasColumnName("thuongHieu");
+            entity.HasOne(d => d.ThuongHieuNavigation)
+                .WithMany(t => t.SanPhams)
+                .HasForeignKey(d => d.ThuongHieuId)
+    .HasConstraintName("FK_SanPham_ThuongHieu");
 
             entity.HasOne(d => d.IdDanhMucNavigation).WithMany(p => p.SanPhams)
                 .HasForeignKey(d => d.IdDanhMuc)
@@ -485,6 +487,17 @@ public partial class ShopDongHoDbContext : IdentityDbContext<IdentityUser, Ident
             entity.Property(e => e.NgayKetThuc).HasColumnType("datetime");
             entity.Property(e => e.SoLuong).HasDefaultValue(0);
             entity.Property(e => e.TenVoucher).HasMaxLength(100);
+        });
+
+        modelBuilder.Entity<ThuongHieu>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+
+            entity.ToTable("ThuongHieu");
+
+            entity.Property(e => e.TenThuongHieu)
+                .HasMaxLength(100)
+                .IsRequired();
         });
 
         OnModelCreatingPartial(modelBuilder);

@@ -1,0 +1,150 @@
+﻿@model WebDongHoLG.Data.SanPham
+
+@{
+    ViewData["Title"] = "Chi tiết sản phẩm";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                Chi tiết sản phẩm: @Model.TenSanPham
+            </h2>
+            <div class="text-secondary mt-1">Mã sản phẩm: #@Model.MaSp</div>
+        </div>
+        <div class="col-auto ms-auto">
+            <div class="btn-list">
+                <a asp-action="Edit" asp-route-id="@Model?.MaSp" class="btn btn-primary d-none d-sm-inline-block">
+                    <i class="ti ti-edit me-1"></i> Chỉnh sửa
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="ti ti-arrow-left me-1"></i> Quay lại danh sách
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards">
+    <div class="col-md-9">
+        <div class="card shadow-sm w-100">
+            <div class="card-header">
+                <h3 class="card-title"><i class="ti ti-info-circle me-2 text-primary"></i>Thông tin cấu hình hệ thống</h3>
+            </div>
+            <div class="card-body">
+                <div class="datagrid">
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Tên sản phẩm</div>
+                        <div class="datagrid-content text-primary">@Model.TenSanPham</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Danh mục</div>
+                        <div class="datagrid-content">@(Model.IdDanhMucNavigation?.TenDanhMuc ?? "N/A")</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Thương hiệu</div>
+                        <div class="datagrid-content">
+                            @if (Model.ThuongHieuNavigation != null)
+                            {
+                                <span class="badge bg-primary text-primary-fg">@Model.ThuongHieuNavigation.TenThuongHieu</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">Chưa xác định</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Đối tượng sử dụng</div>
+                        <div class="datagrid-content">@Model.DoiTuong</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Ngày khởi tạo</div>
+                        <div class="datagrid-content">
+                            <i class="ti ti-calendar-event me-1 text-muted"></i>
+                            @(Model.NgayTao?.ToString("dd/MM/yyyy HH:mm") ?? "N/A")
+                        </div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Trạng thái kinh doanh</div>
+                        <div class="datagrid-content">
+                            @if (Model.IsActive == true)
+                            {
+                                <span class="status status-green">
+                                    <span class="status-dot status-dot-animated"></span>
+                                    Đang bán
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status status-red">
+                                    <span class="status-dot"></span>
+                                    Ngừng kinh doanh
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <div class="datagrid-title mb-2">Mô tả sản phẩm</div>
+                    <div class="datagrid-content">
+                        <div class="p-3 bg-light rounded border text-black" style="white-space: pre-line; min-height: 100px;">
+                            @(!string.IsNullOrEmpty(Model.MoTa) ? Model.MoTa : "Sản phẩm này hiện chưa có nội dung mô tả chi tiết.")
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">
+                <h3 class="card-title">Quản lý</h3>
+            </div>
+            <div class="card-body text-center py-4">
+                <div class="row g-2">
+                    <div class="col-12">
+                        <a asp-action="Edit" asp-route-id="@Model.MaSp" class="btn btn-warning w-100">
+                            <i class="ti ti-edit me-1"></i> Chỉnh sửa thông tin
+                        </a>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <button type="button" class="btn btn-outline-danger w-100" data-bs-toggle="modal" data-bs-target="#modal-delete">
+                            <i class="ti ti-trash me-1"></i> Xóa sản phẩm
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-blur fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content shadow-lg">
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-status bg-danger"></div>
+            <div class="modal-body text-center py-4">
+                <i class="ti ti-alert-triangle text-danger mb-2" style="font-size: 3rem;"></i>
+                <h3>Xác nhận xóa?</h3>
+                <div class="text-primary small">Bạn có thực sự muốn xóa sản phẩm <strong>@Model.TenSanPham</strong>? Thao tác này không thể hoàn tác.</div>
+            </div>
+            <div class="modal-footer">
+                <div class="w-100">
+                    <div class="row">
+                        <div class="col">
+                            <button type="button" class="btn btn-white w-100" data-bs-dismiss="modal">Hủy</button>
+                        </div>
+                        <div class="col">
+                            <form asp-action="Delete" asp-route-id="@Model.MaSp" method="post">
+                                <button type="submit" class="btn btn-danger w-100">Xóa ngay</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

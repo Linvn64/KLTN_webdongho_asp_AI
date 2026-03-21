@@ -16,11 +16,13 @@ public partial class SanPham
 
     public string? MoTa { get; set; }
 
-    public string? ThuongHieu { get; set; }
+    public int? ThuongHieuId { get; set; }
 
     public string? DoiTuong { get; set; }
 
     public bool? IsActive { get; set; }
+
+    public ThuongHieu? ThuongHieuNavigation { get; set; }
 
     public virtual ICollection<BienTheSanPham> BienTheSanPhams { get; set; } = new List<BienTheSanPham>();
 

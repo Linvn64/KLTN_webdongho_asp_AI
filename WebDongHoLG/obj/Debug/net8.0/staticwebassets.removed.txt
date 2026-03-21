@@ -1,0 +1,4 @@
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\images\products\ap-ro.jpeg
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\images\products\aw-ultra.jpg
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\images\products\bulova.jpg
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\images\products\cartier-tank.jpg

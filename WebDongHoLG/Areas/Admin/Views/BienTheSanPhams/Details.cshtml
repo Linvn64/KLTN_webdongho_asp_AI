@@ -1,0 +1,209 @@
+﻿@model WebDongHoLG.Data.BienTheSanPham
+
+@{
+    ViewData["Title"] = "Chi tiết biến thể";
+    Layout = "_AdminLayout";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-primary">
+                <i class="ti ti-info-circle me-2"></i>Chi tiết biến thể: @Model.MaSku
+            </h2>
+            <div class="text-secondary mt-1">Sản phẩm: <b class="text-primary">@(Model.MaSpNavigation?.TenSanPham ?? "N/A")</b></div>
+        </div>
+        <div class="col-auto ms-auto">
+            <div class="btn-list">
+                <a asp-action="Edit" asp-route-id="@Model?.MaBienThe" class="btn btn-primary">
+                    <i class="ti ti-edit me-1"></i> Chỉnh sửa
+                </a>
+                <a asp-action="Index" class="btn btn-outline-secondary">
+                    <i class="ti ti-arrow-left me-1"></i> Quay lại
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards">
+    @* CỘT TRÁI: THÔNG SỐ & TÀI CHÍNH *@
+    <div class="col-md-8">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header">
+                <h3 class="card-title text-primary fw-bold"><i class="ti ti-list-details me-2"></i>Thông số kỹ thuật</h3>
+            </div>
+            <div class="card-body">
+                <div class="datagrid">
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Mã SKU</div>
+                        <div class="datagrid-content fw-bold text-blue font-monospace">@Model.MaSku</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Màu sắc</div>
+                        <div class="datagrid-content">
+                            <span class="badge bg-blue-lt">@Model.MauSac</span>
+                        </div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Đường kính mặt</div>
+                        <div class="datagrid-content text-primary">@Model.DuongKinhMat mm</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Chất liệu dây</div>
+                        <div class="datagrid-content text-primary">@Model.ChatLieuDay</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Trạng thái</div>
+                        <div class="datagrid-content">
+                            @if (Model.IsActive == true)
+                            {
+                                <span class="status status-green">
+                                    <span class="status-dot status-dot-animated"></span> Đang bán
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status status-red">
+                                    <span class="status-dot"></span> Ngừng kinh doanh
+                                </span>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr-text text-azure">Thông tin tài chính</div>
+
+                <div class="datagrid">
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Giá nhập</div>
+                        <div class="datagrid-content text-primary">@(Model.GiaNhap?.ToString("N0")) ₫</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title text-success">Giá bán hiện tại</div>
+                        <div class="datagrid-content fw-bold text-success" style="font-size: 1.2rem;">
+                            @(Model.GiaBan?.ToString("N0")) ₫
+                        </div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title text-azure">Lợi nhuận dự kiến</div>
+                        <div class="datagrid-content text-azure fw-bold">
+                            @{
+                                var profit = (Model.GiaBan ?? 0) - (Model.GiaNhap ?? 0);
+                                @profit.ToString("N0") @:₫
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* CỘT PHẢI: BỘ SƯU TẬP (ĐÃ CHỈNH NHỎ & CÓ CUỘN) *@
+    <div class="col-md-4">
+        <div class="card shadow-sm mb-3">
+            <div class="card-header">
+                <h3 class="card-title text-warning fw-bold"><i class="ti ti-photo me-2"></i>Bộ sưu tập hình ảnh</h3>
+            </div>
+            <div class="card-body p-2"> @* Giảm padding của card-body *@
+                <div class="mb-3 px-2">
+                    <small class="text-muted d-block mb-1">Đường dẫn folder:</small>
+                    <div class="p-2 bg-light rounded border text-break font-monospace small text-primary">
+                        @Model.ImageUrl
+                    </div>
+                </div>
+
+                @* KHỐI MỚI: Bọc ngoài để tạo thanh cuộn nếu ảnh quá nhiều *@
+                <div style="max-height: 350px; overflow-y: auto;" class="px-2">
+                    @* Nơi JS đổ ảnh thật vào - Đổi col-4 thành col-3 để ảnh bé hơn *@
+                    <div id="galleryImages" class="row g-1"> @* g-1 để giảm khoảng cách giữa các ảnh *@
+                        <div class="col-12 text-center py-4 text-muted">
+                            <div class="spinner-border spinner-border-sm text-primary mb-2"></div>
+                            <div class="small">Đang nạp ảnh...</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-light py-2">
+                <small class="text-muted"><i class="ti ti-info-circle me-1"></i>Cuộn để xem thêm ảnh.</small>
+            </div>
+        </div>
+
+        <div class="card shadow-sm border-0 bg-primary-lt">
+            <div class="card-body">
+                <h4 class="mb-3">Thao tác nhanh</h4>
+                <div class="row g-2">
+                    <div class="col-6">
+                        <a asp-action="Edit" asp-route-id="@Model.MaBienThe" class="btn btn-warning w-100 shadow-sm">
+                            <i class="ti ti-edit me-1"></i> Sửa
+                        </a>
+                    </div>
+                    <div class="col-6">
+                        <button type="button" class="btn btn-outline-danger w-100 bg-white shadow-sm" data-bs-toggle="modal" data-bs-target="#modal-delete">
+                            <i class="ti ti-trash me-1"></i> Xóa
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* Modal Xóa giữ nguyên *@
+<div class="modal modal-blur fade" id="modal-delete" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center py-4">
+                <i class="ti ti-alert-triangle text-danger mb-2" style="font-size: 3rem;"></i>
+                <h3 class="text-danger">Xác nhận xóa?</h3>
+                <div class="text-secondary small">Bạn có thực sự muốn xóa biến thể <b>@Model.MaSku</b>?</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-link link-secondary me-auto" data-bs-dismiss="modal">Hủy</button>
+                <form asp-action="Delete" asp-route-id="@Model.MaBienThe" method="post">
+                    <button type="submit" class="btn btn-danger px-4">Xóa ngay</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const fullPath = "@Model.ImageUrl";
+            // Lấy tên folder từ chuỗi: /hinhanhbienthe/rolex/ -> lấy rolex
+            const parts = fullPath.split('/').filter(Boolean);
+            const folderName = parts.length >= 2 ? parts[1] : "";
+            const galleryContainer = document.getElementById("galleryImages");
+
+            if (!folderName) {
+                galleryContainer.innerHTML = '<div class="col-12 text-center text-muted small italic p-3">Chưa chọn folder ảnh</div>';
+                return;
+            }
+
+            fetch(`/Admin/BienTheSanPhams/GetImagesInFolder?folderName=${folderName}`)
+                .then(res => res.json())
+                .then(files => {
+                    galleryContainer.innerHTML = "";
+                    if (files.length === 0) {
+                        galleryContainer.innerHTML = '<div class="col-12 text-center text-danger small p-3">Thư mục trống</div>';
+                        return;
+                    }
+                    files.forEach(file => {
+                        // Sửa col-4 thành col-3 để hiển thị 4 ảnh trên một hàng
+                        galleryContainer.innerHTML += `
+                            <div class="col-3 col-sm-3 col-md-3">
+                                <a href="/hinhanhbienthe/${folderName}/${file}" target="_blank" class="d-block border rounded overflow-hidden shadow-none">
+                                    <div class="img-responsive img-responsive-1x1" 
+                                         style="background-image: url(/hinhanhbienthe/${folderName}/${file}); background-size: cover;"></div>
+                                </a>
+                            </div>`;
+                    });
+                })
+                .catch(() => {
+                    galleryContainer.innerHTML = '<div class="col-12 text-center text-danger small p-3">Lỗi kết nối máy chủ</div>';
+                });
+        });
+    </script>
+}

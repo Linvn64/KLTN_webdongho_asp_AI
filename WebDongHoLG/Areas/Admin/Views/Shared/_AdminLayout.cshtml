@@ -1,0 +1,333 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using WebDongHoLG.Data
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+@inject WebDongHoLG.Data.ShopDongHoDbContext _context
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>WatchShop Admin | @ViewData["Title"]</title>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+    <link href="~/dist/css/tabler.min.css" rel="stylesheet" />
+    <link href="~/dist/css/tabler-themes.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@@tabler/icons-webfont@latest/tabler-icons.min.css">
+
+    <style>
+        :root {
+            --tblr-font-sans-serif: 'Inter', -apple-system, BlinkMacSystemFont, San Francisco, Segoe UI, Roboto, Helvetica Neue, sans-serif;
+        }
+
+        .text-primary {
+            color: var(--tblr-primary) !important;
+        }
+
+        .bg-primary {
+            background-color: var(--tblr-primary) !important;
+        }
+
+        .bg-primary-lt {
+            background-color: rgba(var(--tblr-primary-rgb), 0.15) !important;
+            color: var(--tblr-primary) !important;
+        }
+
+        [data-bs-theme="dark"] {
+            --tblr-body-color: #f4f7f7;
+            --tblr-card-title-color: #ffffff;
+            --tblr-muted-color: #a6b1b1;
+        }
+
+        .text-reset {
+            color: inherit !important;
+        }
+
+        .table-vcenter td {
+            color: inherit;
+        }
+
+        body {
+            font-family: var(--tblr-font-sans-serif);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        .nav-link:hover .nav-link-icon i {
+            color: var(--tblr-primary);
+        }
+    </style>
+    @RenderSection("Styles", required: false)
+</head>
+<body>
+    <script src="~/dist/js/tabler-theme.min.js"></script>
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+
+        var currentUser = await UserManager.GetUserAsync(User);
+        var profile = currentUser != null
+        ? _context.NguoiDungs.FirstOrDefault(n => n.UserId == currentUser.Id)
+        : null;
+    }
+    <div class="page">
+        <header class="navbar navbar-expand-md d-print-none">
+            <div class="container-xl">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar-menu">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
+                    <a href="/Admin/Home">
+                        <i class="ti ti-watch fs-1 text-primary me-2"></i> WATCHSHOP AI
+                    </a>
+                </h1>
+                <div class="navbar-nav flex-row order-md-last">
+                    <div class="d-none d-md-flex me-3 align-items-center">
+                        <a href="?theme=dark" class="nav-link px-0 hide-theme-dark" title="Bật giao diện tối" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                            <i class="ti ti-moon icon"></i>
+                        </a>
+                        <a href="?theme=light" class="nav-link px-0 hide-theme-light" title="Bật giao diện sáng" data-bs-toggle="tooltip" data-bs-placement="bottom">
+                            <i class="ti ti-sun icon"></i>
+                        </a>
+
+                        @await Html.PartialAsync("_AdminNotification")
+                    </div>
+                    <div class="nav-item dropdown">
+                        @if (SignInManager.IsSignedIn(User))
+                        {
+                            <a href="#" class="nav-link d-flex lh-1 text-reset p-0" data-bs-toggle="dropdown">
+                                @if (profile != null && !string.IsNullOrEmpty(profile.AnhDaiDien))
+                                {
+                                    <span class="avatar avatar-sm border shadow-sm"
+                                          style="background-image: url('@Url.Content("~/avatarUploads/" + profile.AnhDaiDien.TrimStart('/'))')"></span>
+                                }
+                                else
+                                {
+                                    <span class="avatar avatar-sm bg-blue-lt">
+                                        @(profile?.HoTen?.Substring(0, 1).ToUpper() ?? "U")
+                                    </span>
+                                }
+
+                                <div class="d-none d-xl-block ps-2">
+                                    <div>@(profile?.HoTen ?? User.Identity?.Name)</div>
+                                    <div class="mt-1 small text-secondary text-uppercase">
+                                        @(User.IsInRole("Admin") ? "Quản trị viên" : "Nhân viên")
+                                    </div>
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+                                <a asp-area="Admin" asp-controller="NguoiDungs" asp-action="Details" asp-route-id="@profile?.MaNguoiDung" class="dropdown-item">Hồ sơ</a>
+                                <a href="/Admin/NguoiDungs/Profile" class="dropdown-item">Cài đặt</a>
+                                <div class="dropdown-divider"></div>
+                                <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                    <button type="submit" class="dropdown-item">Đăng xuất</button>
+                                </form>
+                            </div>
+                        }
+                        else
+                        {
+                            <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
+                        }
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <header class="navbar-expand-md">
+            <div class="collapse navbar-collapse" id="navbar-menu">
+                <div class="navbar">
+                    <div class="container-xl">
+                        <div class="row flex-column flex-md-row flex-fill align-items-center">
+                            <div class="col">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item @(currentController == "Dashboard" ? "active" : "")">
+                                        <a class="nav-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                            <span class="nav-link-icon"><i class="ti ti-home"></i></span>
+                                            <span class="nav-link-title">Tổng quan</span>
+                                        </a>
+                                    </li>
+
+                                    @* --- SẢN PHẨM --- *@
+                                    @if (User.IsInRole("Admin") || User.HasClaim("MenuAccess", "SanPham"))
+                                    {
+                                        <li class="nav-item dropdown @(currentController == "SanPhams" || currentController == "DanhMucSanPhams" || currentController == "Brands" ? "active" : "")">
+                                            <a class="nav-link dropdown-toggle" href="#navbar-products" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button">
+                                                <span class="nav-link-icon"><i class="ti ti-package"></i></span>
+                                                <span class="nav-link-title">Sản phẩm</span>
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="/Admin/SanPhams">Danh sách đồng hồ</a>
+                                                <a class="dropdown-item" asp-controller="BienTheSanPhams">Biến thể sản phẩm</a>
+                                                <a class="dropdown-item" href="/Admin/Brands">Thương hiệu</a>
+                                            </div>
+                                        </li>
+                                    }
+                                    @* --- KHO --- *@
+
+                                    @if (User.IsInRole("Admin") || User.HasClaim("MenuAccess", "Kho"))
+                                    {
+                                        <li class="nav-item dropdown @(currentController == "Khoes" ? "active" : "")">
+                                            <a class="nav-link dropdown-toggle" href="#navbar-inventory" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button">
+                                                <span class="nav-link-icon"><i class="ti ti-building-warehouse"></i></span>
+                                                <span class="nav-link-title">Kho hàng</span>
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="/Admin/Khoes">Kiểm kê tồn kho</a>
+                                                <a class="dropdown-item" href="/Admin/Khoes/NhapKho">Nhập kho</a>
+                                            </div>
+                                        </li>
+                                    }
+
+                                    @* --- KINH DOANH --- *@
+                                    @if (User.IsInRole("Admin") || User.HasClaim("MenuAccess", "DonHang"))
+                                    {
+                                        <li class="nav-item dropdown @(currentController == "Orders" || currentController == "Shipping" ? "active" : "")">
+                                            <a class="nav-link dropdown-toggle" href="#navbar-sales" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button">
+                                                <span class="nav-link-icon"><i class="ti ti-shopping-cart"></i></span>
+                                                <span class="nav-link-title">Kinh doanh</span>
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="/Admin/Orders">Quản lý đơn hàng</a>
+                                                <a class="dropdown-item" href="/Admin/Shipping">Vận đơn & Giao hàng</a>
+                                            </div>
+                                        </li>
+                                    }
+
+                                    @* --- NGƯỜI DÙNG & REVIEWS  --- *@
+                                    @if (User.IsInRole("Admin") || User.HasClaim("MenuAccess", "Reviews"))
+                                    {
+                                        <li class="nav-item dropdown @(currentController == "NguoiDungs" || currentController == "Reviews" ? "active" : "")">
+                                            <a class="nav-link dropdown-toggle" href="#navbar-users" data-bs-toggle="dropdown" data-bs-auto-close="outside" role="button">
+                                                <span class="nav-link-icon"><i class="ti ti-users"></i></span>
+                                                <span class="nav-link-title">Người dùng & Phản hồi</span>
+                                            </a>
+                                            <div class="dropdown-menu">
+                                                @if (User.IsInRole("Admin"))
+                                                {
+                                                    <a class="dropdown-item" href="/Admin/NguoiDungs">Danh sách khách hàng</a>
+                                                }
+                                                <a class="dropdown-item" href="/Admin/Reviews">Phản hồi & Đánh giá</a>
+                                            </div>
+                                        </li>
+                                    }
+
+                                    @* --- AI --- *@
+                                    @if (User.IsInRole("Admin") || User.HasClaim("MenuAccess", "AI"))
+                                    {
+                                        <li class="nav-item @(currentController == "AI" ? "active" : "")">
+                                            <a class="nav-link text-azure fw-bold" href="/Admin/AI">
+                                                <span class="nav-link-icon text-azure"><i class="ti ti-robot"></i></span>
+                                                <span class="nav-link-title">Dự báo AI</span>
+                                            </a>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+
+                            <div class="col-md-auto ms-auto">
+                                <ul class="navbar-nav">
+                                    <li class="nav-item">
+                                        <a class="nav-link" href="#offcanvasSettings" data-bs-toggle="offcanvas">
+                                            <span class="badge badge-sm bg-red text-red-fg badge-pill me-2">New</span>
+                                            <i class="ti ti-settings icon me-1"></i> Theme Settings
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-wrapper">
+            <div class="page-body">
+                <div class="container-xl">
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* --- BẢNG THEME SETTINGS --- *@
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasSettings" aria-labelledby="offcanvasSettingsLabel">
+        <div class="offcanvas-header">
+            <h2 class="offcanvas-title" id="offcanvasSettingsLabel">Theme Settings</h2>
+            <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body d-flex flex-column">
+            <div>
+                <div class="mb-4">
+                    <label class="form-label">Color mode</label>
+                    <p class="form-hint">Choose the color mode for your app.</p>
+                    <label class="form-check">
+                        <input type="radio" name="theme" value="light" class="form-check-input" checked>
+                        <span class="form-check-label">Light</span>
+                    </label>
+                    <label class="form-check">
+                        <input type="radio" name="theme" value="dark" class="form-check-input">
+                        <span class="form-check-label">Dark</span>
+                    </label>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Color scheme</label>
+                    <p class="form-hint">The perfect color mode for your app.</p>
+                    <div class="row g-2">
+                        @foreach (var color in new[] { "blue", "azure", "indigo", "purple", "pink", "red", "orange", "yellow", "lime", "green", "teal", "cyan" })
+                        {
+                            <div class="col-auto">
+                                <label class="form-colorinput">
+                                    <input name="theme-primary" type="radio" value="@color" class="form-colorinput-input">
+                                    <span class="form-colorinput-color bg-@color"></span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Font family</label>
+                    <div class="form-selectgroup form-selectgroup-boxes d-flex flex-column">
+                        @foreach (var font in new[] { "sans-serif", "serif", "monospace", "comic" })
+                        {
+                            <label class="form-selectgroup-item">
+                                <input type="radio" name="theme-font" value="@font" class="form-selectgroup-input">
+                                <span class="form-selectgroup-label">@font</span>
+                            </label>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label">Corner Radius</label>
+                    <div class="row g-2">
+                        @foreach (var radius in new[] { "0", "0.5", "1", "1.5", "2" })
+                        {
+                            <div class="col">
+                                <label class="form-selectgroup-item w-100">
+                                    <input type="radio" name="theme-radius" value="@radius" class="form-check-input">
+                                    <span class="form-check-label">@radius</span>
+                                </label>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-auto space-y">
+                <button type="button" class="btn w-100" id="reset-changes">
+                    <i class="ti ti-rotate me-1"></i> Reset changes
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="~/dist/js/tabler-vendors.min.js"></script>
+
+    <script src="~/dist/js/tabler.min.js"></script>
+
+    <script src="~/js/admin-setting.js"></script>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>

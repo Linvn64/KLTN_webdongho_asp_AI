@@ -1,0 +1,76 @@
+﻿@model WebDongHoLG.Data.SanPham
+
+@{
+    ViewData["Title"] = "Xóa sản phẩm";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-danger">
+                Xác nhận xóa sản phẩm
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card border-danger shadow-sm">
+            <div class="card-status-top bg-danger"></div>
+            <div class="card-body text-center py-4">
+                @* Sử dụng class icon của Tabler *@
+                <div class="mb-3 text-danger">
+                    <i class="ti ti-alert-triangle" style="font-size: 3.5rem;"></i>
+                </div>
+
+                <h3>Bạn có chắc chắn muốn xóa?</h3>
+                <div class="text-secondary mb-3">
+                    Hành động này sẽ xóa vĩnh viễn sản phẩm <strong class="text-primary">@Model.TenSanPham</strong> khỏi hệ thống và không thể hoàn tác.
+                </div>
+
+                <div class="datagrid text-start my-4 bg-light p-3 rounded border">
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Mã SP</div>
+                        <div class="datagrid-content text-primary">#@Model.MaSp</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Thương hiệu</div>
+                        <div class="datagrid-content text-primary">
+                            @(Model.ThuongHieuNavigation?.TenThuongHieu ?? "N/A")
+                        </div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Danh mục</div>
+                        <div class="datagrid-content text-primary">
+                            @(Model.IdDanhMucNavigation?.TenDanhMuc ?? "N/A")
+                        </div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title">Ngày tạo</div>
+                        <div class="datagrid-content text-muted">
+                            <i class="ti ti-calendar me-1"></i>@(Model.NgayTao?.ToString("dd/MM/yyyy") ?? "N/A")
+                        </div>
+                    </div>
+                </div>
+
+                <form asp-action="Delete" method="post">
+                    <input type="hidden" asp-for="MaSp" />
+
+                    <div class="d-flex justify-content-center gap-2">
+                        <a asp-action="Index" class="btn btn-ghost-secondary px-4">
+                            <i class="ti ti-arrow-left me-1"></i> Hủy bỏ
+                        </a>
+                        <button type="submit" class="btn btn-danger px-4">
+                            <i class="ti ti-trash me-1"></i> Xác nhận xóa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="text-center mt-3 small text-muted">
+            <i class="ti ti-info-circle me-1"></i> Lưu ý: Nếu sản phẩm đã có đơn hàng, việc xóa có thể bị từ chối bởi hệ thống.
+        </div>
+    </div>
+</div>

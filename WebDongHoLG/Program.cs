@@ -40,7 +40,7 @@ builder.Services.AddSession(options =>
 
 builder.Services.Configure<CookiePolicyOptions>(options =>
 {
-    options.CheckConsentNeeded = context => true; // GDPR‑style
+    options.CheckConsentNeeded = context => true; 
     options.MinimumSameSitePolicy = SameSiteMode.Unspecified;
 });
 
@@ -72,10 +72,10 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseSession();
+
 app.UseAuthentication();
 app.UseAuthorization();
-
-app.UseSession();
 
 app.MapRazorPages();
 

@@ -1,0 +1,90 @@
+﻿@model WebDongHoLG.Data.SanPham
+
+@{
+    ViewData["Title"] = "Thêm sản phẩm mới";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">
+                Thêm sản phẩm mới
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <form asp-area="Admin" asp-controller="SanPhams" asp-action="Create" method="post">
+        <div class="card-body">
+            <div asp-validation-summary="All" class="alert alert-danger mb-3"></div>
+
+            <div class="row">
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Tên sản phẩm</label>
+                    <input asp-for="TenSanPham" class="form-control" placeholder="Nhập tên sản phẩm..." />
+                    <span asp-validation-for="TenSanPham" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6 mb-3">
+                    <label class="form-label fw-bold">Danh mục</label>
+                    <div class="input-icon">
+                        <select asp-for="IdDanhMuc" class="form-select" asp-items="ViewBag.IdDanhMuc">
+                            <option value="">-- Chọn danh mục --</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="IdDanhMuc" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Thương hiệu</label>
+                    <select asp-for="ThuongHieuId" class="form-select" asp-items="ViewBag.ThuongHieuId">
+                        <option value="">-- Chọn thương hiệu --</option>
+                    </select>
+                    <span asp-validation-for="ThuongHieuId" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Đối tượng</label>
+                    <select asp-for="DoiTuong" class="form-select">
+                        <option value="Nam">Nam</option>
+                        <option value="Nữ">Nữ</option>
+                        <option value="Unisex">Unisex</option>
+                    </select>
+                    <span asp-validation-for="DoiTuong" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-4 mb-3">
+                    <label class="form-label fw-bold">Trạng thái</label>
+                    <label class="form-check form-switch mt-2">
+                        <input class="form-check-input" type="checkbox" name="IsActive" value="true" checked />
+                        <input type="hidden" name="IsActive" value="false" />
+                        <span class="form-check-label">Cho phép kinh doanh ngay</span>
+                    </label>
+                </div>
+
+                @* Mô tả *@
+                <div class="col-md-12 mb-3">
+                    <label class="form-label fw-bold">Mô tả sản phẩm</label>
+                    <textarea asp-for="MoTa" class="form-control" rows="5" placeholder="Nhập mô tả sản phẩm..."></textarea>
+                    <span asp-validation-for="MoTa" class="text-danger small"></span>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer text-end bg-light">
+            <a asp-action="Index" class="btn btn-ghost-secondary me-2">
+                <i class="ti ti-arrow-left me-1"></i> Hủy bỏ
+            </a>
+            <button type="submit" class="btn btn-primary">
+                <i class="ti ti-plus me-1"></i> Tạo sản phẩm
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

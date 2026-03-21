@@ -1,0 +1,155 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using WebDongHoLG.Data;
+
+namespace WebDongHoLG.Areas.Admin.Controllers
+{
+
+    [Area("Admin")]
+    public class SanPhamsController : Controller
+    {
+        private readonly ShopDongHoDbContext _context;
+
+        public SanPhamsController(ShopDongHoDbContext context)
+        {
+            _context = context;
+        }
+
+        public async Task<IActionResult> Index(int? idDanhmuc, int? idThuongHieu, string doiTuong)
+        {
+            var query = _context.SanPhams
+                .Include(s => s.IdDanhMucNavigation)
+                .Include(s => s.ThuongHieuNavigation)
+                .AsQueryable();
+
+            if (idDanhmuc.HasValue) query = query.Where(s => s.IdDanhMuc == idDanhmuc);
+            if (idThuongHieu.HasValue) query = query.Where(s => s.ThuongHieuId == idThuongHieu);
+            if (!string.IsNullOrEmpty(doiTuong)) query = query.Where(s => s.DoiTuong == doiTuong);
+
+            ViewBag.DanhMucSanPhams = _context.DanhMucSanPhams.ToList();
+            ViewBag.ThuongHieus = _context.ThuongHieus.ToList();
+            return View(await query.ToListAsync());
+        }
+
+        public IActionResult Create()
+        {
+            ViewData["IdDanhMuc"] = new SelectList(_context.DanhMucSanPhams, "IdDanhMuc", "TenDanhMuc");
+            ViewData["ThuongHieuId"] = new SelectList(_context.ThuongHieus, "Id", "TenThuongHieu");
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("MaSp,TenSanPham,IdDanhMuc,NgayTao,MoTa,ThuongHieuId,DoiTuong,IsActive")] SanPham sanPham)
+        {
+            if (ModelState.IsValid)
+            {
+                sanPham.NgayTao = DateTime.Now;
+                _context.Add(sanPham);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["IdDanhMuc"] = new SelectList(_context.DanhMucSanPhams, "IdDanhMuc", "TenDanhMuc", sanPham.IdDanhMuc);
+            ViewData["ThuongHieuId"] = new SelectList(_context.ThuongHieus, "Id", "TenThuongHieu", sanPham.ThuongHieuId);
+            return View(sanPham);
+        }
+
+        public async Task<IActionResult> Edit(int? id)
+        {
+            if (id == null) return NotFound();
+            var sanPham = await _context.SanPhams.FindAsync(id);
+            if (sanPham == null) return NotFound();
+
+            ViewData["IdDanhMuc"] = new SelectList(_context.DanhMucSanPhams, "IdDanhMuc", "TenDanhMuc", sanPham.IdDanhMuc);
+            ViewData["ThuongHieuId"] = new SelectList(_context.ThuongHieus, "Id", "TenThuongHieu", sanPham.ThuongHieuId);
+            return View(sanPham);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Edit(int id, [Bind("MaSp,TenSanPham,IdDanhMuc,NgayTao,MoTa,ThuongHieuId,DoiTuong,IsActive")] SanPham sanPham)
+        {
+            if (id != sanPham.MaSp) return NotFound();
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(sanPham);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!SanPhamExists(sanPham.MaSp)) return NotFound();
+                    else throw;
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["IdDanhMuc"] = new SelectList(_context.DanhMucSanPhams, "IdDanhMuc", "TenDanhMuc", sanPham.IdDanhMuc);
+            ViewData["ThuongHieuId"] = new SelectList(_context.ThuongHieus, "Id", "TenThuongHieu", sanPham.ThuongHieuId);
+            return View(sanPham);
+        }
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var sanPham = await _context.SanPhams
+                .Include(s => s.IdDanhMucNavigation)
+                .Include(s => s.ThuongHieuNavigation) 
+                .FirstOrDefaultAsync(m => m.MaSp == id);
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            return View(sanPham);
+        }
+
+
+        // GET: Admin/SanPhams/Delete/5
+        public async Task<IActionResult> Delete(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var sanPham = await _context.SanPhams
+                .Include(s => s.IdDanhMucNavigation)
+                .Include(s => s.ThuongHieuNavigation)
+                .FirstOrDefaultAsync(m => m.MaSp == id);
+            if (sanPham == null)
+            {
+                return NotFound();
+            }
+
+            return View(sanPham);
+        }
+
+        // POST: Admin/SanPhams/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var sanPham = await _context.SanPhams.FindAsync(id);
+            if (sanPham != null)
+            {
+                _context.SanPhams.Remove(sanPham);
+            }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
+
+        private bool SanPhamExists(int id) => _context.SanPhams.Any(e => e.MaSp == id);
+    }
+   
+}

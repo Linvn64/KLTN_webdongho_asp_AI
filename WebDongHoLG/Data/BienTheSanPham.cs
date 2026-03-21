@@ -24,7 +24,7 @@ public partial class BienTheSanPham
 
     public string? ImageUrl { get; set; }
 
-    public bool? IsActive { get; set; }
+    public bool IsActive { get; set; }
 
     public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
 

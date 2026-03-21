@@ -1,0 +1,253 @@
+﻿@model IEnumerable<WebDongHoLG.Areas.Admin.Models.NguoiDungViewModel>
+@{
+    ViewData["Title"] = "Quản lý người dùng";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row g-2 align-items-center">
+        <div class="col">
+            <h2 class="page-title text-uppercase fw-bold text-primary">
+                <i class="ti ti-users me-2"></i> Danh sách người dùng hệ thống
+            </h2>
+        </div>
+    </div>
+</div>
+@if (TempData["Error"] != null)
+{
+    <div class="alert alert-danger alert-dismissible shadow-sm mb-3" role="alert">
+        <div class="d-flex">
+            <div><i class="ti ti-alert-triangle icon me-2"></i></div>
+            <div>@TempData["Error"]</div>
+        </div>
+        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+    </div>
+}
+
+@if (TempData["Success"] != null)
+{
+    <div class="alert alert-success alert-dismissible shadow-sm mb-3" role="alert">
+        <div class="d-flex">
+            <div><i class="ti ti-check icon me-2"></i></div>
+            <div>@TempData["Success"]</div>
+        </div>
+        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+    </div>
+}
+
+<div class="row row-cards mb-3">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-primary text-white avatar shadow-sm">
+                            <i class="ti ti-users"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium">Tổng người dùng</div>
+                        <div class="text-muted small">@Model.Count() thành viên</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-red text-white avatar shadow-sm">
+                            <i class="ti ti-shield-lock"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium">Quản trị viên</div>
+                        <div class="text-muted small">@Model.Count(x => x.VaiTro == "Admin") tài khoản</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-azure text-white avatar shadow-sm">
+                            <i class="ti ti-user-check"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium">Nhân viên</div>
+                        <div class="text-muted small">@Model.Count(x => x.VaiTro == "NhanVien") đang hoạt động</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm border-0 shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-green text-white avatar shadow-sm">
+                            <i class="ti ti-user-plus"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium">Khách hàng mới</div>
+                        <div class="text-muted small">@Model.Count(x => x.NgayTao >= DateTime.Now.AddDays(-7)) (7 ngày qua)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3 border-0 shadow-sm">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-3">
+            <div class="col-md-4">
+                <label class="form-label">Tìm kiếm</label>
+                <input type="text" name="searchString" value="@ViewData["CurrentFilter"]"
+                       class="form-control" placeholder="Nhập tên hoặc email...">
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Vai trò</label>
+                <select name="roleFilter" class="form-select">
+                    <option value="">-- Tất cả vai trò --</option>
+                    <option value="Admin">Quản trị viên</option>
+                    <option value="NhanVien">Nhân viên</option>
+                    <option value="KhachHang">Khách hàng</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Ngày tham gia</label>
+                <input type="date" name="dateFilter" class="form-control">
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="ti ti-search me-1"></i> Lọc
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card border-0 shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-vcenter card-table table-striped">
+            <thead>
+                <tr>
+                    <th>Người dùng / Giới tính</th>
+                    <th>Liên hệ (Email/SĐT)</th>
+                    <th>Vai trò</th>
+                    <th>Ngày tạo</th>
+                    <th>Phân quyền</th>
+                    <th class="text-end w-1">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                @if (!string.IsNullOrEmpty(item.AnhDaiDien))
+                                {
+                                    <span class="avatar avatar-sm me-2 border shadow-sm"
+                                          style="background-image: url('@Url.Content("~/avatarUploads/" + item.AnhDaiDien.TrimStart('/'))')">
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="avatar avatar-sm me-2 border shadow-sm"
+                                          style="background-image: url(https://ui-avatars.com/api/?name=@item.HoTen&background=random)">
+                                    </span>
+                                }
+                                <div>
+                                    <div class="fw-bold text-primary">@item.HoTen</div>
+                                    <div class="text-muted small">
+                                        Giới tính: @(item.GioiTinh == "Nam" ? "Nam" : (item.GioiTinh == "Nu" ? "Nữ" : "Khác"))
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+
+                        <td>
+                            <div class="fw-medium">@item.Email</div>
+                            <div class="text-muted small">
+                                <i class="ti ti-phone me-1"></i>@item.Sdt
+                            </div>
+                        </td>
+
+                        <td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                @if (item.VaiTro == "Admin")
+                                {
+                                    <span class="badge bg-red-lt fw-bold">
+                                        <i class="ti ti-shield-check me-1"></i>Admin
+                                    </span>
+                                }
+                                else
+                                {
+                                    <form asp-action="UpdateRole" method="post" class="input-group input-group-sm">
+                                        <input type="hidden" name="userId" value="@item.UserId" />
+                                        <select name="newRole" class="form-select form-select-sm fw-bold @(item.VaiTro == "NhanVien" ? "text-azure" : "text-muted")"
+                                                onchange="this.form.submit()">
+                                            <option value="KhachHang" selected="@(item.VaiTro == "KhachHang")">Khách hàng</option>
+                                            <option value="NhanVien" selected="@(item.VaiTro == "NhanVien")">Nhân viên</option>
+                                            <option value="Admin" selected="@(item.VaiTro == "Admin")">Admin</option>
+                                        </select>
+                                    </form>
+                                }
+                            }
+                        </td>
+
+                        <td>
+                            <div class="fw-medium">@item.NgayTao</div>
+                        </td>
+
+                        <td>
+                            @if (User.IsInRole("Admin"))
+                            {
+                                @if (item.VaiTro == "NhanVien")
+                                {
+                                    <a asp-action="PhanQuyen" asp-route-id="@item.MaNguoiDung" class="btn btn-sm btn-outline-warning w-100">
+                                        <i class="ti ti-lock-access me-1"></i> Tích mục xem
+                                    </a>
+                                }
+                                else if (item.VaiTro == "Admin")
+                                {
+                                    <span class="badge bg-purple-lt fw-bold w-100">
+                                        <i class="ti ti-infinity me-1"></i> Toàn quyền
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="text-muted small italic">Chưa cấp quyền NV</span>
+                                }
+                            }
+                        </td>
+                        <td class="text-end">
+                            <div class="btn-list justify-content-end">
+                                <a asp-action="Details" asp-route-id="@item.MaNguoiDung" class="btn btn-sm btn-primary w-100">
+                                    <i class="ti ti-eye me-1"></i> Xem thông tin
+                                </a>
+
+                                <a asp-controller="DonHangs" asp-action="UserOrders" asp-route-userId="@item.UserId" class="btn btn-sm btn-icon btn-outline-secondary" title="Lịch sử mua hàng">
+                                    <i class="ti ti-shopping-cart w-100"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

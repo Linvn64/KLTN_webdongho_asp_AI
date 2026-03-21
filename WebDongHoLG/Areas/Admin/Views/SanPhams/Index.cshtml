@@ -1,0 +1,137 @@
+﻿@model IEnumerable<WebDongHoLG.Data.SanPham>
+@{
+    ViewData["Title"] = "Quản lý sản phẩm";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">Quản lý sản phẩm</h2>
+        </div>
+        <div class="col-auto ms-auto">
+            <a asp-action="Create" class="btn btn-primary">
+                <i class="ti ti-plus me-2"></i> Thêm sản phẩm
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3 shadow-sm">
+    <div class="card-body">
+        <form method="get" class="row g-2">
+            <div class="col-md-3">
+                <select name="idDanhmuc" class="form-select">
+                    <option value="">-- Tất cả Danh mục --</option>
+                    @foreach (var c in ViewBag.DanhMucSanPhams)
+                    {
+                        <option value="@c.IdDanhMuc" selected="@(Context.Request.Query["idDanhmuc"] == c.IdDanhMuc.ToString() ? "selected" : null)">
+                            @c.TenDanhMuc
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select name="idThuongHieu" class="form-select">
+                    <option value="">-- Tất cả Thương hiệu --</option>
+                    @foreach (var b in ViewBag.ThuongHieus)
+                    {
+                        <option value="@b.Id" selected="@(Context.Request.Query["idThuongHieu"] == b.Id.ToString() ? "selected" : null)">
+                            @b.TenThuongHieu
+                        </option>
+                    }
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <select name="doiTuong" class="form-select">
+                    @{
+                        var dt = Context.Request.Query["doiTuong"].ToString();
+                    }
+                    <option value="">-- Tất cả Đối tượng --</option>
+                    <option value="Nam" selected="@(dt == "Nam" ? "selected" : null)">Nam</option>
+                    <option value="Nữ" selected="@(dt == "Nữ" ? "selected" : null)">Nữ</option>
+                    <option value="Unisex" selected="@(dt == "Unisex" ? "selected" : null)">Unisex</option>
+                </select>
+            </div>
+
+            <div class="col-md-3 d-flex gap-2">
+                <a asp-action="Index" class="btn btn-secondary w-50">
+                    <i class="ti ti-refresh me-2"></i> Tải lại
+                </a>
+                <button type="submit" class="btn btn-primary w-50">
+                    <i class="ti ti-filter me-2"></i> Lọc dữ liệu
+                </button>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-hover card-table">
+            <thead>
+                <tr>
+                    <th>Tên sản phẩm</th>
+                    <th style="width: 150px;">Thương hiệu</th>
+                    <th>Danh mục</th>
+                    <th>Đối tượng</th>
+                    <th>Ngày tạo</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="fw-bold text-primary">@item.TenSanPham</div>
+                            <div class="text-muted small text-truncate" style="max-width: 250px;">@item.MoTa</div>
+                        </td>
+                        <td>
+                            <span class="badge bg-primary text-primary-fg w-100 py-2">
+                                @(item.ThuongHieuNavigation?.TenThuongHieu ?? "N/A")
+                            </span>
+                        </td>
+                        <td>
+                            <span class="text-secondary">@(item.IdDanhMucNavigation?.TenDanhMuc ?? "N/A")</span>
+                        </td>
+                        <td>@item.DoiTuong</td>
+                        <td class="text-muted small">@item.NgayTao?.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (item.IsActive == true)
+                            {
+                                <span class="status status-green">
+                                    <span class="status-dot status-dot-animated"></span>
+                                    Đang bán
+                                </span>
+                            }
+                            else
+                            {
+                                <span class="status status-red">
+                                    <span class="status-dot"></span>
+                                    Ẩn/Ngừng
+                                </span>
+                            }
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.MaSp" class="btn btn-icon btn-outline-warning" title="Sửa">
+                                    <i class="ti ti-edit"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.MaSp" class="btn btn-icon btn-outline-info" title="Xem">
+                                    <i class="ti ti-eye"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.MaSp" class="btn btn-icon btn-outline-danger" title="Xóa">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
