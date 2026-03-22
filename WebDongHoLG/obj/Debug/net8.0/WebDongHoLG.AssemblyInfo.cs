@@ -15,7 +15,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("WebDongHoLG")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+6291c171b22d5f68db007b84c96dcf2eaa0ef894")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8a9ce93e0be058e2a9454cdf46f95d5aa57d531a")]
 [assembly: System.Reflection.AssemblyProductAttribute("WebDongHoLG")]
 [assembly: System.Reflection.AssemblyTitleAttribute("WebDongHoLG")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

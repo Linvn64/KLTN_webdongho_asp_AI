@@ -1,0 +1,385 @@
+﻿@model WebDongHoLG.Data.BienTheSanPham
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <form asp-action="@ViewData["FormAction"]" method="post" id="sharedForm" enctype="multipart/form-data">
+                <div class="card-body">
+                    <div asp-validation-summary="All" class="alert alert-danger mb-3"></div>
+
+                    <input type="hidden" asp-for="MaBienThe" />
+                    <input type="hidden" asp-for="ImageUrl" id="hiddenImageUrl" />
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Sản phẩm chính</label>
+                        <select asp-for="MaSp" id="inputProduct" class="form-select" asp-items="ViewBag.MaSp">
+                            <option value="">-- Chọn sản phẩm gốc --</option>
+                        </select>
+                        <div id="productInfoBadge" class="mt-1"></div>
+                    </div>
+
+                    <div class="hr-text">Thông số kỹ thuật</div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Màu sắc</label>
+                            <input asp-for="MauSac" id="inputColor" class="form-control" placeholder="Đen, Trắng..." />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Size (mm)</label>
+                            <input asp-for="DuongKinhMat" id="inputSize" type="number" class="form-control" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Chất liệu dây</label>
+                            <input asp-for="ChatLieuDay" id="inputStrap" class="form-control" />
+                        </div>
+                    </div>
+
+                    <div class="hr-text">Giá & Định danh</div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-md-4">
+                            <label class="form-label">Giá nhập</label>
+                            <input type="text" id="giaNhapDisplay" class="form-control money-input"
+                                   value="@(Model?.GiaNhap?.ToString("N0"))" />
+                            <input type="hidden" asp-for="GiaNhap" id="giaNhapRaw" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label text-success fw-bold">Giá bán</label>
+                            <input type="text" id="giaBanDisplay" class="form-control text-success fw-bold money-input"
+                                   value="@(Model?.GiaBan?.ToString("N0"))" />
+                            <input type="hidden" asp-for="GiaBan" id="giaBanRaw" />
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label">Mã SKU</label>
+                            <input asp-for="MaSku" id="inputSku" class="form-control font-monospace text-uppercase" readonly />
+                        </div>
+                        <div class="mb-3">
+                            <div class="form-check form-switch">
+                                <input asp-for="IsActive" id="inputIsActive" class="form-check-input" type="checkbox" role="switch" />
+                                <label class="form-check-label fw-bold" for="inputIsActive">
+                                    Đang hoạt động / Kinh doanh
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="hr-text">Hình ảnh & Gallery</div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tên thư mục (Tự động gợi ý)</label>
+                        <input name="ImageFolder" id="inputFolder" class="form-control border-primary bg-light text-primary"
+                               placeholder="Điền thông số để gợi ý tên folder..." />
+                        <small class="text-muted">Ví dụ: rolex-datejust-nam/rolex-datejust-nam-den-dayka</small>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Tải lên ảnh mới (Nếu có)</label>
+                        <input type="file" name="uploadFiles" id="fileUpload" class="form-control" multiple accept="image/*">
+                    </div>
+
+                    <input type="hidden" name="MainImage" id="mainImageInput"
+                           value="@(string.IsNullOrEmpty(Model?.ImageUrl) ? "" : Model.ImageUrl.Split('/').Last())" />
+                    <input type="hidden" name="ImageOrders" id="imageOrdersInput" />
+                </div>
+
+                <div class="card-footer text-end bg-light">
+                    <a asp-action="Index" class="btn btn-ghost-secondary me-2">Hủy</a>
+                    <button type="submit" class="btn btn-primary px-4">
+                        <i class="ti ti-device-floppy me-1"></i>@ViewData["SubmitText"]
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="sticky-top" style="top: 20px;">
+            <div class="card shadow-lg border-primary">
+                <div class="card-status-top bg-primary"></div>
+                <div class="card-body">
+                    <h3 class="card-title text-primary">
+                        <i class="ti ti-photo me-2"></i>Gallery Biến Thể
+                    </h3>
+                    <div class="mb-3 border-bottom pb-2">
+                        <small class="text-muted text-uppercase fw-bold">Ảnh chính đã chọn:</small>
+                        <div id="previewMainImageText" class="text-danger fw-bold h5 mt-1">
+                            @(string.IsNullOrEmpty(Model?.ImageUrl) ? "Chưa chọn" : Model.ImageUrl.Split('/').Last())
+                        </div>
+                    </div>
+                    <div id="previewImages" class="row g-2" style="max-height: 500px; overflow-y: auto;">
+                        <div class="col-12 text-muted small italic p-3">Hãy nhập thông tin hoặc upload ảnh...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<partial name="_ValidationScriptsPartial" />
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const formatVN = (val) => new Intl.NumberFormat('vi-VN').format(val);
+        const cleanNum = (str) => String(str).replace(/\D/g, '');
+
+        const el = {
+            giaNhapDisp:        document.getElementById("giaNhapDisplay"),
+            giaNhapRaw:         document.getElementById("giaNhapRaw"),
+            giaBanDisp:         document.getElementById("giaBanDisplay"),
+            giaBanRaw:          document.getElementById("giaBanRaw"),
+            product:            document.getElementById("inputProduct"),
+            color:              document.getElementById("inputColor"),
+            strap:              document.getElementById("inputStrap"),
+            size:               document.getElementById("inputSize"),
+            sku:                document.getElementById("inputSku"),
+            folder:             document.getElementById("inputFolder"),
+            previewImages:      document.getElementById("previewImages"),
+            mainImageInput:     document.getElementById("mainImageInput"),
+            imageOrdersInput:   document.getElementById("imageOrdersInput"),
+            fileUpload:         document.getElementById("fileUpload"),
+            previewMainText:    document.getElementById("previewMainImageText"),
+            hiddenImageUrl:     document.getElementById("hiddenImageUrl"),
+            productInfoBadge:   document.getElementById("productInfoBadge")
+        };
+
+        // ===== HELPER =====
+        const toSlug = (str) => {
+            if (!str) return "";
+            return str.toString().toLowerCase()
+                .replace(/đ/g, 'd')
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\s-]/g, "")
+                .replace(/[\s_-]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+        };
+
+        let cachedProductInfo = {};
+
+        // ===== 1. CẬP NHẬT SKU & FOLDER =====
+        const updateAll = () => {
+            let productId = el.product.value;
+            if (!productId) return;
+
+            let colorVal = el.color.value.trim();
+            let strapVal = el.strap.value.trim();
+            let sizeVal  = el.size.value;
+
+            if (cachedProductInfo[productId]) {
+                buildFolderAndSku(cachedProductInfo[productId], colorVal, strapVal, sizeVal, productId);
+                return;
+            }
+
+            fetch(`/Admin/BienTheSanPhams/GetProductInfo/${productId}`)
+                .then(res => res.json())
+                .then(data => {
+                    cachedProductInfo[productId] = data;
+
+                    // Badge đối tượng
+                    const labelMap = { "nam": "Nam", "nu": "Nữ", "": "Chung" };
+                    const colorMap  = { "nam": "bg-blue-lt text-blue", "nu": "bg-pink-lt text-pink", "": "bg-gray-lt" };
+                    let dt = (data.doiTuong || "").toLowerCase();
+                    el.productInfoBadge.innerHTML = `
+                        <span class="badge ${colorMap[dt] || 'bg-gray-lt'} fw-bold">
+                            <i class="ti ti-user me-1"></i>Đối tượng: ${labelMap[dt] || data.doiTuong || "Chung"}
+                        </span>`;
+
+                    buildFolderAndSku(data, colorVal, strapVal, sizeVal, productId);
+                })
+                .catch(() => {
+                    let colorShort = toSlug(colorVal).toUpperCase() || "MAU";
+                    el.sku.value = `${productId}-${colorShort}-${sizeVal || "SIZE"}`;
+                });
+        };
+
+        function buildFolderAndSku(data, colorVal, strapVal, sizeVal, productId) {
+            const tenSp    = data.tenSanPham || "";
+            const doiTuong = data.doiTuong   || "";
+
+            // SKU: MaSP-MÀU-SIZE
+            let colorShort = toSlug(colorVal).toUpperCase() || "MAU";
+            el.sku.value   = `${productId}-${colorShort}-${sizeVal || "SIZE"}`;
+
+            // Folder: tensp-doituong / tensp-doituong-mau-day
+            let spSlug       = toSlug(tenSp + (doiTuong ? " " + doiTuong : ""));
+            let variantParts = [toSlug(colorVal), toSlug(strapVal)].filter(x => x !== "");
+            let variantSlug  = variantParts.length > 0 ? `${spSlug}-${variantParts.join("-")}` : spSlug;
+            let suggestedPath = `${spSlug}/${variantSlug}`;
+
+            el.folder.value = suggestedPath;
+            loadExistingImages(suggestedPath);
+        }
+
+        // ===== 2. RENDER GALLERY =====
+        function renderGallery(fileNames, basePath, blobUrls = null) {
+            if (!fileNames || fileNames.length === 0) {
+                el.previewImages.innerHTML = `
+                    <div class="col-12 text-center py-3">
+                        <i class="ti ti-folder-open text-muted" style="font-size:2rem;"></i>
+                        <div class="text-muted small mt-1">Thư mục trống.<br>Hãy upload ảnh mới.</div>
+                    </div>`;
+                return;
+            }
+
+            let orders      = {};
+            let currentMain = el.mainImageInput.value;
+
+            // Mặc định ảnh đầu tiên nếu chưa chọn
+            if (!currentMain) {
+                currentMain = fileNames[0];
+                el.mainImageInput.value = currentMain;
+            }
+
+            el.previewImages.innerHTML = "";
+
+            fileNames.forEach((file, index) => {
+                orders[file] = index + 1;
+
+                let src    = (blobUrls && blobUrls[index]) ? blobUrls[index] : (basePath + file);
+                let isMain = (file === currentMain);
+
+                const div = document.createElement("div");
+                div.className = "col-4 image-item mb-2";
+                div.setAttribute("data-file", file);
+                div.setAttribute("data-src",  src);
+
+                div.innerHTML = `
+                    <div class="image-box border shadow-sm ${isMain ? 'border-danger border-3' : 'border-secondary'}"
+                         style="background-image: url('${src}');
+                                width: 100%; height: 80px;
+                                background-size: cover; background-position: center;
+                                cursor: pointer; border-radius: 6px; transition: all 0.15s;
+                                ${isMain ? 'transform: scale(1.05); outline: 3px solid red;' : ''}">
+                    </div>
+                    <div class="text-center text-truncate mt-1" style="font-size:9px;" title="${file}">
+                        ${isMain
+                            ? '<b class="text-danger">⭐ CHÍNH</b>'
+                            : '<span class="text-muted">' + file + '</span>'}
+                    </div>
+                    <div class="input-group input-group-sm mt-1">
+                        <span class="input-group-text px-1" style="font-size:9px;">Thứ tự</span>
+                        <input type="number" value="${index + 1}" min="1"
+                               class="form-control form-control-sm order-input text-center"
+                               style="font-size:10px;" />
+                    </div>`;
+
+                el.previewImages.appendChild(div);
+            });
+
+            el.imageOrdersInput.value = JSON.stringify(orders);
+            el.previewMainText.innerText = currentMain || "Chưa chọn";
+
+            // Sự kiện thay đổi thứ tự
+            el.previewImages.querySelectorAll(".order-input").forEach(input => {
+                input.addEventListener("input", function () {
+                    let file = this.closest(".image-item").getAttribute("data-file");
+                    orders[file] = parseInt(this.value) || 0;
+                    el.imageOrdersInput.value = JSON.stringify(orders);
+                });
+            });
+        }
+
+        // ===== 3. LOAD ẢNH TỪ SERVER =====
+        function loadExistingImages(folderName) {
+            if (!folderName || el.fileUpload.files.length > 0) return;
+
+            fetch(`/Admin/BienTheSanPhams/GetImagesInFolder?folderName=${encodeURIComponent(folderName)}`)
+                .then(res => res.json())
+                .then(files => {
+                    if (!files || files.length === 0) {
+                        el.previewImages.innerHTML = `
+                            <div class="col-12 text-center py-3">
+                                <i class="ti ti-folder-open text-muted" style="font-size:2rem;"></i>
+                                <div class="text-muted small mt-1">Thư mục trống hoặc chưa tồn tại.<br>Hãy upload ảnh mới.</div>
+                            </div>`;
+                        return;
+                    }
+                    renderGallery(files, `/hinhanhbienthe/${folderName}/`, null);
+                })
+                .catch(() => {
+                    el.previewImages.innerHTML = `
+                        <div class="col-12 text-muted small p-3 text-center">
+                            <i class="ti ti-wifi-off me-1"></i>Không tải được ảnh từ server.
+                        </div>`;
+                });
+        }
+
+        // ===== 4. UPLOAD FILE MỚI TỪ MÁY =====
+        el.fileUpload.addEventListener("change", function () {
+            const files = Array.from(this.files);
+            if (files.length === 0) return;
+
+            // Reset ảnh chính về file đầu tiên
+            el.mainImageInput.value = files[0].name;
+
+            renderGallery(
+                files.map(f => f.name),
+                "",
+                files.map(f => URL.createObjectURL(f))
+            );
+        });
+
+        // ===== 5. CLICK CHỌN ẢNH CHÍNH =====
+        el.previewImages.addEventListener("click", function (e) {
+            let box = e.target.closest(".image-box");
+            if (!box) return;
+
+            const item     = box.closest(".image-item");
+            const fileName = item.getAttribute("data-file");
+
+            // Cập nhật ảnh chính
+            el.mainImageInput.value = fileName;
+
+            // Render lại để cập nhật viền đỏ
+            let allItems  = Array.from(el.previewImages.querySelectorAll(".image-item"));
+            let fileNames = allItems.map(i => i.getAttribute("data-file"));
+            let srcList   = allItems.map(i => i.getAttribute("data-src"));
+
+            renderGallery(fileNames, "", srcList);
+        });
+
+        // ===== 6. LẮNG NGHE THAY ĐỔI THÔNG SỐ =====
+        ["inputProduct", "inputColor", "inputSize", "inputStrap"].forEach(id => {
+            document.getElementById(id)?.addEventListener("input",  updateAll);
+            document.getElementById(id)?.addEventListener("change", updateAll);
+        });
+
+        // ===== 7. XỬ LÝ GIÁ =====
+        el.giaNhapDisp.addEventListener("input", function () {
+            let val = cleanNum(this.value);
+            this.value = val ? formatVN(val) : "";
+            el.giaNhapRaw.value = val;
+            // Chỉ tự tính giá bán ở trang Thêm mới (Model == null)
+            if (val && @(Model == null ? "true" : "false")) {
+                let autoGiaBan = Math.round(val * 1.3);
+                el.giaBanRaw.value  = autoGiaBan;
+                el.giaBanDisp.value = formatVN(autoGiaBan);
+            }
+        });
+
+        el.giaBanDisp.addEventListener("input", function () {
+            let val = cleanNum(this.value);
+            this.value = val ? formatVN(val) : "";
+            el.giaBanRaw.value = val;
+        });
+
+        // ===== 8. KHỞI TẠO TRANG EDIT =====
+        // Luôn hiển thị badge nếu đang có sản phẩm được chọn
+        if (el.product.value) {
+            updateAll();
+        }
+
+        // Load ảnh từ folder nếu đang có ImageUrl lưu sẵn
+        if (el.hiddenImageUrl && el.hiddenImageUrl.value) {
+            let parts = el.hiddenImageUrl.value.split('/').filter(Boolean);
+            // Cấu trúc: /hinhanhbienthe/[folder1]/[folder2]/tenfile.jpg
+            // → bỏ index 0 ("hinhanhbienthe") và index cuối (tên file)
+            if (parts.length >= 3) {
+                let folderName = parts.slice(1, parts.length - 1).join('/');
+                el.folder.value = folderName;
+                loadExistingImages(folderName);
+            }
+        }
+    });
+        // Thêm tạm vào trước submit để debug
+    document.getElementById("sharedForm").addEventListener("submit", function(e) {
+        alert("MainImage: " + document.getElementById("mainImageInput").value);
+    });
+</script>

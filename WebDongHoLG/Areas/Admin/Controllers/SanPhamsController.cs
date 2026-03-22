@@ -47,6 +47,18 @@ namespace WebDongHoLG.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("MaSp,TenSanPham,IdDanhMuc,NgayTao,MoTa,ThuongHieuId,DoiTuong,IsActive")] SanPham sanPham)
         {
+            var isDuplicate = await _context.SanPhams.AnyAsync(s =>
+                            s.TenSanPham == sanPham.TenSanPham &&
+                            s.ThuongHieuId == sanPham.ThuongHieuId &&
+                            s.IdDanhMuc == sanPham.IdDanhMuc &&
+                            s.DoiTuong == sanPham.DoiTuong
+    );
+
+            if (isDuplicate)
+            {
+                ModelState.AddModelError("", "Sản phẩm này đã tồn tại! (Trùng tên + thương hiệu + danh mục + đối tượng)");
+            }
+
             if (ModelState.IsValid)
             {
                 sanPham.NgayTao = DateTime.Now;
@@ -74,7 +86,23 @@ namespace WebDongHoLG.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("MaSp,TenSanPham,IdDanhMuc,NgayTao,MoTa,ThuongHieuId,DoiTuong,IsActive")] SanPham sanPham)
         {
+
+
             if (id != sanPham.MaSp) return NotFound();
+
+            var isDuplicate = await _context.SanPhams.AnyAsync(s =>
+                s.TenSanPham == sanPham.TenSanPham &&
+                s.ThuongHieuId == sanPham.ThuongHieuId &&
+                s.IdDanhMuc == sanPham.IdDanhMuc &&
+                s.DoiTuong == sanPham.DoiTuong &&
+                s.MaSp != id  
+            );
+
+            if (isDuplicate)
+            {
+                ModelState.AddModelError("", "Sản phẩm này đã tồn tại! (Trùng tên + thương hiệu + danh mục + đối tượng)");
+            }
+
 
             if (ModelState.IsValid)
             {
@@ -150,6 +178,9 @@ namespace WebDongHoLG.Areas.Admin.Controllers
         }
 
         private bool SanPhamExists(int id) => _context.SanPhams.Any(e => e.MaSp == id);
+
+
+        
     }
    
 }
