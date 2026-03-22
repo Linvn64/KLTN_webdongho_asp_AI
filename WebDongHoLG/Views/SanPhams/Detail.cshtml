@@ -1,0 +1,362 @@
+﻿@model WebDongHoLG.ViewModels.ChiTietSanPhamVM
+@{
+    ViewData["Title"] = Model.TenSp;
+    var bienTheHienTai = Model.BienThes.FirstOrDefault();
+    var dsMau = Model.BienThes.Select(bt => bt.MauSac).Distinct().ToList();
+    var dsSize = Model.BienThes.Select(bt => bt.DuongKinhMat).Where(s => s.HasValue).Select(s => s.Value).Distinct().OrderBy(s => s).ToList();
+    var dsDayDeo = Model.BienThes.Select(bt => bt.ChatLieuDay).Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList();
+}
+
+<style>
+    /* Gallery & Thumbnails */
+    .main-img-container {
+        aspect-ratio: 1/1;
+        position: relative;
+        border: 1px solid #eee;
+        overflow: hidden;
+        cursor: zoom-in;
+        background: #fff;
+    }
+
+    #imgChinh {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+        transition: opacity 0.2s ease;
+    }
+
+    .thumb-track-container {
+        position: relative;
+        margin: 10px 35px;
+        overflow: hidden;
+    }
+
+    #thumbInner {
+        display: flex;
+        gap: 8px;
+        transition: transform 0.3s ease;
+    }
+
+    .thumb-item {
+        width: 72px;
+        height: 72px;
+        flex-shrink: 0;
+        cursor: pointer;
+        border: 2px solid transparent;
+        border-radius: 2px;
+        overflow: hidden;
+    }
+
+        .thumb-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .thumb-item.active {
+            border-color: #ee4d2d !important;
+        }
+
+    .nav-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid #ddd;
+        z-index: 5;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+        .nav-btn:hover {
+            color: #ee4d2d;
+        }
+
+        .nav-btn.prev {
+            left: 0;
+        }
+
+        .nav-btn.next {
+            right: 0;
+        }
+
+    /* Modal */
+    .modal-content.bg-dark-custom {
+        background-color: rgba(0,0,0,0.9);
+    }
+
+    .btn-nav-modal {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 3rem;
+        opacity: 0.6;
+        transition: 0.3s;
+    }
+
+        .btn-nav-modal:hover {
+            opacity: 1;
+            color: #ee4d2d;
+        }
+</style>
+<style>
+    /* Khung chứa ảnh phóng to - Ép kích thước cố định */
+    .zoom-wrapper {
+        width: 500px; /* Bạn muốn bao nhiêu px thì chỉnh ở đây (ví dụ 350px hoặc 500px) */
+        height: 500px; /* Bắt buộc rộng = cao để ra hình vuông đồng nhất */
+        background: #fff; /* Đặt nền trắng để ảnh không bị lộ viền đen nếu ảnh gốc không vuông */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: auto;
+        border-radius: 8px; /* Bo góc nhẹ cho sang */
+        overflow: hidden;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Đổ bóng để nổi bật trên nền đen */
+    }
+
+    #imgPhongTo {
+        width: 100%; /* Ép chiều rộng bằng khung */
+        height: 100%; /* Ép chiều cao bằng khung */
+        object-fit: contain; /* GIỮ NGUYÊN TỈ LỆ: Ảnh sẽ tự co giãn để nằm gọn trong khung vuông, không bị méo */
+        padding: 15px; /* Tạo khoảng cách một chút với viền khung cho đẹp */
+    }
+
+    /* Làm nền Modal trong suốt hoàn toàn */
+    #modalPhongTo .modal-content {
+        background: transparent !important;
+        border: none !important;
+    }
+</style>
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Chi tiết sản phẩm</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a href="/">Trang chủ</a></li>
+        <li class="breadcrumb-item"><a asp-controller="SanPhams" asp-action="Index">Sản phẩm</a></li>
+        <li class="breadcrumb-item active text-white">@Model.TenSp</li>
+    </ol>
+</div>
+
+<div class="container-fluid py-5 mt-5">
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            <div class="col-lg-5">
+                <div class="main-img-container rounded mb-2" onclick="phongToAnh()">
+                    <img id="imgChinh" src="@(bienTheHienTai?.ImageUrl ?? "/home/img/no-image.jpg")">
+                    <div class="position-absolute bottom-0 end-0 p-2">
+                        <span class="badge bg-dark bg-opacity-50" style="font-size:10px;"><i class="fa fa-expand me-1"></i>Phóng to</span>
+                    </div>
+                </div>
+
+                <div class="position-relative">
+                    <button class="nav-btn prev" onclick="scrollThumbs(-1)"><i class="fa fa-chevron-left"></i></button>
+                    <div class="thumb-track-container">
+                        <div id="thumbInner">
+                            @{
+                                var tatCaAnh = new List<(string Src, int MaBT, string Mau, int? Size, string Day)>();
+                                foreach (var bt in Model.BienThes)
+                                {
+                                    if (!string.IsNullOrEmpty(bt.ImageUrl)) tatCaAnh.Add((bt.ImageUrl, bt.MaBienThe, bt.MauSac, bt.DuongKinhMat, bt.ChatLieuDay));
+                                    foreach (var a in bt.HinhAnhs.Where(h => h != bt.ImageUrl)) tatCaAnh.Add((a, bt.MaBienThe, bt.MauSac, bt.DuongKinhMat, bt.ChatLieuDay));
+                                }
+                            }
+                            @for (int i = 0; i < tatCaAnh.Count; i++)
+                            {
+                                var img = tatCaAnh[i];
+                                <div class="thumb-item @(img.MaBT == bienTheHienTai?.MaBienThe && i == 0 ? "active" : "")"
+                                     data-index="@i" data-src="@img.Src" data-mabienthe="@img.MaBT"
+                                     data-mau="@img.Mau" data-size="@(img.Size?.ToString() ?? "null")" data-day="@img.Day"
+                                     onclick="chonThumb(@i)">
+                                    <img src="@img.Src">
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <button class="nav-btn next" onclick="scrollThumbs(1)"><i class="fa fa-chevron-right"></i></button>
+                </div>
+            </div>
+
+            <div class="col-lg-7">
+                <small class="text-muted">@Model.TenThuongHieu</small>
+                <h4 class="fw-bold mb-2 mt-1">
+                    @Model.TenSp
+                    <span class="badge ms-2" style="font-size:11px; background-color:@(Model.DoiTuong == "Nam" ? "#0d6efd" : "#d63384")">@Model.DoiTuong</span>
+                </h4>
+
+                <div class="d-flex align-items-center mb-3 gap-2">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <i class="fa fa-star @(i <= Math.Round(Model.SoSaoTrungBinh) ? "text-warning" : "text-muted")"></i>
+                    }
+                    <small class="text-muted">(@Model.SoDanhGia đánh giá)</small>
+                </div>
+
+                <div class="bg-light rounded p-3 mb-3">
+                    <h3 class="text-danger fw-bold mb-0" id="giaHienTai">@(bienTheHienTai?.GiaBan?.ToString("#,##0") ?? "Liên hệ") ₫</h3>
+                </div>
+
+                <div class="mb-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="fw-bold">Màu sắc:</span>
+                        <span class="text-primary fw-bold" id="mauDangChon">@bienTheHienTai?.MauSac</span>
+                    </div>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var mau in dsMau)
+                        {
+                            <button type="button" class="btn btn-sm border rounded-pill px-3 chon-mau @(mau == bienTheHienTai?.MauSac ? "btn-primary" : "btn-outline-secondary")"
+                                    data-mau="@mau" onclick="chonMau('@mau', this)">
+                                @mau
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-bold d-block mb-2">Kích thước: <span id="sizeDangChon" class="text-primary">@bienTheHienTai?.DuongKinhMat mm</span></span>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var size in dsSize)
+                        {
+                            <button type="button" class="btn btn-sm border rounded-pill px-3 chon-size @(size == bienTheHienTai?.DuongKinhMat ? "btn-primary" : "btn-outline-secondary")"
+                                    data-size="@size" onclick="chonSize(@size, this)">
+                                @size mm
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <span class="fw-bold d-block mb-2">Chất liệu dây: <span id="dayDangChon" class="text-primary">@bienTheHienTai?.ChatLieuDay</span></span>
+                    <div class="d-flex flex-wrap gap-2">
+                        @foreach (var day in dsDayDeo)
+                        {
+                            <button type="button" class="btn btn-sm border rounded-pill px-3 chon-day @(day == bienTheHienTai?.ChatLieuDay ? "btn-primary" : "btn-outline-secondary")"
+                                    data-day="@day" onclick="chonDay('@day', this)">
+                                @day
+                            </button>
+                        }
+                    </div>
+                </div>
+
+                <div class="mb-3" id="tonKhoHienTai">
+                    @if ((bienTheHienTai?.SoLuongTon ?? 0) > 0)
+                    {
+                        <span class="text-success"><i class="fa fa-check-circle me-1"></i>Còn <strong>@bienTheHienTai.SoLuongTon</strong> sản phẩm</span>
+                    }
+                    else
+                    {
+
+                        <span class="text-danger"><i class="fa fa-times-circle me-1"></i>Hết hàng</span>
+                    }
+                </div>
+
+                <div class="mb-4 d-flex align-items-center gap-3">
+                    <div class="input-group" style="width:120px;">
+                        <button class="btn btn-outline-secondary btn-minus" type="button"><i class="fa fa-minus"></i></button>
+                        <input type="text" id="txtSoLuong" class="form-control text-center" value="1">
+                        <button class="btn btn-outline-secondary btn-plus" type="button"><i class="fa fa-plus"></i></button>
+                    </div>
+                    <button type="button" onclick="themVaoGio()" class="btn btn-outline-primary rounded-pill px-4"><i class="fa fa-shopping-bag me-2"></i>Thêm vào giỏ</button>
+                    <button type="button" onclick="muaNgay()" class="btn btn-danger rounded-pill px-4">Mua ngay</button>
+                </div>
+
+                <input type="hidden" id="maBienTheChon" value="@bienTheHienTai?.MaBienThe" />
+                <small class="text-muted">Mã SKU: <span id="skuHienTai">@bienTheHienTai?.MaSku</span></small>
+            </div>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <nav>
+                    <div class="nav nav-tabs mb-3">
+                        <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#nav-thongso">Thông số</button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nav-mota">Mô tả</button>
+                        <button class="nav-link" data-bs-toggle="tab" data-bs-target="#nav-danhgia">Đánh giá</button>
+                    </div>
+                </nav>
+                <div class="tab-content border rounded p-4 bg-white">
+                    <div class="tab-pane active" id="nav-thongso">
+                        <table class="table table-sm mb-0">
+                            <tr><th style="width:150px">Thương hiệu</th><td>@Model.TenThuongHieu</td></tr>
+                            <tr><th>Màu sắc</th><td id="tab-mau">@bienTheHienTai?.MauSac</td></tr>
+                            <tr><th>Dây đeo</th><td id="tab-day">@bienTheHienTai?.ChatLieuDay</td></tr>
+                            <tr><th>Kích thước</th><td id="tab-size">@bienTheHienTai?.DuongKinhMat mm</td></tr>
+                        </table>
+                    </div>
+                    <div class="tab-pane" id="nav-mota">@Html.Raw(Model.MoTa)</div>
+                    <div class="tab-pane" id="nav-danhgia">
+                        @foreach (var dg in Model.DanhGias)
+                        {
+                            <div class="border-bottom mb-3 pb-2">
+                                <div class="d-flex justify-content-between"><strong>@dg.TenNguoiDung</strong><small>@dg.NgayDanhGia.ToShortDateString()</small></div>
+                                <div class="text-warning">@for(int i=0; i<dg.SoSao; i++){
+                                <i class="fa fa-star"></i>
+                            }
+</div>
+                            <p>@dg.NoiDung</p>
+                        </div>
+                                                }
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <form asp-action="Index" method="get" class="input-group mb-4">
+                    <input name="keyword" class="form-control" placeholder="Tìm đồng hồ...">
+                    <button class="btn btn-primary"><i class="fa fa-search"></i></button>
+                </form>
+                @await Component.InvokeAsync("DanhMuc")
+                <h5 class="mt-4 mb-3">Sản phẩm liên quan</h5>
+                @foreach (var sp in ViewBag.SpLienQuan as List<WebDongHoLG.ViewModels.SanPhamVM>)
+                {
+                    <div class="d-flex gap-3 mb-3 border-bottom pb-2">
+                        <img src="@sp.Hinh" style="width:60px; height:60px; object-fit:cover" class="rounded">
+                        <div>
+                            <a href="/SanPhams/Detail/@sp.MaSp" class="text-dark d-block">@sp.TenSp</a>
+                            <span class="text-danger fw-bold">@sp.GiaBan?.ToString("N0") ₫</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalPhongTo" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <button type="button" class="btn-close btn-close-white position-absolute end-0 top-0 m-3" style="z-index:12" data-bs-dismiss="modal"></button>
+
+            <div class="modal-body p-0 position-relative d-flex align-items-center justify-content-center">
+
+                <button class="btn-nav-modal position-absolute start-0 ms-n5" onclick="chuyenAnhMuiTen(-1)" style="left: -80px;">
+                    <i class="fa fa-chevron-left"></i>
+                </button>
+
+                <div class="zoom-wrapper">
+                    <img id="imgPhongTo" src="" alt="Ảnh sản phẩm">
+                </div>
+
+                <button class="btn-nav-modal position-absolute end-0 me-n5" onclick="chuyenAnhMuiTen(1)" style="right: -80px;">
+                    <i class="fa fa-chevron-right"></i>
+                </button>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script>
+        const bienThes = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.BienThes));
+        window._mauDaChon = '@bienTheHienTai?.MauSac';
+        window._sizeDaChon = @(bienTheHienTai?.DuongKinhMat ?? 0);
+        window._dayDaChon = '@bienTheHienTai?.ChatLieuDay';
+    </script>
+    <script src="~/js/nguoidung/sanphamdetail.js"></script>
+}

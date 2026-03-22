@@ -1,0 +1,35 @@
+﻿@model IEnumerable<WebDongHoLG.ViewModels.SanPhamVM>
+@{
+    ViewData["Title"] = "Search";
+    Layout = "_TemplateDanhSachSanPham";
+}
+<style>
+    
+    .fruite-img {
+        height: 300px; 
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: #f8f9fa; 
+    }
+
+    
+        .fruite-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; 
+            padding: 10px; 
+        }
+
+    
+    .fruite-item h4 {
+        height: 3rem;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+    }
+</style>
+<h3>Tìm thấy @Model.Count() sản phẩm</h3>
+@await Html.PartialAsync("MatHangSanPham", Model)

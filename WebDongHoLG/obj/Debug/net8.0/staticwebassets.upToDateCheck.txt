@@ -1958,6 +1958,16 @@ wwwroot\dist\libs\typed.js\package.json
 wwwroot\dist\libs\typed.js\README.md
 wwwroot\favicon.ico
 wwwroot\hinhanhbienthe\cartier-tank-louis\den.webp
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-den-cao-su\kamasu.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-den-cao-su\longines-el.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-den-cao-su\mako3.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-hong-cao-su\protrek.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-hong-cao-su\rolex-sub.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-hong-cao-su\sunmoon.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-hong-cao-su\swarovski.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-trang-cao-su\mk.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-trang-cao-su\s3.jpg
+wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-trang-cao-su\tissot-viso.jpg
 wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-vang-da\Screenshot 2026-03-22 094951.png
 wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-vang-da\Screenshot 2026-03-22 100251.png
 wwwroot\hinhanhbienthe\casio-g-shock-nu\casio-g-shock-nu-vang-da\Screenshot 2026-03-22 154713.png
@@ -1971,7 +1981,29 @@ wwwroot\hinhanhbienthe\casio\gold.jpeg
 wwwroot\hinhanhbienthe\casio\white.jpg
 wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-den-thep-ma-vang\default-avatar.jpg
 wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-den-thep-ma-vang\trang.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-den-thep\samurai.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-den-thep\seiko-c7.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-den-thep\seiko-dolce.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-den-thep\seiko-st.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-den-thep\t-race.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-hong-da\hamilton-khaki.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-hong-da\hublot-bb.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-hong-da\invicta.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-trang-vang\fc-slim.jpeg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-trang-vang\fugu.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-trang-vang\garmin-epix.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nam\rolex-datejust-nam-trang-vang\gmw.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-den-da\hublot-bb.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-den-da\mvmt.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-den-da\seiko-c7.jpg
 wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-den-nhua\trang.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-hong-vang\omega-speed.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-hong-vang\presage.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-hong-vang\seiko-st.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-hong-vang\skx007.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-trang-thep\samurai.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-trang-thep\seiko-c7.jpg
+wwwroot\hinhanhbienthe\rolex-datejust-nu\rolex-datejust-nu-trang-thep\t-race.jpg
 wwwroot\hinhanhbienthe\rolex-datejust\default-avatar.jpg
 wwwroot\hinhanhbienthe\rolex-datejust\den-thep-ma-vang-nu\default-avatar.jpg
 wwwroot\hinhanhbienthe\rolex-datejust\den-thep-ma-vang-nu\den.webp
@@ -2181,6 +2213,8 @@ wwwroot\js\admin-setting.js
 wwwroot\js\auth.js
 wwwroot\js\bienthe.js
 wwwroot\js\giohang.js
+wwwroot\js\nguoidung\sanpham.js
+wwwroot\js\nguoidung\sanphamdetail.js
 wwwroot\js\nhapkho.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

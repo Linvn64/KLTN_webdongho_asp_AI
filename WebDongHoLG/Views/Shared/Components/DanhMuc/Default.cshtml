@@ -1,0 +1,69 @@
+﻿@model IEnumerable<WebDongHoLG.ViewModels.DanhMucVM>
+
+@{
+    var currentDoiTuong = Context.Request.Query["doiTuong"].ToString();
+}
+
+<div class="col-lg-12">
+    <div class="mb-3">
+        <h4 class="mb-2">Lọc theo đối tượng</h4>
+
+        <div class="mb-2">
+            <a class="text-decoration-none @(string.IsNullOrEmpty(currentDoiTuong) ? "fw-bold text-primary" : "text-dark")"
+               href="/SanPhams">
+                <i class="fa fa-circle me-2 @(string.IsNullOrEmpty(currentDoiTuong) ? "text-primary" : "text-muted")"></i>Tất cả
+            </a>
+        </div>
+        <div class="mb-2">
+            <a class="text-decoration-none @(currentDoiTuong == "Nam" ? "fw-bold text-primary" : "text-dark")"
+               href="/SanPhams?doiTuong=Nam">
+                <i class="fa fa-circle me-2 @(currentDoiTuong == "Nam" ? "text-primary" : "text-muted")"></i>Nam
+            </a>
+        </div>
+        <div class="mb-2">
+            <a class="text-decoration-none @(currentDoiTuong == "Nữ" ? "fw-bold text-primary" : "text-dark")"
+               href="/SanPhams?doiTuong=N%E1%BB%AF">
+                <i class="fa fa-circle me-2 @(currentDoiTuong == "Nữ" ? "text-primary" : "text-muted")"></i>Nữ
+            </a>
+        </div>
+        <div class="mb-2">
+            <a class="text-decoration-none @(currentDoiTuong == "Unisex" ? "fw-bold text-primary" : "text-dark")"
+               href="/SanPhams?doiTuong=Unisex">
+                <i class="fa fa-circle me-2 @(currentDoiTuong == "Unisex" ? "text-primary" : "text-muted")"></i>Unisex
+            </a>
+        </div>
+    </div>
+</div>
+
+{{-- Danh mục --}}
+<div class="col-lg-12">
+    <div class="mb-3">
+        <h4>Danh Mục Sản Phẩm</h4>
+        @{
+            var currentDanhMuc = Context.Request.Query["danhmuc"].ToString();
+        }
+        <ul class="list-unstyled fruite-categorie">
+            <li>
+                <div class="d-flex justify-content-between fruite-name">
+                    <a class="@(string.IsNullOrEmpty(currentDanhMuc) ? "fw-bold text-primary" : "")"
+                       asp-controller="SanPhams" asp-action="Index">
+                        <i class="fa fa-clock me-2"></i>Tất cả
+                    </a>
+                </div>
+            </li>
+            @foreach (var item in Model)
+            {
+                <li>
+                    <div class="d-flex justify-content-between fruite-name">
+                        <a class="@(currentDanhMuc == item.MaDanhMuc.ToString() ? "fw-bold text-primary" : "")"
+                           asp-controller="SanPhams" asp-action="Index"
+                           asp-route-danhmuc="@item.MaDanhMuc">
+                            <i class="fa fa-clock me-2"></i>@item.TenDanhMuc
+                        </a>
+                        <span>(@item.SoLuong)</span>
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
