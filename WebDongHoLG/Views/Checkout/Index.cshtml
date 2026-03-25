@@ -1,0 +1,370 @@
+﻿@model WebDongHoLG.ViewModels.DonHangVM
+
+@section Styles {
+    <style>
+        .custom-radio-address {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+            .custom-radio-address:hover {
+                background-color: #f8f9fa;
+            }
+
+            .custom-radio-address .form-check-input {
+                width: 1.2rem;
+                height: 1.2rem;
+                cursor: pointer;
+            }
+
+                .custom-radio-address .form-check-input:checked {
+                    background-color: #ee4d2d;
+                    border-color: #ee4d2d;
+                }
+
+        .action-icons a {
+            font-size: 1rem;
+            padding: 5px;
+        }
+
+        .voucher-disabled {
+            opacity: 0.6;
+            background-color: #f9f9f9;
+            filter: grayscale(1);
+        }
+
+        .img-product-large {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .table-checkout thead {
+            background-color: #f8f9fa;
+        }
+
+        .table-checkout th, .table-checkout td {
+            padding: 16px 15px;
+            vertical-align: middle;
+        }
+    </style>
+}
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <form asp-controller="Checkout" asp-action="PlaceOrder" method="post">
+            <input type="hidden" name="isBuyNow"
+                   value="@(ViewBag.IsBuyNow != null ? ViewBag.IsBuyNow.ToString().ToLower() : "false")" />
+            <input type="hidden" name="selectedIds"
+                   value="@string.Join(",", Model.DanhSachSanPham.Select(x => x.MaBienThe))" />
+
+            <div class="row">
+
+                <div class="col-12 mb-4">
+                    <h4 class="fw-bold mb-4">
+                        <i class="fas fa-shopping-basket me-2 text-primary"></i>Sản phẩm thanh toán
+                    </h4>
+                    <div class="table-responsive shadow-sm rounded">
+                        <table class="table table-checkout bg-white mb-0">
+                            <thead>
+                                <tr>
+                                    <th style="width:50%">Sản phẩm</th>
+                                    <th class="text-center">Đơn giá</th>
+                                    <th class="text-center">Số lượng</th>
+                                    <th class="text-end">Thành tiền</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (int i = 0; i < Model.DanhSachSanPham.Count; i++)
+                                {
+                                    var item = Model.DanhSachSanPham[i];
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <input type="hidden" name="DanhSachSanPham[@i].MaBienThe" value="@item.MaBienThe" />
+                                                <input type="hidden" name="DanhSachSanPham[@i].SoLuong" value="@item.SoLuong" />
+                                                <img src="@(item.Hinh ?? "/home/img/no-image.jpg")"
+                                                     class="img-product-large border" alt="@item.TenSp">
+                                                <div>
+                                                    <h6 class="fw-bold mb-1">@item.TenSp</h6>
+                                                    @if (!string.IsNullOrEmpty(item.TenThuongHieu))
+                                                    {
+                                                        <small class="text-muted d-block">@item.TenThuongHieu</small>
+                                                    }
+                                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                                        @if (!string.IsNullOrEmpty(item.MauSac))
+                                                        {
+                                                            <span class="badge bg-secondary" style="font-size:10px;">@item.MauSac</span>
+                                                        }
+                                                        @if (item.DuongKinhMat.HasValue)
+                                                        {
+                                                            <span class="badge bg-secondary" style="font-size:10px;">@item.DuongKinhMat mm</span>
+                                                        }
+                                                        @if (!string.IsNullOrEmpty(item.ChatLieuDay))
+                                                        {
+                                                            <span class="badge bg-secondary" style="font-size:10px;">@item.ChatLieuDay</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="text-center">@item.DonGia.ToString("#,##0") ₫</td>
+                                        <td class="text-center fw-bold">x @item.SoLuong</td>
+                                        <td class="text-end fw-bold text-danger">
+                                            @item.ThanhTien.ToString("#,##0") ₫
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="col-lg-8">
+
+                    <div class="p-4 border rounded bg-white mb-4 shadow-sm"
+                         style="border-top: 4px solid #ee4d2d !important;">
+                        <h5 class="text-danger fw-bold mb-3">
+                            <i class="fas fa-map-marker-alt me-2"></i>Địa Chỉ Nhận Hàng
+                        </h5>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div id="displayCurrentAddress">
+                                @if (Model.DiaChiChiTiet != "Chưa có địa chỉ giao hàng")
+                                {
+                                    <strong>@Model.HoTen (@Model.SdtNhanHang)</strong>
+                                    <span class="ms-3 text-muted">@Model.DiaChiHienThi</span>
+                                }
+                                else
+                                {
+                                    <span class="text-danger fw-bold">Vui lòng thêm địa chỉ nhận hàng!</span>
+                                }
+                            </div>
+                            <button type="button" class="btn btn-sm text-primary fw-bold border"
+                                    data-bs-toggle="modal" data-bs-target="#addressModal">
+                                THAY ĐỔI
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="p-0 border rounded bg-white mb-4 shadow-sm overflow-hidden">
+                        <div class="p-4 bg-light d-flex justify-content-between align-items-center"
+                             data-bs-toggle="collapse" data-bs-target="#collapseVoucher" style="cursor:pointer;">
+                            <h6 class="fw-bold text-danger mb-0">
+                                <i class="fas fa-ticket-alt me-2"></i>Shop Voucher
+                            </h6>
+                            <div class="text-muted small">
+                                Bấm để chọn mã giảm giá <i class="fas fa-chevron-down ms-1"></i>
+                            </div>
+                        </div>
+                        <div class="collapse" id="collapseVoucher">
+                            <div class="p-4 border-top">
+                                @if (Model.DanhSachVoucher != null && Model.DanhSachVoucher.Any())
+                                {
+                                    foreach (var v in Model.DanhSachVoucher)
+                                    {
+                                        var conLai = (v.SoLuong ?? 0) - (v.DaDung ?? 0);
+                                        bool dungNgay = Model.NgayHeThong >= v.NgayBatDau && Model.NgayHeThong <= v.NgayKetThuc;
+                                        bool isActive = v.IsActive == true && dungNgay && conLai > 0;
+                                        <div class="form-check d-flex align-items-center p-3 border rounded mb-2 @(isActive ? "border-danger" : "voucher-disabled")"
+                                             style="@(isActive ? "cursor:pointer;" : "pointer-events:none;")">
+                                            <input class="form-check-input me-2" type="radio"
+                                                   name="MaVoucherChon" id="v-@v.MaVoucher" value="@v.MaVoucher"
+                                                   @(isActive ? "" : "disabled")
+                                                   @(Model.MaVoucherChon == v.MaVoucher ? "checked" : "")
+                                                   onchange="updatePriceWithVoucher(@v.PhanTramGiam)">
+                                            <label class="form-check-label w-100" for="v-@v.MaVoucher">
+                                                <div class="d-flex justify-content-between">
+                                                    <span class="fw-bold @(isActive ? "text-danger" : "")">@v.TenVoucher</span>
+                                                    <span class="badge @(isActive ? "bg-danger" : "bg-secondary")">
+                                                        Giảm @(v.PhanTramGiam * 100)%
+                                                    </span>
+                                                </div>
+                                                <small class="text-muted">
+                                                    Hạn: @v.NgayKetThuc.ToString("dd/MM/yyyy") — Còn @conLai lượt
+                                                </small>
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                                else
+                                {
+                                    <p class="text-muted mb-0">Không có voucher khả dụng.</p>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="card p-4 shadow-sm border-0 bg-light position-sticky" style="top:20px;">
+                        <h5 class="fw-bold mb-4 border-bottom pb-2">Chi tiết thanh toán</h5>
+
+                        <input type="hidden" id="valTongTienHang" value="@Model.TongTienHang" />
+                        <input type="hidden" id="valPhiShip" value="@Model.PhiVanChuyen" />
+
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tiền hàng</span>
+                            <span>@Model.TongTienHang.ToString("#,##0") ₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2 text-danger">
+                            <span>Voucher giảm</span>
+                            <span id="displayGiamGia">- @Model.GiamGiaVoucher.ToString("#,##0") ₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Phí vận chuyển</span>
+                            <span id="displayPhiShip">@Model.PhiVanChuyen.ToString("#,##0") ₫</span>
+                        </div>
+
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">
+                                <i class="fas fa-credit-card me-2 text-primary"></i>Phương thức thanh toán
+                            </h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="CachThanhToan"
+                                       id="payCOD" value="COD" checked>
+                                <label class="form-check-label" for="payCOD">
+                                    Thanh toán khi nhận hàng (COD)
+                                </label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="radio" name="CachThanhToan"
+                                       id="payVNPAY" value="VNPAY">
+                                <label class="form-check-label" for="payVNPAY">
+                                    Thanh toán Online qua VNPAY
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="CachThanhToan"
+                                       id="payMomo" value="MOMO">
+                                <input type="hidden" name="Amount" value="@Model.TongThanhToan" />
+                                <input type="hidden" name="OrderInfo" value="Thanh toán Momo cho đơn hàng tại DonghoLG"/>
+                                <input type="hidden" name="FullName" value="DonghoLG" />
+                                <label class="form-check-label" for="payMomo">
+                                    Thanh toán bằng momo
+                                </label>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="d-flex justify-content-between mb-4">
+                            <h5 class="fw-bold">Tổng cộng</h5>
+                            <h4 class="text-danger fw-bold" id="displayTongThanhToan">
+                                @Model.TongThanhToan.ToString("#,##0") ₫
+                            </h4>
+                        </div>
+
+                        <button type="submit"
+                                class="btn w-100 py-3 fw-bold border-0 text-uppercase text-white shadow"
+                                style="background-color:#ee4d2d;"
+                                @(Model.DiaChiChiTiet == "Chưa có địa chỉ giao hàng" ? "disabled" : "")>
+                            <i class="fas fa-lock me-2"></i>Đặt hàng ngay
+                        </button>
+
+                        <a asp-controller="GioHangs" asp-action="Index"
+                           class="btn w-100 py-3 fw-bold text-uppercase shadow-sm"
+                           style="background-color: #f8f9fa; color: #495057; border: 1px solid #ced4da;">
+                            <i class="fas fa-arrow-left me-2"></i>Hủy / Quay lại Giỏ hàng
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="addressModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header bg-light">
+                <h5 class="fw-bold mb-0">Địa chỉ nhận hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body p-4">
+                <div id="addressListContainer" class="mb-4">
+                    @foreach (var dc in Model.DanhSachDiaChi)
+                    {
+                        bool isSelected = dc.DiaChi == Model.DiaChiChiTiet;
+                        <div class="form-check d-flex align-items-center border-bottom py-3 custom-radio-address">
+                            <input class="form-check-input me-3" type="radio" name="rdAddress"
+                                   id="addr-@dc.MaDiaChi" value="@dc.MaDiaChi"
+                                   @(isSelected ? "checked" : "")
+                                   onchange="changeDefaultAddress(@dc.MaDiaChi)">
+                            <label class="form-check-label w-100" for="addr-@dc.MaDiaChi">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <strong>@Model.HoTen (@dc.SdtNhanHang)</strong>
+                                        @if (isSelected)
+                                        {
+                                            <span class="badge bg-danger ms-2" style="font-size:0.7rem;">Đang chọn</span>
+                                        }
+                                        <br />
+                                        <span class="text-muted small">@dc.DiaChi</span>
+                                    </div>
+                                    <div class="action-icons">
+                                        <a href="javascript:void(0)"
+                                           onclick="fillEditForm('@dc.MaDiaChi','@dc.SdtNhanHang','@dc.DiaChi','@dc.GhiChu')"
+                                           class="text-primary me-2">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <a href="javascript:void(0)"
+                                           onclick="deleteAddressAjax(@dc.MaDiaChi, this)"
+                                           class="text-danger">
+                                            <i class="fas fa-trash"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </label>
+                        </div>
+                    }
+                </div>
+
+                <button class="btn btn-outline-success w-100 mb-3 fw-bold" onclick="showAddForm()">
+                    + Thêm địa chỉ mới
+                </button>
+
+                <div id="formAddress" style="display:none;" class="border-top pt-3">
+                    <form id="addressSubmitForm">
+                        <input type="hidden" name="MaDiaChi" id="editMaDiaChi" value="0">
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-6">
+                                <input type="text" name="HoTen" id="inputHoTen" class="form-control"
+                                       placeholder="Họ tên người nhận" required value="@Model.HoTen">
+                            </div>
+                            <div class="col-md-6">
+                                <input type="text" name="SdtNhanHang" id="inputSdt" class="form-control"
+                                       placeholder="Số điện thoại" required>
+                            </div>
+                        </div>
+                        <div class="row g-2 mb-2">
+                            <div class="col-md-4">
+                                <select name="TinhThanh" id="selectTinh" class="form-select" required>
+                                    <option value="Hà Nội">Hà Nội</option>
+                                    <option value="Hồ Chí Minh">Hồ Chí Minh</option>
+                                    <option value="Tỉnh khác">Tỉnh khác</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="QuanHuyen" id="inputQuan" class="form-control"
+                                       placeholder="Quận / Huyện">
+                            </div>
+                            <div class="col-md-4">
+                                <input type="text" name="PhuongXa" id="inputXa" class="form-control"
+                                       placeholder="Phường / Xã">
+                            </div>
+                        </div>
+                        <input type="text" name="DiaChiChiTiet" id="inputChiTiet" class="form-control mb-3"
+                               placeholder="Số nhà, tên đường" required>
+                        <button type="submit" id="btnSubmitAddr" class="btn btn-danger w-100 fw-bold">
+                            XÁC NHẬN
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/nguoidung/checkout.js"></script>
+}

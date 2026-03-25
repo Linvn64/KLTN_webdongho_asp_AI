@@ -12,6 +12,7 @@ public partial class Voucher
 
     public double PhanTramGiam { get; set; }
 
+    public double GiaTriToiThieu { get; set; }
     public DateTime NgayBatDau { get; set; }
 
     public DateTime NgayKetThuc { get; set; }

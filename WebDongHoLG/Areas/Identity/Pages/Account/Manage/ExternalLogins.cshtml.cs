@@ -2,15 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
+using WebDongHoLG.Data;
 
 namespace WebDongHoLG.Areas.Identity.Pages.Account.Manage
 {
@@ -19,15 +21,18 @@ namespace WebDongHoLG.Areas.Identity.Pages.Account.Manage
         private readonly UserManager<IdentityUser> _userManager;
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly IUserStore<IdentityUser> _userStore;
+        private readonly ShopDongHoDbContext _context;
 
         public ExternalLoginsModel(
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
-            IUserStore<IdentityUser> userStore)
+            IUserStore<IdentityUser> userStore,
+            ShopDongHoDbContext context)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _userStore = userStore;
+            _context = context;
         }
 
         /// <summary>
@@ -83,21 +88,31 @@ namespace WebDongHoLG.Areas.Identity.Pages.Account.Manage
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+                return NotFound($"Unable to load user.");
             }
 
-            var result = await _userManager.RemoveLoginAsync(user, loginProvider, providerKey);
+            var profile = await _context.NguoiDungs
+                .FirstOrDefaultAsync(x => x.UserId == user.Id);
+
+            if (profile != null)
+            {
+                _context.NguoiDungs.Remove(profile);
+                await _context.SaveChangesAsync();
+            }
+
+            var result = await _userManager.DeleteAsync(user);
+
             if (!result.Succeeded)
             {
-                StatusMessage = "The external login was not removed.";
+                StatusMessage = "Delete account failed.";
                 return RedirectToPage();
             }
 
-            await _signInManager.RefreshSignInAsync(user);
-            StatusMessage = "The external login was removed.";
-            return RedirectToPage();
-        }
+            // ❗ Logout
+            await _signInManager.SignOutAsync();
 
+            return Redirect("~/");
+        }
         public async Task<IActionResult> OnPostLinkLoginAsync(string provider)
         {
             // Clear the existing external cookie to ensure a clean login process

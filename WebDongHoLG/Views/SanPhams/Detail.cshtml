@@ -106,28 +106,26 @@
         }
 </style>
 <style>
-    /* Khung chứa ảnh phóng to - Ép kích thước cố định */
     .zoom-wrapper {
-        width: 500px; /* Bạn muốn bao nhiêu px thì chỉnh ở đây (ví dụ 350px hoặc 500px) */
-        height: 500px; /* Bắt buộc rộng = cao để ra hình vuông đồng nhất */
-        background: #fff; /* Đặt nền trắng để ảnh không bị lộ viền đen nếu ảnh gốc không vuông */
+        width: 500px; 
+        height: 500px; 
+        background: #fff; 
         display: flex;
         align-items: center;
         justify-content: center;
         margin: auto;
-        border-radius: 8px; /* Bo góc nhẹ cho sang */
+        border-radius: 8px; 
         overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5); /* Đổ bóng để nổi bật trên nền đen */
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
     }
 
     #imgPhongTo {
-        width: 100%; /* Ép chiều rộng bằng khung */
-        height: 100%; /* Ép chiều cao bằng khung */
-        object-fit: contain; /* GIỮ NGUYÊN TỈ LỆ: Ảnh sẽ tự co giãn để nằm gọn trong khung vuông, không bị méo */
-        padding: 15px; /* Tạo khoảng cách một chút với viền khung cho đẹp */
+        width: 100%; 
+        height: 100%; 
+        object-fit: contain; 
+        padding: 15px; 
     }
 
-    /* Làm nền Modal trong suốt hoàn toàn */
     #modalPhongTo .modal-content {
         background: transparent !important;
         border: none !important;
@@ -254,14 +252,21 @@
                     }
                 </div>
 
+                @{
+                    var isHetHang = (bienTheHienTai?.SoLuongTon ?? 0) <= 0;
+                }
                 <div class="mb-4 d-flex align-items-center gap-3">
                     <div class="input-group" style="width:120px;">
-                        <button class="btn btn-outline-secondary btn-minus" type="button"><i class="fa fa-minus"></i></button>
-                        <input type="text" id="txtSoLuong" class="form-control text-center" value="1">
-                        <button class="btn btn-outline-secondary btn-plus" type="button"><i class="fa fa-plus"></i></button>
+                        <button class="btn btn-outline-secondary btn-minus" type="button" @(isHetHang ? "disabled" : "")><i class="fa fa-minus"></i></button>
+                        <input type="text" id="txtSoLuong" class="form-control text-center" value="1" @(isHetHang ? "disabled" : "")>
+                        <button class="btn btn-outline-secondary btn-plus" type="button" @(isHetHang ? "disabled" : "")><i class="fa fa-plus"></i></button>
                     </div>
-                    <button type="button" onclick="themVaoGio()" class="btn btn-outline-primary rounded-pill px-4"><i class="fa fa-shopping-bag me-2"></i>Thêm vào giỏ</button>
-                    <button type="button" onclick="muaNgay()" class="btn btn-danger rounded-pill px-4">Mua ngay</button>
+                    <button type="button" onclick="themVaoGio()" class="btn btn-outline-primary rounded-pill px-4" @(isHetHang ? "disabled" : "")>
+                        <i class="fa fa-shopping-bag me-2"></i>Thêm vào giỏ
+                    </button>
+                    <button type="button" onclick="muaNgay()" class="btn btn-danger rounded-pill px-4" @(isHetHang ? "disabled" : "")>
+                        Mua ngay
+                    </button>
                 </div>
 
                 <input type="hidden" id="maBienTheChon" value="@bienTheHienTai?.MaBienThe" />
@@ -354,9 +359,8 @@
 @section Scripts {
     <script>
         const bienThes = @Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.BienThes));
-        window._mauDaChon = '@bienTheHienTai?.MauSac';
-        window._sizeDaChon = @(bienTheHienTai?.DuongKinhMat ?? 0);
-        window._dayDaChon = '@bienTheHienTai?.ChatLieuDay';
+        const isLoggedIn = @(User.Identity.IsAuthenticated.ToString().ToLower());
     </script>
-    <script src="~/js/nguoidung/sanphamdetail.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="~/js/nguoidung/sanphamdetail.js" asp-append-version="true"></script>
 }

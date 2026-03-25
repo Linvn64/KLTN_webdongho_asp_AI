@@ -2213,8 +2213,12 @@ wwwroot\js\admin-setting.js
 wwwroot\js\auth.js
 wwwroot\js\bienthe.js
 wwwroot\js\giohang.js
+wwwroot\js\layout.js
+wwwroot\js\nguoidung\checkout.js
+wwwroot\js\nguoidung\giohang.js
 wwwroot\js\nguoidung\sanpham.js
 wwwroot\js\nguoidung\sanphamdetail.js
+wwwroot\js\nguoidung\themnhanhsanpham.js
 wwwroot\js\nhapkho.js
 wwwroot\js\site.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

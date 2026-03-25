@@ -14,7 +14,7 @@ $(document).on('submit', '#addressSubmitForm', function (e) {
     }
 
     $.ajax({
-        url: '/GioHangs/UpdateAddress',
+        url: '/Checkout/UpdateAddress',
         type: 'POST',
         data: $(this).serialize(),
         success: function (res) {
@@ -65,7 +65,7 @@ function deleteAddressAjax(maDiaChi, element) {
         confirmButtonText: 'Đồng ý xóa'
     }).then((result) => {
         if (result.isConfirmed) {
-            $.post('/GioHangs/DeleteAddress', { maDc: maDiaChi }, function (res) {
+            $.post('/Checkout/DeleteAddress', { maDc: maDiaChi }, function (res) {
                 if (res.success) {
                     $(element).closest('.form-check').fadeOut(300);
                 }
@@ -75,7 +75,7 @@ function deleteAddressAjax(maDiaChi, element) {
 }
 
 function changeDefaultAddress(maDiaChi) {
-    window.location.href = '/GioHangs/SelectAddress?maDc=' + maDiaChi;
+    window.location.href = '/Checkout/SelectAddress?maDc=' + maDiaChi;
 }
 
 function fillEditForm(id, sdt, diachi, tinh) {
@@ -160,5 +160,5 @@ function proceedToCheckout() {
         return; 
     }
 
-    window.location.href = "/GioHangs/Checkout?selectedIds=" + selectedIds.join(',');
+    window.location.href = "/Checkout/Index?selectedIds=" + selectedIds.join(',');
 }

@@ -1,0 +1,49 @@
+﻿@{
+    ViewData["Title"] = "Chuyển khoản ngân hàng";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 text-center">
+            <i class="fas fa-university fa-4x text-primary mb-3"></i>
+            <h3 class="fw-bold mb-2">Chuyển khoản ngân hàng</h3>
+            <p class="text-muted mb-4">Mã đơn hàng: <strong>#@ViewBag.MaDonHang</strong></p>
+
+            <div class="card shadow-sm text-start mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold border-bottom pb-2 mb-3">Thông tin tài khoản</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Ngân hàng</span>
+                        <strong>Vietcombank</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Số tài khoản</span>
+                        <strong>1234567890</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Chủ tài khoản</span>
+                        <strong>LGWATCH SHOP</strong>
+                    </div>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Số tiền</span>
+                        <strong class="text-danger">@ViewBag.TongTien?.ToString("#,##0") ₫</strong>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <span class="text-muted">Nội dung CK</span>
+                        <strong>LGWATCH DH@(ViewBag.MaDonHang)</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert alert-warning text-start">
+                <i class="fas fa-info-circle me-2"></i>
+                Vui lòng chuyển khoản trong vòng <strong>24 giờ</strong>.
+                Ghi đúng nội dung <strong>LGWATCH DH@(ViewBag.MaDonHang)</strong> để xác nhận đơn hàng.
+            </div>
+
+            <a asp-controller="SanPhams" asp-action="Index" class="btn btn-primary rounded-pill px-5">
+                Về trang chủ
+            </a>
+        </div>
+    </div>
+</div>

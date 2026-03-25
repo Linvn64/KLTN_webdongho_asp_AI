@@ -1,0 +1,115 @@
+﻿@model WebDongHoLG.Data.Voucher
+
+@{
+    ViewData["Title"] = "Chi tiết Voucher";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-primary">
+                <i class="ti ti-info-circle me-2"></i>Chi tiết mã giảm giá
+            </h2>
+        </div>
+        <div class="col-auto ms-auto">
+            <div class="btn-list">
+                <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                    <i class="ti ti-arrow-left me-2"></i>Quay lại
+                </a>
+                <a asp-action="Edit" asp-route-id="@Model?.MaVoucher" class="btn btn-warning px-4">
+                    <i class="ti ti-edit me-2"></i>Chỉnh sửa
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row row-cards">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 pt-3">
+            <div class="card-body text-center">
+                <div class="mb-3">
+                    <span class="avatar avatar-xl avatar-rounded bg-primary-lt">
+                        <i class="ti ti-ticket" style="font-size: 2.5rem;"></i>
+                    </span>
+                </div>
+                <h3 class="card-title mb-1 text-uppercase fw-bold text-primary">@Model.TenVoucher</h3>
+                <div class="text-muted small">ID hệ thống: #@Model.MaVoucher</div>
+                <div class="mt-3">
+                    @if (Model.IsActive == true && Model.NgayKetThuc >= DateTime.Now)
+                    {
+                        <span class="status status-green px-3">
+                            <span class="status-dot status-dot-animated"></span> Đang chạy
+                        </span>
+                    }
+                    else
+                    {
+                        <span class="status status-red px-3">
+                            <span class="status-dot"></span> Dừng/Hết hạn
+                        </span>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white py-3">
+                <h3 class="card-title fw-bold">Thông tin cấu hình Voucher</h3>
+            </div>
+            <div class="card-body">
+                <div class="datagrid">
+                    <div class="datagrid-item">
+                        <div class="datagrid-title text-muted">Mức giảm giá</div>
+                        <div class="datagrid-content fw-bold text-danger" style="font-size: 1.1rem;">
+                            @((Model.PhanTramGiam * 100).ToString("N0"))%
+                        </div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title text-muted">Đơn tối thiểu</div>
+                        <div class="datagrid-content fw-bold">@Model.GiaTriToiThieu.ToString("N0") ₫</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title text-muted">Tổng số lượng</div>
+                        <div class="datagrid-content">@Model.SoLuong lượt</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title text-muted">Số lượt đã dùng</div>
+                        <div class="datagrid-content fw-bold text-primary">@Model.DaDung</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title text-muted">Thời gian bắt đầu</div>
+                        <div class="datagrid-content">@Model.NgayBatDau.ToString("dd/MM/yyyy HH:mm")</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title text-muted">Thời gian kết thúc</div>
+                        <div class="datagrid-content @(Model.NgayKetThuc < DateTime.Now ? "text-danger fw-bold" : "")">
+                            @Model.NgayKetThuc.ToString("dd/MM/yyyy HH:mm")
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="card-footer bg-light p-4">
+                @{
+                    double dDung = Model.DaDung ?? 0;
+                    double tSo = Model.SoLuong ?? 1;
+                    double tisoUD = (dDung / tSo) * 100;
+                }
+                <div class="progress progress-sm mb-2 shadow-sm">
+                    <div class="progress-bar bg-primary" style="width: @tisoUD%"></div>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="small text-muted">Tiến độ sử dụng</span>
+                    <span class="fw-bold text-primary">@Math.Round(tisoUD)%</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

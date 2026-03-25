@@ -45,7 +45,6 @@ namespace WebDongHoLG.Controllers
 
             var sanPhams = await query.ToListAsync();
 
-            // Map từng sản phẩm sang SanPhamVM
             var allVMs = sanPhams.Select(s => {
                 var bienThes = s.BienTheSanPhams.Where(bt => bt.IsActive == true).ToList();
                 return new SanPhamVM
@@ -64,7 +63,6 @@ namespace WebDongHoLG.Controllers
                 };
             }).ToList();
 
-            // NHÓM theo TenSp + ThuongHieu (cùng tên, cùng hãng)
             var nhomSanPhams = allVMs
                 .GroupBy(s => new { s.TenSp, s.TenThuongHieu })
                 .Select(g => new SanPhamNhomVM
@@ -81,7 +79,6 @@ namespace WebDongHoLG.Controllers
                 })
                 .AsQueryable();
 
-            // Sắp xếp
             nhomSanPhams = sapXep switch
             {
                 "gia-tang" => nhomSanPhams.OrderBy(s => s.GiaBanThapNhat),
@@ -90,7 +87,6 @@ namespace WebDongHoLG.Controllers
                 _ => nhomSanPhams.OrderBy(s => s.TenSp)
             };
 
-            // Phân trang
             int totalItems = nhomSanPhams.Count();
             int totalPages = (int)Math.Ceiling(totalItems / (double)PAGE_SIZE);
             var data = nhomSanPhams.Skip((page - 1) * PAGE_SIZE).Take(PAGE_SIZE).ToList();
@@ -122,7 +118,6 @@ namespace WebDongHoLG.Controllers
 
             if (sp == null) return NotFound();
 
-            // Lấy tất cả sản phẩm cùng tên + cùng hãng (khác giới tính)
             var spCungTen = await _context.SanPhams
                 .Where(s => s.TenSanPham == sp.TenSanPham
                          && s.ThuongHieuId == sp.ThuongHieuId
@@ -166,7 +161,6 @@ namespace WebDongHoLG.Controllers
                             .ToList()
                     }).ToList(),
 
-                // Danh sách giới tính
                 CacDoiTuong = spCungTen.Select(s => new DoiTuongVM
                 {
                     MaSp = s.MaSp,
@@ -197,6 +191,38 @@ namespace WebDongHoLG.Controllers
         public async Task<IActionResult> Search(string keyword)
         {
             return RedirectToAction(nameof(Index), new { keyword });
+        }
+
+
+        [HttpGet]
+        public async Task<IActionResult> GetBienTheChonNhanh(int maSp)
+        {
+            var sp = await _context.SanPhams
+                .Include(s => s.ThuongHieuNavigation)
+                .Include(s => s.BienTheSanPhams)
+                    .ThenInclude(bt => bt.Khos)
+                .FirstOrDefaultAsync(s => s.MaSp == maSp);
+
+            if (sp == null) return NotFound();
+
+            var result = new
+            {
+                tenSp = sp.TenSanPham,
+                tenThuongHieu = sp.ThuongHieuNavigation?.TenThuongHieu,
+                bienThes = sp.BienTheSanPhams.Where(bt => bt.IsActive == true).Select(bt => new
+                {
+                    maBienThe = bt.MaBienThe,
+                    mauSac = bt.MauSac,
+                    duongKinhMat = bt.DuongKinhMat,
+                    chatLieuDay = bt.ChatLieuDay,
+                    giaBan = bt.GiaBan,
+                    imageUrl = bt.ImageUrl,
+                    soLuongTon = bt.Khos.Sum(k => k.SoLuongTon ?? 0),
+                    maSku = bt.MaSku
+                }).ToList()
+            };
+
+            return Json(result);
         }
     }
 }

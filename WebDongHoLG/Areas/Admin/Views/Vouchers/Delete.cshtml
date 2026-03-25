@@ -1,0 +1,59 @@
+﻿@model WebDongHoLG.Data.Voucher
+
+@{
+    ViewData["Title"] = "Xóa Voucher";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-danger">
+                <i class="ti ti-trash me-2"></i>Xác nhận xóa Voucher
+            </h2>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0">
+            <div class="card-status-top bg-danger"></div>
+            <div class="card-body py-4">
+                <div class="text-center mb-3">
+                    <div class="avatar avatar-xl bg-danger-lt mb-2">
+                        <i class="ti ti-alert-triangle" style="font-size: 2rem;"></i>
+                    </div>
+                    <h3>Bạn có chắc chắn muốn xóa mã này?</h3>
+                    <p class="text-muted small">Hành động này không thể hoàn tác sau khi thực hiện.</p>
+                </div>
+
+                <div class="list-group list-group-flush border-top border-bottom mb-4">
+                    <div class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Tên Voucher:</span>
+                        <strong class="text-uppercase text-primary">@Model.TenVoucher</strong>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Mức giảm:</span>
+                        <strong class="text-danger">@((Model.PhanTramGiam * 100).ToString("N0"))%</strong>
+                    </div>
+                    <div class="list-group-item d-flex justify-content-between">
+                        <span class="text-muted">Đã sử dụng:</span>
+                        <strong>@Model.DaDung / @Model.SoLuong lượt</strong>
+                    </div>
+                </div>
+
+                <form asp-action="Delete">
+                    <input type="hidden" asp-for="MaVoucher" />
+                    <div class="d-flex gap-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary w-100">
+                            Hủy bỏ
+                        </a>
+                        <button type="submit" class="btn btn-danger w-100">
+                            <i class="ti ti-trash me-1"></i> Đồng ý xóa
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

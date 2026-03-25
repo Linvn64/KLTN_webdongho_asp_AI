@@ -1,0 +1,136 @@
+﻿@model IEnumerable<WebDongHoLG.Data.Voucher>
+@{
+    ViewData["Title"] = "Quản lý Mã giảm giá";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-primary">
+                <i class="ti ti-ticket me-2"></i>Quản lý Voucher
+            </h2>
+            <div class="text-secondary mt-1">Danh sách các chương trình khuyến mãi hiện có</div>
+        </div>
+        <div class="col-auto ms-auto">
+            <a asp-action="Create" class="btn btn-primary shadow-sm">
+                <i class="ti ti-plus me-2"></i> Thêm mã mới
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3 border-0 shadow-sm">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-2">
+            <div class="col-md-10">
+                <div class="input-icon">
+                    <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+                    <input type="text" name="searchString" class="form-control" placeholder="Tìm tên mã Voucher...">
+                </div>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-outline-primary w-100">
+                    <i class="ti ti-filter me-1"></i> Lọc
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+@* SỬA LẠI DÒNG ID DƯỚI ĐÂY CHO ĐÚNG *@
+<div class="card shadow-sm border-0" id="js-list">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-hover card-table">
+            <thead>
+                <tr>
+                    <th><button class="table-sort sort" data-sort="sort-name">Mã Voucher</button></th>
+                    <th class="text-center"><button class="table-sort sort" data-sort="sort-percent">Mức giảm</button></th>
+                    <th class="text-center"><button class="table-sort sort" data-sort="sort-min">Đơn tối thiểu</button></th>
+                    <th><button class="table-sort sort" data-sort="sort-date">Thời hạn</button></th>
+                    <th class="text-center">Sử dụng</th>
+                    <th class="text-center">Trạng thái</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody class="list">
+                @if (Model.Any())
+                {
+                    @foreach (var item in Model)
+                    {
+                        var isExpired = item.NgayKetThuc < DateTime.Now;
+                        var isFull = (item.DaDung ?? 0) >= (item.SoLuong ?? 0) && (item.SoLuong > 0);
+
+                        <tr>
+                            <td class="sort-name">
+                                <div class="fw-bold text-primary text-uppercase">@item.TenVoucher</div>
+                                <div class="text-muted small">ID: #@item.MaVoucher</div>
+                            </td>
+
+                            <td class="text-center sort-percent" data-value="@(item.PhanTramGiam * 100)">
+                                <span class="badge bg-red-lt fw-bold" style="font-size: 13px;">
+                                    @((item.PhanTramGiam * 100).ToString("N0"))%
+                                </span>
+                            </td>
+
+                            <td class="text-center sort-min" data-value="@item.GiaTriToiThieu">
+                                <div class="fw-bold text-primary">
+                                    @item.GiaTriToiThieu.ToString("N0") <small class="text-muted">đ</small>
+                                </div>
+                            </td>
+
+                            <td class="sort-date" data-value="@item.NgayKetThuc.ToString("yyyyMMddHHmm")">
+                                <div class="small">Từ: @item.NgayBatDau.ToString("dd/MM/yyyy")</div>
+                                <div class="small @(isExpired ? "text-danger fw-bold" : "text-muted")">
+                                    Đến: @item.NgayKetThuc.ToString("dd/MM/yyyy")
+                                </div>
+                            </td>
+
+                            <td class="text-center">@item.DaDung / @item.SoLuong</td>
+
+                            <td class="text-center">
+                                @if (item.IsActive == true && !isExpired && !isFull)
+                                {
+                                    <span class="status status-green">
+                                        <span class="status-dot status-dot-animated"></span> Đang chạy
+                                    </span>
+                                }
+                                else if (isExpired)
+                                {
+                                    <span class="status status-red">
+                                        <span class="status-dot"></span> Hết hạn
+                                    </span>
+                                }
+                                else if (isFull)
+                                {
+                                    <span class="status status-orange">
+                                        <span class="status-dot"></span> Hết lượt
+                                    </span>
+                                }
+                                else
+                                {
+                                    <span class="status status-yellow">
+                                        <span class="status-dot"></span> Đã tắt
+                                    </span>
+                                }
+                            </td>
+
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a asp-action="Edit" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-warning">
+                                        <i class="ti ti-edit"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-info">
+                                        <i class="ti ti-eye"></i>
+                                    </a>
+                                    <a asp-action="ToggleStatus" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-danger">
+                                        <i class="ti @(item.IsActive == true ? "ti-power" : "ti-circle-check")"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

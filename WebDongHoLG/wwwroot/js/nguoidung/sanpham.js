@@ -47,17 +47,4 @@
             if (val > 1) document.getElementById("txtSoLuong").value = val - 1;
         });
 
-    function themVaoGio() {
-            const maBienThe = document.getElementById("maBienTheChon").value;
-    const qty = document.getElementById("txtSoLuong").value;
-    if (!maBienThe) {alert("Vui lòng chọn biến thể!"); return; }
-    window.location.href = `/GioHangs/AddToCart?id=${maBienThe}&quantity=${qty}`;
-        }
-
-    function muaNgay() {
-            const maBienThe = document.getElementById("maBienTheChon").value;
-    const qty = document.getElementById("txtSoLuong").value;
-    if (!maBienThe) {alert("Vui lòng chọn biến thể!"); return; }
-    window.location.href = `/GioHangs/Checkout?selectedIds=${maBienThe}&qty=${qty}&isBuyNow=true`;
-        }
-
+ 

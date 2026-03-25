@@ -251,7 +251,7 @@ namespace WebDongHoLG.Migrations
                         .HasColumnType("nvarchar(500)")
                         .HasColumnName("imageUrl");
 
-                    b.Property<bool?>("IsActive")
+                    b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("bit")
                         .HasDefaultValue(true)
@@ -728,6 +728,11 @@ namespace WebDongHoLG.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasDefaultValue(0);
+
+                    b.Property<decimal>("GiaTriToiThieu")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("decimal(18, 2)")
+                        .HasDefaultValue(0m);
 
                     b.Property<bool?>("IsActive")
                         .ValueGeneratedOnAdd()

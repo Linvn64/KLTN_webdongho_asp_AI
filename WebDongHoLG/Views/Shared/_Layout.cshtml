@@ -26,10 +26,6 @@
     <!-- Template Stylesheet -->
     <link href="~/home/css/style.css" rel="stylesheet">
 
-
-
-
-
     <style>
 
         .user-dropdown .dropdown-menu {
@@ -43,6 +39,30 @@
         .user-dropdown:hover .dropdown-menu {
             display: block;
         }
+
+        @@keyframes slideIn {
+            from {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        @@keyframes slideOut {
+            from {
+                transform: translateX(0);
+                opacity: 1;
+            }
+
+            to {
+                transform: translateX(120%);
+                opacity: 0;
+            }
+        }
     </style>
     @RenderSection("Styles", required: false)
 
@@ -50,6 +70,20 @@
 
 <body>
 
+    @await Html.PartialAsync("_ThemNhanhSanPham")
+
+    @if (TempData["ToastSuccess"] != null)
+    {
+        <input type="hidden" id="_toastSuccess" value="@TempData["ToastSuccess"]" />
+    }
+    @if (TempData["ToastError"] != null)
+    {
+        <input type="hidden" id="_toastError" value="@TempData["ToastError"]" />
+    }
+    @if (TempData["ToastWarning"] != null)
+    {
+        <input type="hidden" id="_toastWarning" value="@TempData["ToastWarning"]" />
+    }
     <!-- Spinner Start -->
     <div id="spinner" class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
         <div class="spinner-grow text-primary" role="status"></div>
@@ -150,9 +184,7 @@
     <script src="~/home/lib/lightbox/js/lightbox.min.js"></script>
     <script src="~/home/lib/owlcarousel/owl.carousel.min.js"></script>
     <script src="~/home/js/main.js"></script>
-
     <script src="~/js/site.js" asp-append-version="true"></script>
-    @RenderSection("Scripts", required: false)
     <script>
         $(document).ready(function () {
 
@@ -164,5 +196,14 @@
             });
         });
     </script>
+
+    <div id="toastContainer" style="position:fixed; top:20px; right:20px; z-index:9999; min-width:320px;">
+    </div>
+    <script src="~/js/layout.js" asp-append-version="true"></script>
+    <script src="~/js/nguoidung/themnhanhsanpham.js" asp-append-version="true"></script>
+   
+
+
+    @RenderSection("Scripts", required: false)
 </body>
 </html>

@@ -288,3 +288,4 @@ C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\runtimes\w
 C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\runtimes\win-x64\native\e_sqlite3.dll
 C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\runtimes\win-x86\native\e_sqlite3.dll
 C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\bundleconfig.json
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\RestSharp.dll

@@ -1,0 +1,84 @@
+﻿@model WebDongHoLG.Models.DonHang
+@{
+    ViewData["Title"] = "Chọn phương thức thanh toán";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6">
+            <div class="text-center mb-4">
+                <i class="fas fa-clock fa-4x text-warning mb-3"></i>
+                <h3 class="fw-bold">Đơn hàng chờ thanh toán</h3>
+                <p class="text-muted">Mã đơn: <strong>#@Model.MaDonHang</strong></p>
+                <h4 class="text-danger fw-bold">@Model.TongTien?.ToString("#,##0") ₫</h4>
+            </div>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="fw-bold mb-3">Sản phẩm</h5>
+                    @foreach (var ct in Model.ChiTietDonHangs)
+                    {
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>
+                                @ct.MaBienTheNavigation.MaSpNavigation.TenSanPham
+                                <span class="text-muted">x@ct.SoLuong</span>
+                            </span>
+                            <span class="text-danger fw-bold">
+                                @((ct.DonGiaTaiThoiDiem * ct.SoLuong)?.ToString("#,##0")) ₫
+                            </span>
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <form asp-controller="Checkout" asp-action="RetryPayment" method="post">
+                <input type="hidden" name="maDonHang" value="@Model.MaDonHang" />
+
+                <div class="card shadow-sm mb-4">
+                    <div class="card-body">
+                        <h5 class="fw-bold mb-3">
+                            <i class="fas fa-credit-card me-2 text-primary"></i>
+                            Chọn phương thức thanh toán
+                        </h5>
+                        <div class="form-check mb-3 p-3 border rounded">
+                            <input class="form-check-input" type="radio" name="CachThanhToan"
+                                   id="payCOD" value="COD" checked>
+                            <label class="form-check-label" for="payCOD">
+                                <i class="fas fa-truck me-2 text-success"></i>
+                                <strong>Thanh toán khi nhận hàng (COD)</strong>
+                                <div class="text-muted small mt-1">Miễn phí, thanh toán khi nhận hàng</div>
+                            </label>
+                        </div>
+                        <div class="form-check mb-3 p-3 border rounded">
+                            <input class="form-check-input" type="radio" name="CachThanhToan"
+                                   id="payVNPAY" value="VNPAY">
+                            <label class="form-check-label" for="payVNPAY">
+                                <i class="fas fa-credit-card me-2 text-primary"></i>
+                                <strong>Thanh toán qua VNPay</strong>
+                                <div class="text-muted small mt-1">ATM, Visa, QR Code</div>
+                            </label>
+                        </div>
+                        <div class="form-check mb-3 p-3 border rounded">
+                            <input class="form-check-input" type="radio" name="CachThanhToan"
+                                   id="payMomo" value="MOMO">
+                            <label class="form-check-label" for="payMomo">
+                                <i class="fas fa-wallet me-2" style="color: #ae2070;"></i>
+                                <strong>Thanh toán qua Ví MoMo</strong>
+                                <div class="text-muted small mt-1">Thanh toán nhanh chóng qua ứng dụng MoMo</div>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn w-100 py-3 fw-bold text-white"
+                        style="background-color:#ee4d2d;">
+                    <i class="fas fa-lock me-2"></i>Xác nhận thanh toán
+                </button>
+                <a asp-controller="Home" asp-action="Index"
+                   class="btn btn-outline-secondary w-100 mt-2 py-2">
+                    Về trang chủ
+                </a>
+            </form>
+        </div>
+    </div>
+</div>

@@ -487,6 +487,9 @@ public partial class ShopDongHoDbContext : IdentityDbContext<IdentityUser, Ident
             entity.Property(e => e.NgayKetThuc).HasColumnType("datetime");
             entity.Property(e => e.SoLuong).HasDefaultValue(0);
             entity.Property(e => e.TenVoucher).HasMaxLength(100);
+            entity.Property(e => e.GiaTriToiThieu)
+                                  .HasColumnType("decimal(18, 2)") 
+                                  .HasDefaultValue(0);
         });
 
         modelBuilder.Entity<ThuongHieu>(entity =>
