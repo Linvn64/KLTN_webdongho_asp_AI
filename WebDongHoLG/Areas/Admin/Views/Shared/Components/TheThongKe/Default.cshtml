@@ -1,0 +1,68 @@
+﻿@model WebDongHoLG.Areas.Admin.ViewModels.TheThongKeVM
+
+<div class="row row-cards">
+    @* Thẻ Doanh Thu *@
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-primary text-white avatar"><i class="ti ti-currency-dollar"></i></span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium">@Model.TongDoanhThu.ToString("N0") ₫</div>
+                        <div class="text-secondary">Tổng doanh thu</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* Thẻ Đơn Hàng *@
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-green text-white avatar"><i class="ti ti-shopping-cart"></i></span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium">@Model.TongDonHang</div>
+                        <div class="text-secondary">Đơn hàng</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* Thẻ Sản Phẩm *@
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-twitter text-white avatar"><i class="ti ti-package"></i></span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium">@Model.TongSanPham</div>
+                        <div class="text-secondary">Sản phẩm</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    @* Thẻ Khách Hàng *@
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-facebook text-white avatar"><i class="ti ti-users"></i></span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium">@Model.TongKhachHang</div>
+                        <div class="text-secondary">Khách hàng</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

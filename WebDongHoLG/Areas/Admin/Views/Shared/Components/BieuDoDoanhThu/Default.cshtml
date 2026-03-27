@@ -1,0 +1,64 @@
+﻿<div class="card">
+    <div class="card-body">
+        <h3 class="card-title">Xu hướng doanh thu (7 ngày qua)</h3>
+        <div id="bieu-do-doanh-thu" style="min-height: 250px;"></div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        if (window.ApexCharts) {
+            new ApexCharts(document.getElementById('bieu-do-doanh-thu'), {
+                chart: {
+                    type: "area",
+                    height: 250,
+                    toolbar: { show: false },
+                    fontFamily: 'inherit', // Thừa hưởng font từ Tabler
+                    parentHeightOffset: 0,
+                    animations: { enabled: true }
+                },
+                // Cấu hình để Tooltip hiển thị đẹp trên cả nền sáng/tối
+                theme: {
+                    mode: document.body.getAttribute('data-bs-theme') === 'dark' ? 'dark' : 'light'
+                },
+                dataLabels: { enabled: false },
+                fill: { opacity: .16, type: 'solid' },
+                stroke: { width: 2, lineCap: "round", curve: "smooth" },
+                series: [{
+                    name: "Doanh thu",
+                    data: @Html.Raw(Json.Serialize(Model.SoLieu))
+                }],
+                grid: {
+                    padding: { top: -20, right: 0, left: -4, bottom: -4 },
+                    strokeDashArray: 4,
+                },
+                xaxis: {
+                    labels: { padding: 0 },
+                    tooltip: { enabled: false },
+                    axisBorder: { show: false },
+                    categories: @Html.Raw(Json.Serialize(Model.NgayThang)),
+                },
+                yaxis: {
+                    labels: {
+                        padding: 4,
+                        // Fix lỗi số quá dài: Chuyển 10,000,000 thành 10M hoặc 10Tr
+                        formatter: function (value) {
+                            if (value >= 1000000) return (value / 1000000).toFixed(1) + 'Tr';
+                            return value.toLocaleString('vi-VN');
+                        }
+                    },
+                },
+                colors: ["#206bc4"],
+                // Fix lỗi Tooltip bị trắng xóa khó nhìn
+                tooltip: {
+                    theme: 'dark',
+                    y: {
+                        formatter: function (val) {
+                            return val.toLocaleString('vi-VN') + " ₫";
+                        }
+                    }
+                }
+            }).render();
+        }
+    });
+</script>

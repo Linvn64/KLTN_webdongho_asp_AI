@@ -146,6 +146,12 @@
                                         </a>
                                     </li>
 
+                                    <li class="nav-item @(currentController == "BaoCao" ? "active" : "")">
+                                        <a class="nav-link" asp-area="Admin" asp-controller="BaoCao" asp-action="TaiChinh">
+                                            <span class="nav-link-icon"><i class="ti ti-home"></i></span>
+                                            <span class="nav-link-title">Báo cáo tài chính</span>
+                                        </a>
+                                    </li>
                                     @* --- SẢN PHẨM --- *@
                                     @if (User.IsInRole("Admin") || User.HasClaim("MenuAccess", "SanPham"))
                                     {
@@ -157,7 +163,6 @@
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" href="/Admin/SanPhams">Danh sách đồng hồ</a>
                                                 <a class="dropdown-item" asp-controller="BienTheSanPhams">Biến thể sản phẩm</a>
-                                                <a class="dropdown-item" href="/Admin/Brands">Thương hiệu</a>
                                             </div>
                                         </li>
                                     }
@@ -186,8 +191,7 @@
                                                 <span class="nav-link-title">Kinh doanh</span>
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="/Admin/Orders">Quản lý đơn hàng</a>
-                                                <a class="dropdown-item" href="/Admin/Shipping">Vận đơn & Giao hàng</a>
+                                                <a class="dropdown-item" href="/Admin/QuanLyDonhang">Quản lý đơn hàng</a>
                                                 <a class="dropdown-item" href="/Admin/Vouchers">Voucher</a>
                                             </div>
                                         </li>
@@ -206,11 +210,12 @@
                                                 {
                                                     <a class="dropdown-item" href="/Admin/NguoiDungs">Danh sách khách hàng</a>
                                                 }
-                                                <a class="dropdown-item" href="/Admin/Reviews">Phản hồi & Đánh giá</a>
+                                                <a class="dropdown-item" href="/Admin/QuanLyDanhGia">Phản hồi & Đánh giá</a>
                                             </div>
                                         </li>
                                     }
-
+                                    
+                                    
                                     @* --- AI --- *@
                                     @if (User.IsInRole("Admin") || User.HasClaim("MenuAccess", "AI"))
                                     {
@@ -221,6 +226,7 @@
                                             </a>
                                         </li>
                                     }
+
                                 </ul>
                             </div>
 

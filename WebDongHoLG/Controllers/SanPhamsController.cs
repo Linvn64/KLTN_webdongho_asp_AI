@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebDongHoLG.Data;
 using WebDongHoLG.ViewModels;
@@ -9,11 +10,14 @@ namespace WebDongHoLG.Controllers
     {
         private readonly ShopDongHoDbContext _context;
         private const int PAGE_SIZE = 9;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public SanPhamsController(ShopDongHoDbContext context)
+        public SanPhamsController(ShopDongHoDbContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
+        
 
         public async Task<IActionResult> Index(int? danhmuc, int? thuonghieu,
      string? keyword, string? doiTuong, string? sapXep, int page = 1)
@@ -114,6 +118,8 @@ namespace WebDongHoLG.Controllers
                     .ThenInclude(bt => bt.Khos)
                 .Include(s => s.DanhGia)
                     .ThenInclude(dg => dg.MaNguoiDungNavigation)
+                .Include(s => s.DanhGia)
+                    .ThenInclude(dg => dg.MaBienTheNavigation)
                 .FirstOrDefaultAsync(s => s.MaSp == id);
 
             if (sp == null) return NotFound();
@@ -135,14 +141,19 @@ namespace WebDongHoLG.Controllers
                 DoiTuong = sp.DoiTuong,
                 SoSaoTrungBinh = sp.DanhGia.Any() ? sp.DanhGia.Average(dg => dg.SoSao ?? 0) : 0,
                 SoDanhGia = sp.DanhGia.Count,
-                DanhGias = sp.DanhGia.OrderByDescending(dg => dg.NgayDanhGia).Take(5)
+
+                DanhGias = sp.DanhGia.OrderByDescending(dg => dg.NgayDanhGia)
                     .Select(dg => new DanhGiaVM
                     {
-                        TenNguoiDung = dg.MaNguoiDungNavigation?.HoTen ?? "Ẩn danh",
-                        SoSao = dg.SoSao ?? 0,
+                        TenNguoiDung = dg.MaNguoiDungNavigation?.HoTen ?? "Người dùng",
+                        SoSao = dg.SoSao ?? 5,
                         NoiDung = dg.NoiDung,
-                        NgayDanhGia = dg.NgayDanhGia ?? DateTime.Now
+                        NgayDanhGia = dg.NgayDanhGia ?? DateTime.Now,
+                        TenBienThe = dg.MaBienTheNavigation != null
+                            ? $"{dg.MaBienTheNavigation.MauSac} - {dg.MaBienTheNavigation.DuongKinhMat}mm"
+                            : ""
                     }).ToList(),
+
                 BienThes = sp.BienTheSanPhams.Where(bt => bt.IsActive == true)
                     .Select(bt => new BienTheVM
                     {
@@ -185,6 +196,35 @@ namespace WebDongHoLG.Controllers
                     TenDanhMuc = s.IdDanhMucNavigation.TenDanhMuc
                 })
                 .ToListAsync();
+
+            var userId = _userManager.GetUserId(User);
+            var nguoiDung = userId != null
+                ? await _context.NguoiDungs.FirstOrDefaultAsync(u => u.UserId == userId)
+                : null;
+
+            if (nguoiDung != null)
+            {
+                bool daMua = await _context.DonHangs
+                    .Where(d => d.MaNguoiDung == nguoiDung.MaNguoiDung && d.TrangThai.Contains("Hoàn thành"))
+                    .SelectMany(d => d.ChiTietDonHangs)
+                    .AnyAsync(ct => ct.MaBienTheNavigation.MaSp == id);
+
+                bool daDanhGia = await _context.DanhGia
+                    .AnyAsync(dg => dg.MaNguoiDung == nguoiDung.MaNguoiDung && dg.MaSp == id);
+
+                ViewBag.CoTheDanhGia = daMua && !daDanhGia;
+                ViewBag.DaDanhGia = daDanhGia;
+
+                var donHangHoanThanh = await _context.DonHangs
+                    .Include(d => d.ChiTietDonHangs)
+                        .ThenInclude(ct => ct.MaBienTheNavigation)
+                    .Where(d => d.MaNguoiDung == nguoiDung.MaNguoiDung && d.TrangThai.Contains("Hoàn thành"))
+                    .OrderByDescending(d => d.NgayDat)
+                    .FirstOrDefaultAsync(d => d.ChiTietDonHangs
+                        .Any(ct => ct.MaBienTheNavigation.MaSp == id));
+
+                ViewBag.MaDonHangHoanThanh = donHangHoanThanh?.MaDonHang;
+            }
 
             return View(vm);
         }

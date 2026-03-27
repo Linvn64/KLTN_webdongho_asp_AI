@@ -204,6 +204,15 @@ namespace WebDongHoLG.Controllers
             }
             await _context.SaveChangesAsync();
 
+            var tt = new ThanhToan
+            {
+                MaDonHang = donHang.MaDonHang,
+                PhuongThuc = CachThanhToan,
+                ThoiGianThanhToan = DateTime.Now,
+                TrangThai = CachThanhToan == "COD" ? "Chờ thu tiền" : "Chờ thanh toán"
+            };
+            _context.ThanhToans.Add(tt);
+            await _context.SaveChangesAsync();
 
             // Phân nhánh theo phương thức thanh toán
             if (CachThanhToan == "VNPAY")

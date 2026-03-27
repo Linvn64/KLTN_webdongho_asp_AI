@@ -31,6 +31,8 @@ namespace WebDongHoLG.ViewModels
         public int SoSao { get; set; }
         public string? NoiDung { get; set; }
         public DateTime NgayDanhGia { get; set; }
+        public string? TenBienThe { get; set; }
+
     }
 
 }

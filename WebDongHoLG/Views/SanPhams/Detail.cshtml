@@ -5,132 +5,12 @@
     var dsMau = Model.BienThes.Select(bt => bt.MauSac).Distinct().ToList();
     var dsSize = Model.BienThes.Select(bt => bt.DuongKinhMat).Where(s => s.HasValue).Select(s => s.Value).Distinct().OrderBy(s => s).ToList();
     var dsDayDeo = Model.BienThes.Select(bt => bt.ChatLieuDay).Where(s => !string.IsNullOrEmpty(s)).Distinct().ToList();
+    var maSp = Model.MaSp;
 }
 
-<style>
-    /* Gallery & Thumbnails */
-    .main-img-container {
-        aspect-ratio: 1/1;
-        position: relative;
-        border: 1px solid #eee;
-        overflow: hidden;
-        cursor: zoom-in;
-        background: #fff;
-    }
-
-    #imgChinh {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        transition: opacity 0.2s ease;
-    }
-
-    .thumb-track-container {
-        position: relative;
-        margin: 10px 35px;
-        overflow: hidden;
-    }
-
-    #thumbInner {
-        display: flex;
-        gap: 8px;
-        transition: transform 0.3s ease;
-    }
-
-    .thumb-item {
-        width: 72px;
-        height: 72px;
-        flex-shrink: 0;
-        cursor: pointer;
-        border: 2px solid transparent;
-        border-radius: 2px;
-        overflow: hidden;
-    }
-
-        .thumb-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .thumb-item.active {
-            border-color: #ee4d2d !important;
-        }
-
-    .nav-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: #fff;
-        border: 1px solid #ddd;
-        z-index: 5;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-        .nav-btn:hover {
-            color: #ee4d2d;
-        }
-
-        .nav-btn.prev {
-            left: 0;
-        }
-
-        .nav-btn.next {
-            right: 0;
-        }
-
-    /* Modal */
-    .modal-content.bg-dark-custom {
-        background-color: rgba(0,0,0,0.9);
-    }
-
-    .btn-nav-modal {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 3rem;
-        opacity: 0.6;
-        transition: 0.3s;
-    }
-
-        .btn-nav-modal:hover {
-            opacity: 1;
-            color: #ee4d2d;
-        }
-</style>
-<style>
-    .zoom-wrapper {
-        width: 500px; 
-        height: 500px; 
-        background: #fff; 
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: auto;
-        border-radius: 8px; 
-        overflow: hidden;
-        box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
-    }
-
-    #imgPhongTo {
-        width: 100%; 
-        height: 100%; 
-        object-fit: contain; 
-        padding: 15px; 
-    }
-
-    #modalPhongTo .modal-content {
-        background: transparent !important;
-        border: none !important;
-    }
-</style>
+@section Styles {
+    <link rel="stylesheet" href="~/css/sanphamdetail.css" asp-append-version="true" />
+}
 <div class="container-fluid page-header py-5">
     <h1 class="text-center text-white display-6">Chi tiết sản phẩm</h1>
     <ol class="breadcrumb justify-content-center mb-0">
@@ -285,26 +165,15 @@
                 </nav>
                 <div class="tab-content border rounded p-4 bg-white">
                     <div class="tab-pane active" id="nav-thongso">
-                        <table class="table table-sm mb-0">
-                            <tr><th style="width:150px">Thương hiệu</th><td>@Model.TenThuongHieu</td></tr>
-                            <tr><th>Màu sắc</th><td id="tab-mau">@bienTheHienTai?.MauSac</td></tr>
-                            <tr><th>Dây đeo</th><td id="tab-day">@bienTheHienTai?.ChatLieuDay</td></tr>
-                            <tr><th>Kích thước</th><td id="tab-size">@bienTheHienTai?.DuongKinhMat mm</td></tr>
-                        </table>
+                        <partial name="_ThongSoPartial" model="Model" />
                     </div>
-                    <div class="tab-pane" id="nav-mota">@Html.Raw(Model.MoTa)</div>
+
+                    <div class="tab-pane" id="nav-mota">
+                        <partial name="_MoTaPartial" model="Model.MoTa" />
+                    </div>
+
                     <div class="tab-pane" id="nav-danhgia">
-                        @foreach (var dg in Model.DanhGias)
-                        {
-                            <div class="border-bottom mb-3 pb-2">
-                                <div class="d-flex justify-content-between"><strong>@dg.TenNguoiDung</strong><small>@dg.NgayDanhGia.ToShortDateString()</small></div>
-                                <div class="text-warning">@for(int i=0; i<dg.SoSao; i++){
-                                <i class="fa fa-star"></i>
-                            }
-</div>
-                            <p>@dg.NoiDung</p>
-                        </div>
-                                                }
+                        <partial name="_DanhGiaPartial" model="Model" />
                     </div>
                 </div>
             </div>

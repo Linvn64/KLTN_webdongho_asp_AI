@@ -1,0 +1,29 @@
+﻿@model dynamic
+
+<div class="card h-100">
+    <div class="card-header">
+        <h3 class="card-title fw-bold text-orange">
+            <i class="ti ti-trophy me-1"></i> Top sản phẩm bán chạy
+        </h3>
+    </div>
+    <div class="card-table table-responsive">
+        <table class="table table-vcenter">
+            <tbody>
+                @foreach (var sp in Model)
+                {
+                    <tr>
+                        <td class="w-1">
+                            <span class="avatar avatar-sm" style="background-image: url(@sp.AnhSP)"></span>
+                        </td>
+                        <td class="td-truncate">
+                            <div class="text-reset d-block text-truncate" style="max-width: 150px;">@sp.TenSP</div>
+                        </td>
+                        <td class="text-nowrap text-secondary">
+                            <span class="badge bg-orange-lt">@sp.SoLuongBan đã bán</span>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

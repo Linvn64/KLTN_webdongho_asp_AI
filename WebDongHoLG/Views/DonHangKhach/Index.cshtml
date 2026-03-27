@@ -2,6 +2,7 @@
 @{
     ViewData["Title"] = "Lịch sử đơn hàng";
     var currentStatus = (ViewBag.CurrentStatus as string ?? "").Trim();
+    var daDanhGiaList = ViewBag.DanhSachDaDanhGia as List<string> ?? new List<string>();
 }
 
 @section Styles {
@@ -63,6 +64,7 @@
             font-weight: 500;
             text-decoration: none;
             display: inline-block;
+            cursor: pointer;
         }
 
             .btn-shopee:hover {
@@ -88,15 +90,18 @@
 }
 
 <div class="container py-4">
+    @* --- Tab trạng thái --- *@
     <div class="shopee-tabs mb-3">
         <a href="/DonHangKhach/Index" class="shopee-tab-item @(string.IsNullOrEmpty(currentStatus) ? "active" : "")">Tất cả</a>
         <a href="/DonHangKhach/Index?status=Chờ thanh toán" class="shopee-tab-item @(currentStatus == "Chờ thanh toán" ? "active" : "")">Chờ thanh toán</a>
+        <a href="/DonHangKhach/Index?status=Chờ xác nhận" class="shopee-tab-item @(currentStatus == "Chờ xác nhận" ? "active" : "")">Chờ xác nhận</a>
         <a href="/DonHangKhach/Index?status=Chờ xử lý" class="shopee-tab-item @(currentStatus == "Chờ xử lý" ? "active" : "")">Chờ xử lý</a>
         <a href="/DonHangKhach/Index?status=Đang giao hàng" class="shopee-tab-item @(currentStatus == "Đang giao hàng" ? "active" : "")">Đang giao hàng</a>
         <a href="/DonHangKhach/Index?status=Hoàn thành" class="shopee-tab-item @(currentStatus == "Hoàn thành" ? "active" : "")">Hoàn thành</a>
         <a href="/DonHangKhach/Index?status=Đã hủy" class="shopee-tab-item @(currentStatus == "Đã hủy" ? "active" : "")">Đã hủy</a>
     </div>
 
+    @* --- Thanh tìm kiếm --- *@
     <form method="get" action="/DonHangKhach/Index" class="bg-white p-2 mb-3 rounded d-flex align-items-center shadow-sm" style="border: 1px solid #e1e1e1;">
         <input type="hidden" name="status" value="@currentStatus" />
         <i class="fas fa-search text-muted ms-2 me-2"></i>
@@ -114,17 +119,17 @@
     {
         foreach (var don in Model)
         {
-            // Làm sạch trạng thái trước khi so sánh
             var trangThai = (don.TrangThai ?? "").Trim();
 
             <div class="order-card p-4 mb-3">
                 <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
                     <div>
-                        <span class="badge bg-danger me-2">Mall</span>
+                        <span class="badge bg-danger me-2 text-white px-2 py-1">Mall</span>
                         <span class="fw-bold text-dark">Mã đơn: #@don.MaDonHang</span>
                     </div>
-                    <div class="text-danger fw-bold text-uppercase d-flex align-items-center" style="font-size: 14px;">
-                        <i class="fas fa-truck me-2"></i> @trangThai
+                    <div class="text-danger fw-bold text-uppercase d-flex align-items-center">
+                        <i class="fas fa-truck me-2"></i>
+                        @trangThai
                     </div>
                 </div>
 
@@ -137,7 +142,7 @@
                             <div class="text-muted" style="font-size: 13px;">
                                 Phân loại: @ct.MaBienTheNavigation?.MauSac, @ct.MaBienTheNavigation?.DuongKinhMat mm
                             </div>
-                            <div class="mt-1">x@(ct.SoLuong)</div>
+                            <div class="mt-1 text-secondary">x@(ct.SoLuong)</div>
                         </div>
                         <div class="text-end text-danger fw-bold">
                             @((ct.DonGiaTaiThoiDiem ?? 0).ToString("#,##0"))₫
@@ -151,42 +156,101 @@
                         <span class="text-danger fw-bold" style="font-size: 22px;">@((don.TongTien ?? 0).ToString("#,##0"))₫</span>
                     </div>
 
-                    <div class="d-flex justify-content-end gap-2">
-                        @if (trangThai == "Chờ thanh toán")
-                        {
-                            var thoiGianHetHan = don.NgayDat.Value.AddMinutes(15);
-                            var soGiayConLai = (thoiGianHetHan - DateTime.Now).TotalSeconds;
-
-                            if (soGiayConLai > 0)
+                    <div class="d-flex justify-content-end gap-2 align-items-center">
+                        <div class="d-flex justify-content-end gap-2 align-items-center">
+                            @if (trangThai == "Chờ thanh toán")
                             {
-                                <div class="text-warning small mt-1">
-                                    <i class="far fa-clock"></i> Thanh toán trong:
-                                    <b class="countdown text-danger" data-seconds="@soGiayConLai">--:--</b>
+                                var thoiGianHetHan = don.NgayDat.Value.AddMinutes(15);
+                                var soGiayConLai = (thoiGianHetHan - DateTime.Now).TotalSeconds;
+                                if (soGiayConLai > 0)
+                                {
+                                    <div class="text-warning small me-2">
+                                        <i class="far fa-clock"></i> Thanh toán trong:
+                                        <b class="countdown text-danger" data-seconds="@soGiayConLai">--:--</b>
+                                    </div>
+                                }
+                                <a href="/Checkout/PaymentPending?maDonHang=@don.MaDonHang" class="btn btn-shopee">Thanh toán lại</a>
+                                <button type="button" onclick="confirmHuy(@don.MaDonHang)" class="btn btn-shopee-outline">Hủy đơn</button>
+                            }
+                            else if (trangThai == "Chờ xác nhận" || trangThai == "Chờ xử lý" || trangThai == "Đã thanh toán")
+                            {
+                                if (trangThai == "Đã thanh toán" || trangThai == "Chờ xác nhận")
+                                {
+                                    <span class="text-success small me-2 fw-bold"><i class="fas fa-check-circle"></i> Đã thanh toán</span>
+                                }
+                                <button type="button" onclick="confirmHuy(@don.MaDonHang)" class="btn btn-shopee-outline text-danger">Hủy đơn hàng</button>
+                                <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
+                            }
+                            else if (trangThai == "Đang giao hàng" || trangThai == "Đã giao hàng")
+                            {
+                                var ngayDuocPhepNhan = don.NgayDat.Value.AddDays(3);
+
+                                if (trangThai == "Đã giao hàng" || DateTime.Now >= ngayDuocPhepNhan)
+                                {
+                                    <button type="button" onclick="confirmDaNhan(@don.MaDonHang)" class="btn btn-shopee shadow-sm">
+                                        <i class="fas fa-box-open me-1"></i> Đã nhận được hàng
+                                    </button>
+                                }
+                                else
+                                {
+                                    <div class="text-start me-auto">
+                                        <span class="badge bg-warning-lt text-warning fw-bold border border-warning px-2 py-1">
+                                            <i class="fas fa-truck-moving me-1"></i> Đang vận chuyển...
+                                        </span>
+                                        <div class="small text-muted mt-1" style="font-size: 11px;">Mở nhận hàng ngày: @ngayDuocPhepNhan.ToString("dd/MM")</div>
+                                    </div>
+                                }
+                                <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
+                            }
+                            else if (trangThai == "Hoàn thành")
+                            {
+                                <div class="w-100">
+                                    @foreach (var ct in don.ChiTietDonHangs)
+                                    {
+                                        // 1. Lấy thông tin định danh duy nhất cho từng món hàng
+                                        var maSpNay = ct.MaBienTheNavigation?.MaSp ?? 0;
+                                        var maBienTheNay = ct.MaBienThe;
+                                        var maDonHangNay = don.MaDonHang;
+
+                                        // 2. Tạo Key để check: Phải có cả MaBienThe để phân biệt Vàng/Đen
+                                        // Key này phải khớp với cách Giang viết trong DonHangKhachController
+                                        var key = $"{maSpNay}_{maBienTheNay}_{maDonHangNay}";
+                                        bool daDanhGia = daDanhGiaList.Contains(key);
+
+                                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
+                                            <div class="d-flex align-items-center">
+                                                @* Hiện ảnh nhỏ của biến thể để khách không bấm nhầm *@
+                                                <img src="@(ct.MaBienTheNavigation?.ImageUrl ?? "/home/img/no-image.jpg")"
+                                                     style="width:30px; height:30px; object-fit:cover; border-radius:3px;" class="me-2">
+                                                <span class="text-dark" style="font-size:13px;">
+                                                    @ct.MaBienTheNavigation?.MaSpNavigation?.TenSanPham
+                                                    <small class="text-muted">(@ct.MaBienTheNavigation?.MauSac - @ct.MaBienTheNavigation?.DuongKinhMat mm)</small>
+                                                </span>
+                                            </div>
+
+                                            @if (daDanhGia)
+                                            {
+                                                <span class="badge bg-success-lt text-success fw-bold px-2 py-1">
+                                                    <i class="fas fa-check-circle me-1"></i> Đã đánh giá
+                                                </span>
+                                            }
+                                            else
+                                            {
+                                                @* 3. Truyền đủ 3 tham số để trang Create biết chính xác là món nào *@
+                                                <a href="/DanhGia/Create?maSp=@maSpNay&maDonHang=@maDonHangNay&maBienThe=@maBienTheNay"
+                                                   class="btn btn-shopee btn-sm">
+                                                    ⭐ Đánh giá
+                                                </a>
+                                            }
+                                        </div>
+                                    }
+                                    <div class="d-flex justify-content-end gap-2 mt-3">
+                                        <a href="/SanPhams/Detail/@don.ChiTietDonHangs.FirstOrDefault()?.MaBienTheNavigation?.MaSp" class="btn btn-shopee">Mua lại</a>
+                                        <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
+                                    </div>
                                 </div>
                             }
-                            <a href="/Checkout/PaymentPending?maDonHang=@don.MaDonHang" class="btn btn-shopee">Thanh toán lại</a>
-                            <button type="button" onclick="confirmHuy(@don.MaDonHang)" class="btn btn-shopee-outline">Hủy đơn hàng</button>
-                        }
-                        else if (trangThai == "Chờ xử lý")
-                        {
-                            <button type="button" onclick="confirmHuy(@don.MaDonHang)" class="btn btn-shopee-outline text-danger">Hủy đơn hàng</button>
-                            <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
-                        }
-                        else if (trangThai == "Đang giao hàng")
-                        {
-                            <button type="button" onclick="confirmDaNhan(@don.MaDonHang)" class="btn btn-shopee">Đã nhận được hàng</button>
-                            <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
-                        }
-                        else if (trangThai == "Hoàn thành")
-                        {
-                            var ctDauTien = don.ChiTietDonHangs.FirstOrDefault();
-                            <a href="/Home/ProductDetail/@ctDauTien?.MaBienTheNavigation?.MaSp" class="btn btn-shopee">Mua lại</a>
-                            <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
-                        }
-                        else
-                        {
-                            <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
-                        }
+                        </div>
                     </div>
                 </div>
             </div>
@@ -198,19 +262,24 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         function confirmHuy(id) {
-            console.log("Đang gọi hàm hủy cho đơn: " + id); // Kiểm tra xem nút có ăn không
             Swal.fire({
                 title: 'Xác nhận hủy đơn?',
-                text: "Bạn có chắc chắn muốn hủy đơn hàng #" + id + " không?",
+                text: "Hãy cho chúng mình biết lý do để cải thiện dịch vụ nhé",
                 icon: 'warning',
+                input: 'select',
+                inputOptions: {
+                    'Thay đổi địa chỉ': 'Thay đổi địa chỉ nhận hàng',
+                    'Đổi sản phẩm khác': 'Muốn chọn mẫu đồng hồ khác',
+                    'Tìm thấy giá rẻ hơn': 'Tìm thấy nơi khác rẻ hơn',
+                    'Không còn nhu cầu': 'Không còn nhu cầu mua nữa'
+                },
                 showCancelButton: true,
                 confirmButtonColor: '#ee4d2d',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Đồng ý hủy',
+                confirmButtonText: 'Hủy đơn ngay',
                 cancelButtonText: 'Quay lại'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    window.location.href = '/DonHangKhach/HuyDon?id=' + id;
+                    window.location.href = `/DonHangKhach/HuyDon?id=${id}&lyDo=${result.value}`;
                 }
             })
         }
@@ -218,13 +287,12 @@
         function confirmDaNhan(id) {
             Swal.fire({
                 title: 'Xác nhận đã nhận hàng',
-                text: "Bạn xác nhận đơn hàng #" + id + " đã được giao đến bạn?",
+                text: "Bạn đã kiểm tra và hài lòng với sản phẩm?",
                 icon: 'question',
                 showCancelButton: true,
                 confirmButtonColor: '#28a745',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Xác nhận',
-                cancelButtonText: 'Đóng'
+                confirmButtonText: 'Đã nhận hàng',
+                cancelButtonText: 'Chưa nhận'
             }).then((result) => {
                 if (result.isConfirmed) {
                     window.location.href = '/DonHangKhach/DaNhanHang?id=' + id;
@@ -232,39 +300,23 @@
             })
         }
 
-
-            function startCountdowns() {
-            // Tìm tất cả các thẻ có class là countdown
+        function startCountdowns() {
             const timers = document.querySelectorAll('.countdown');
-
             timers.forEach(timer => {
-                // Lấy số giây mà C# đã tính sẵn truyền vào
                 let seconds = parseInt(timer.getAttribute('data-seconds'));
-
                 const interval = setInterval(() => {
                     if (seconds <= 0) {
                         timer.innerHTML = "Hết hạn";
                         clearInterval(interval);
-                        // Có thể dùng location.reload() để trang tự tải lại và ẩn đơn này đi
                         return;
                     }
-
                     seconds--;
-
-                    // Chuyển đổi giây thành Phút:Giây
                     let m = Math.floor(seconds / 60);
                     let s = Math.floor(seconds % 60);
-
-                    // Thêm số 0 phía trước nếu chỉ có 1 chữ số (VD: 05:02)
-                    m = m < 10 ? "0" + m : m;
-                    s = s < 10 ? "0" + s : s;
-
-                    timer.innerHTML = m + ":" + s;
-                }, 1000); // Cứ 1 giây chạy lại 1 lần
+                    timer.innerHTML = (m < 10 ? "0" + m : m) + ":" + (s < 10 ? "0" + s : s);
+                }, 1000);
             });
         }
-
-        // Chạy đồng hồ ngay khi trang web tải xong
         document.addEventListener("DOMContentLoaded", startCountdowns);
     </script>
 }

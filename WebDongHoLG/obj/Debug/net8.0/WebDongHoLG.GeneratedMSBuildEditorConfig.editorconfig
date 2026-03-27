@@ -28,6 +28,10 @@ build_property._RazorSourceGeneratorDebug =
 build_property.EffectiveAnalysisLevelStyle = 8.0
 build_property.EnableCodeStyleSeverity = 
 
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/BaoCao/TaiChinh.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmFvQ2FvXFRhaUNoaW5oLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/BienTheSanPhams/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcQmllblRoZVNhblBoYW1zXENyZWF0ZS5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
@@ -100,6 +104,26 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcTmhhcEtob1xJbmRleC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/QuanLyDanhGia/Delete.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUXVhbkx5RGFuaEdpYVxEZWxldGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/QuanLyDanhGia/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUXVhbkx5RGFuaEdpYVxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/QuanLyDonHang/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUXVhbkx5RG9uSGFuZ1xEZXRhaWxzLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/QuanLyDonHang/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUXVhbkx5RG9uSGFuZ1xJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/QuanLyDonHang/PrintLabel.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcUXVhbkx5RG9uSGFuZ1xQcmludExhYmVsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/SanPhams/Create.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2FuUGhhbXNcQ3JlYXRlLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -118,6 +142,22 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/SanPhams/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2FuUGhhbXNcSW5kZXguY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/Shared/Components/BieuDoDoanhThu/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcQmlldURvRG9hbmhUaHVcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/Shared/Components/DonHangMoiNhat/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcRG9uSGFuZ01vaU5oYXRcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/Shared/Components/SanPhamBanChay/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcU2FuUGhhbUJhbkNoYXlcRGVmYXVsdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/Shared/Components/TheThongKe/Default.cshtml]
+build_metadata.AdditionalFiles.TargetPath = QXJlYXNcQWRtaW5cVmlld3NcU2hhcmVkXENvbXBvbmVudHNcVGhlVGhvbmdLZVxEZWZhdWx0LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Areas/Admin/Views/Shared/_AdminLayout.cshtml]
@@ -268,6 +308,14 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hlY2tvdXRcUGF5bWVudFBlbmRpbmcuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/DanhGia/Create.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFuaEdpYVxDcmVhdGUuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/DonHangKhach/Details.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ0toYWNoXERldGFpbHMuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/DonHangKhach/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRG9uSGFuZ0toYWNoXEluZGV4LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -298,6 +346,18 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/SanPhams/Search.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuUGhhbXNcU2VhcmNoLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/SanPhams/_DanhGiaPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuUGhhbXNcX0RhbmhHaWFQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/SanPhams/_MoTaPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuUGhhbXNcX01vVGFQYXJ0aWFsLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/SanPhams/_ThongSoPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2FuUGhhbXNcX1Rob25nU29QYXJ0aWFsLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/Shared/Components/DanhMuc/Default.cshtml]

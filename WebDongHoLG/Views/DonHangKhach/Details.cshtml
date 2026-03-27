@@ -1,0 +1,289 @@
+﻿@model WebDongHoLG.Models.DonHang
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng #" + Model.MaDonHang;
+    var trangThai = (Model.TrangThai ?? "").Trim();
+}
+
+@section Styles {
+    <style>
+        body {
+            background-color: #f5f5f5;
+            font-family: -apple-system, Helvetica, Arial, sans-serif;
+        }
+
+        .detail-card {
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 1px 1px rgba(0,0,0,.05);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .section-title {
+            padding: 15px 20px;
+            font-weight: 500;
+            font-size: 16px;
+            color: rgba(0,0,0,.87);
+            text-transform: uppercase;
+            border-bottom: 1px solid #f1f1f1;
+            background-color: #fafafa;
+        }
+
+        .content-body {
+            padding: 20px;
+        }
+
+        /* Banner trạng thái */
+        .status-banner {
+            background: #fffbf8;
+            border: 1px solid #fbd2b9;
+            padding: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-top: 4px solid #ee4d2d;
+        }
+
+        .status-text {
+            color: #ee4d2d;
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        /* Sản phẩm */
+        .product-item {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #f1f1f1;
+        }
+
+        .product-img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border: 1px solid #e1e1e1;
+            border-radius: 2px;
+            flex-shrink: 0;
+        }
+
+        .product-info {
+            flex-grow: 1;
+            padding-left: 15px;
+        }
+
+        .product-name {
+            font-size: 16px;
+            color: rgba(0,0,0,.87);
+            margin-bottom: 5px;
+            font-weight: 400;
+        }
+
+        /* Phần thanh toán - Căn thẳng hàng bên phải */
+        .payment-details {
+            background-color: #fffefb;
+            padding: 20px;
+            border-top: 1px solid #f1f1f1;
+        }
+
+        .price-table {
+            width: 100%;
+            max-width: 450px;
+            margin-left: auto;
+        }
+
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 14px;
+            color: rgba(0,0,0,.54);
+        }
+
+        .price-label {
+            text-align: left;
+            flex: 1;
+        }
+
+        .price-value {
+            text-align: right;
+            color: rgba(0,0,0,.8);
+            min-width: 150px;
+        }
+
+        .final-row {
+            border-top: 1px solid #f1f1f1;
+            margin-top: 10px;
+            padding-top: 15px;
+        }
+
+        .total-label {
+            font-size: 16px;
+            color: rgba(0,0,0,.87);
+        }
+
+        .total-price {
+            font-size: 24px;
+            color: #ee4d2d;
+            font-weight: 500;
+        }
+    </style>
+}
+
+<div class="container py-4">
+    @* 1. Banner trạng thái *@
+    <div class="status-banner rounded shadow-sm">
+        <div>
+            <a href="/DonHangKhach/Index" class="text-decoration-none text-muted small mb-2 d-inline-block">
+                <i class="fas fa-chevron-left"></i> QUAY LẠI
+            </a>
+            <div class="status-text text-uppercase">
+                <i class="fas @(trangThai == "Chờ xác nhận" ? "fa-check-circle" : "fa-box") me-2"></i>
+                @trangThai
+            </div>
+        </div>
+        <div class="text-end">
+            <div class="mb-1">Mã Đơn Hàng: <strong>#@Model.MaDonHang</strong></div>
+            <div class="text-muted small">Ngày đặt: @Model.NgayDat?.ToString("dd/MM/yyyy HH:mm")</div>
+        </div>
+    </div>
+
+    @* 2. Thông tin nhận hàng và vận chuyển (Chia đôi) *@
+    <div class="row g-3">
+        <div class="col-md-6">
+            <div class="detail-card h-100 shadow-sm">
+                <div class="section-title"><i class="fas fa-map-marker-alt me-2 text-danger"></i> Địa Chỉ Nhận Hàng</div>
+                <div class="content-body">
+                    <h6 class="fw-bold mb-1">@Model.MaNguoiDungNavigation?.HoTen</h6>
+                    <div class="text-muted small mb-2">SĐT: @Model.MaDiaChiNavigation?.SdtNhanHang</div>
+                    <div class="text-muted small">@Model.MaDiaChiNavigation?.DiaChi</div>
+                    <div class="badge bg-light text-dark border mt-2">@Model.MaDiaChiNavigation?.GhiChu</div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="detail-card h-100 shadow-sm">
+                <div class="section-title"><i class="fas fa-truck me-2 text-primary"></i> Thông tin vận chuyển</div>
+                <div class="content-body">
+                    @{
+                        var tinhThanh = (Model.MaDiaChiNavigation?.GhiChu ?? "").Trim();
+                        string thoiGianDuKien = "";
+                        DateTime ngayDat = Model.NgayDat ?? DateTime.Now;
+                        if (tinhThanh.Contains("Hà Nội") || tinhThanh.Contains("Ha Noi"))
+                        {
+                            thoiGianDuKien = $"Dự kiến nhận hàng: {ngayDat.AddDays(1):dd/MM} - {ngayDat.AddDays(3):dd/MM}";
+                        }
+                        else
+                        {
+                            thoiGianDuKien = $"Dự kiến nhận hàng: {ngayDat.AddDays(4):dd/MM} - {ngayDat.AddDays(6):dd/MM}";
+                        }
+                    }
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-shipping-fast fa-2x text-primary me-3"></i>
+                        <div>
+                            <div class="fw-bold text-primary">@thoiGianDuKien</div>
+                            <div class="small text-muted mt-1">Đơn hàng đang được hệ thống xử lý nhanh nhất.</div>
+                        </div>
+                    </div>
+                    <hr />
+                    <div class="small">
+                        <span class="text-muted">Hình thức thanh toán:</span>
+                        <span class="fw-bold text-dark">
+                            @if (Model.ThanhToan != null && !string.IsNullOrEmpty(Model.ThanhToan.PhuongThuc))
+                            {
+                                @(Model.ThanhToan.PhuongThuc.ToUpper())
+                            }
+                            else
+                            {
+                                <span>Thanh toán khi nhận hàng (COD)</span>
+                            }
+                        </span>
+                        @if (trangThai == "Đang giao hàng")
+                        {
+                            var ngayNhanDuKien = Model.NgayDat.Value.AddDays(3);
+                            if (DateTime.Now < ngayNhanDuKien)
+                            {
+                                <div class="alert alert-info mt-3">
+                                    <i class="fas fa-truck-loading"></i>
+                                    Đơn hàng đang trên đường đến với bạn. Nút "Đã nhận hàng" sẽ xuất hiện vào ngày <strong>@ngayNhanDuKien.ToString("dd/MM/yyyy")</strong>.
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @* 3. Danh sách sản phẩm *@
+    <div class="detail-card mt-3 shadow-sm">
+        <div class="section-title"><i class="fas fa-shopping-bag me-2 text-warning"></i> Sản phẩm đã đặt</div>
+        @foreach (var item in Model.ChiTietDonHangs)
+        {
+            <div class="product-item">
+                <img src="@(item.MaBienTheNavigation?.ImageUrl ?? "/home/img/no-image.jpg")" class="product-img" alt="product">
+                <div class="product-info">
+                    <div class="product-name fw-bold">@item.MaBienTheNavigation?.MaSpNavigation?.TenSanPham</div>
+                    <div class="small text-muted">Phân loại: @item.MaBienTheNavigation?.MauSac, @(item.MaBienTheNavigation?.DuongKinhMat)mm</div>
+                    <div class="small mt-1">x @item.SoLuong</div>
+                </div>
+                <div class="text-end fw-bold text-dark" style="min-width: 150px;">
+                    @((item.DonGiaTaiThoiDiem ?? 0).ToString("#,##0")) ₫
+                </div>
+            </div>
+        }
+
+        @* 4. Phần tổng kết tiền - Căn lề thẳng hàng tuyệt đối *@
+        <div class="payment-details">
+            <div class="price-table">
+                <div class="price-row">
+                    <div class="price-label">Tổng tiền hàng</div>
+                    <div class="price-value">@((Model.ChiTietDonHangs.Sum(x => (decimal?)(x.DonGiaTaiThoiDiem * x.SoLuong)) ?? 0).ToString("#,##0")) ₫</div>
+                </div>
+
+                @{
+                    var tongTienHang = Model.ChiTietDonHangs.Sum(x => (decimal?)(x.DonGiaTaiThoiDiem * x.SoLuong)) ?? 0;
+                    var thanhTien = Model.TongTien ?? 0;
+                    var tienGiam = tongTienHang - thanhTien;
+                }
+
+                @if (tienGiam > 0)
+                {
+                    <div class="price-row">
+                        <div class="price-label">Voucher giảm giá</div>
+                        <div class="price-value text-success">- @tienGiam.ToString("#,##0") ₫</div>
+                    </div>
+                }
+
+                <div class="price-row">
+                    <div class="price-label">Phí vận chuyển</div>
+                    <div class="price-value">0 ₫</div>
+                </div>
+
+                <div class="price-row final-row">
+                    <div class="price-label total-label fw-bold">Thành tiền</div>
+                    <div class="price-value total-price">@((Model.TongTien ?? 0).ToString("#,##0")) ₫</div>
+                </div>
+
+                <div class="price-row mt-2">
+                    <div class="price-label">Trạng thái thanh toán</div>
+                    <div class="price-value">
+                        @if (Model.ThanhToan?.TrangThai == "Thành công" || trangThai == "Chờ xác nhận")
+                        {
+                            <span class="text-success fw-bold"><i class="fas fa-check-circle"></i> Đã thanh toán</span>
+                        }
+                        else if (trangThai == "Chờ xử lý")
+                        {
+                            <span class="text-muted fw-bold">Thanh toán khi nhận hàng</span>
+                        }
+                        else
+                        {
+                            <span class="text-warning fw-bold">@(Model.ThanhToan?.TrangThai ?? "Chờ thanh toán")</span>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>  

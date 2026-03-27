@@ -239,3 +239,35 @@ function muaNgay() {
 
     window.location.href = `/Checkout/Index?selectedIds=${maBT}&qty=${qty}&isBuyNow=true`;
 }
+
+
+function locSao(sao) {
+    document.querySelectorAll('[id^="btn-sao-"]').forEach(btn => {
+        btn.classList.remove('active', 'btn-warning');
+        btn.classList.add('btn-outline-warning');
+    });
+
+    const btnActive = document.getElementById('btn-sao-' + sao);
+    btnActive.classList.add('active');
+    if (sao !== 0) btnActive.classList.remove('btn-outline-warning'), btnActive.classList.add('btn-warning');
+
+    const items = document.querySelectorAll('.dg-item'); 
+    let count = 0;
+
+    items.forEach(item => {
+        const itemSao = parseInt(item.getAttribute('data-sao'));
+        if (sao === 0 || itemSao === sao) {
+            item.style.setProperty('display', 'block', 'important');
+            count++;
+        } else {
+            item.style.setProperty('display', 'none', 'important');
+        }
+    });
+
+    const noReviewMsg = document.getElementById('khong-co-dg');
+    if (count === 0) {
+        noReviewMsg.style.display = 'block';
+    } else {
+        noReviewMsg.style.display = 'none';
+    }
+}

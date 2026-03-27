@@ -8,69 +8,90 @@
     <div class="row align-items-center">
         <div class="col">
             <h2 class="page-title text-danger">
-                Xác nhận xóa sản phẩm
+                <i class="ti ti-alert-octagon me-2"></i>Xác nhận xóa sản phẩm
             </h2>
         </div>
     </div>
 </div>
 
 <div class="row justify-content-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <div class="card border-danger shadow-sm">
             <div class="card-status-top bg-danger"></div>
             <div class="card-body text-center py-4">
-                @* Sử dụng class icon của Tabler *@
                 <div class="mb-3 text-danger">
-                    <i class="ti ti-alert-triangle" style="font-size: 3.5rem;"></i>
+                    <i class="ti ti-trash-x" style="font-size: 4rem;"></i>
                 </div>
 
-                <h3>Bạn có chắc chắn muốn xóa?</h3>
-                <div class="text-secondary mb-3">
-                    Hành động này sẽ xóa vĩnh viễn sản phẩm <strong class="text-primary">@Model.TenSanPham</strong> khỏi hệ thống và không thể hoàn tác.
-                </div>
+                <h3 class="h2 text-dark">Bạn có chắc chắn muốn xóa?</h3>
+                <p class="text-secondary px-md-5">
+                    Hành động này sẽ xóa vĩnh viễn sản phẩm: <strong class="text-primary bg-primary-lt px-2 py-1 rounded">@Model.TenSanPham</strong>
+                    khỏi hệ thống và không thể hoàn tác.
+                </p>
 
-                <div class="datagrid text-start my-4 bg-light p-3 rounded border">
+                <div class="hr-text text-danger fw-bold">Thông tin chi tiết sản phẩm</div>
+
+                <div class="datagrid text-start my-4 p-4 rounded-3 border bg-azure-lt shadow-none">
                     <div class="datagrid-item">
-                        <div class="datagrid-title">Mã SP</div>
-                        <div class="datagrid-content text-primary">#@Model.MaSp</div>
+                        <div class="datagrid-title fw-bold text-secondary text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Mã Sản Phẩm</div>
+                        <div class="datagrid-content text-indigo fw-bold" style="font-size: 1rem;">#@Model.MaSp</div>
                     </div>
                     <div class="datagrid-item">
-                        <div class="datagrid-title">Thương hiệu</div>
-                        <div class="datagrid-content text-primary">
-                            @(Model.ThuongHieuNavigation?.TenThuongHieu ?? "N/A")
+                        <div class="datagrid-title fw-bold text-secondary text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Tên Sản Phẩm</div>
+                        <div class="datagrid-content text-indigo fw-bold">@Model.TenSanPham</div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title fw-bold text-secondary text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Thương hiệu</div>
+                        <div class="datagrid-content">
+                            <span class="badge bg-indigo text-white shadow-sm">@(Model.ThuongHieuNavigation?.TenThuongHieu ?? "N/A")</span>
                         </div>
                     </div>
                     <div class="datagrid-item">
-                        <div class="datagrid-title">Danh mục</div>
-                        <div class="datagrid-content text-primary">
-                            @(Model.IdDanhMucNavigation?.TenDanhMuc ?? "N/A")
-                        </div>
+                        <div class="datagrid-title fw-bold text-secondary text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Danh mục</div>
+                        <div class="datagrid-content text-indigo fw-bold">@(Model.IdDanhMucNavigation?.TenDanhMuc ?? "N/A")</div>
                     </div>
                     <div class="datagrid-item">
-                        <div class="datagrid-title">Ngày tạo</div>
-                        <div class="datagrid-content text-muted">
+                        <div class="datagrid-title fw-bold text-secondary text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Ngày tạo</div>
+                        <div class="datagrid-content text-indigo fw-medium">
                             <i class="ti ti-calendar me-1"></i>@(Model.NgayTao?.ToString("dd/MM/yyyy") ?? "N/A")
+                        </div>
+                    </div>
+                    <div class="datagrid-item">
+                        <div class="datagrid-title fw-bold text-secondary text-uppercase" style="font-size: 0.7rem; letter-spacing: 0.5px;">Trạng thái</div>
+                        <div class="datagrid-content">
+                            @if (Model.IsActive == true)
+                            {
+                                <span class="badge bg-green-lt fw-bold border border-green">Đang hoạt động</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-red-lt fw-bold border border-red">Ngừng kinh doanh</span>
+                            }
                         </div>
                     </div>
                 </div>
 
                 <form asp-action="Delete" method="post">
                     <input type="hidden" asp-for="MaSp" />
-
-                    <div class="d-flex justify-content-center gap-2">
-                        <a asp-action="Index" class="btn btn-ghost-secondary px-4">
-                            <i class="ti ti-arrow-left me-1"></i> Hủy bỏ
+                    <div class="d-flex justify-content-center gap-3 mt-2">
+                        <a asp-action="Index" class="btn btn-outline-secondary px-4">
+                            <i class="ti ti-arrow-left me-1"></i> Quay lại
                         </a>
-                        <button type="submit" class="btn btn-danger px-4">
-                            <i class="ti ti-trash me-1"></i> Xác nhận xóa
+                        <button type="submit" class="btn btn-danger px-4 shadow-sm">
+                            <i class="ti ti-trash me-1"></i> Xác nhận xóa ngay
                         </button>
                     </div>
                 </form>
             </div>
         </div>
 
-        <div class="text-center mt-3 small text-muted">
-            <i class="ti ti-info-circle me-1"></i> Lưu ý: Nếu sản phẩm đã có đơn hàng, việc xóa có thể bị từ chối bởi hệ thống.
+        <div class="alert alert-important alert-warning shadow-sm mt-3 border-0">
+            <div class="d-flex">
+                <div><i class="ti ti-alert-circle icon alert-icon"></i></div>
+                <div>
+                    <strong>Lưu ý:</strong> Nếu sản phẩm đã có biến thể hoặc đơn hàng liên quan, việc xóa có thể bị từ chối để đảm bảo toàn vẹn dữ liệu.
+                </div>
+            </div>
         </div>
     </div>
 </div>

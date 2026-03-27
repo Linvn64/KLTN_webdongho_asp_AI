@@ -1,0 +1,10 @@
+﻿@model WebDongHoLG.ViewModels.ChiTietSanPhamVM
+@{
+    var bienTheHienTai = Model.BienThes.FirstOrDefault();
+}
+<table class="table table-sm mb-0">
+    <tr><th style="width:150px">Thương hiệu</th><td>@Model.TenThuongHieu</td></tr>
+    <tr><th>Màu sắc</th><td id="tab-mau">@bienTheHienTai?.MauSac</td></tr>
+    <tr><th>Dây đeo</th><td id="tab-day">@bienTheHienTai?.ChatLieuDay</td></tr>
+    <tr><th>Kích thước</th><td id="tab-size">@bienTheHienTai?.DuongKinhMat mm</td></tr>
+</table>

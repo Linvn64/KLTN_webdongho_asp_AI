@@ -1,0 +1,163 @@
+﻿@model WebDongHoLG.Areas.Admin.ViewModels.BaoCaoTaiChinhVM
+
+@{
+    ViewData["Title"] = "Báo cáo tài chính";
+}
+
+<div class="page-header d-print-none">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+            @* Tiêu đề bên trái *@
+            <div class="col">
+                <h2 class="page-title text-success">
+                    <i class="ti ti-report-money me-2"></i> BÁO CÁO TÀI CHÍNH & KHO HÀNG
+                </h2>
+                <div class="text-muted small mt-1">
+                    Kỳ báo cáo: <strong>@Model.TuNgay.ToString("dd/MM/yyyy")</strong>
+                    <i class="ti ti-arrow-right mx-1"></i>
+                    <strong>@Model.DenNgay.ToString("dd/MM/yyyy")</strong>
+                </div>
+            </div>
+
+            @* Bộ lọc Ngày và Xuất PDF bên phải *@
+            <div class="col-auto ms-auto d-flex gap-2">
+                <form asp-action="TaiChinh" method="get" class="d-flex align-items-center gap-2">
+                    <div class="input-icon">
+                        <span class="input-icon-addon"><i class="ti ti-calendar"></i></span>
+                        <input type="date" name="tuNgay" class="form-control border-success"
+                               value="@Model.TuNgay.ToString("yyyy-MM-dd")">
+                    </div>
+                    <span class="text-muted">đến</span>
+                    <div class="input-icon">
+                        <span class="input-icon-addon"><i class="ti ti-calendar"></i></span>
+                        <input type="date" name="denNgay" class="form-control border-success"
+                               value="@Model.DenNgay.ToString("yyyy-MM-dd")">
+                    </div>
+                    <button type="submit" class="btn btn-success">
+                        <i class="ti ti-filter me-1"></i> Lọc
+                    </button>
+                </form>
+
+                <button onclick="window.print();" class="btn btn-outline-secondary">
+                    <i class="ti ti-printer me-1"></i> Xuất PDF
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-body">
+    <div class="container-xl">
+        <div class="row row-cards">
+
+            @* --- CÁC THẺ CON SỐ (GIỮ NGUYÊN LINK) --- *@
+            <div class="col-md-6 col-lg-3">
+                <a asp-controller="SanPham" asp-action="Index" class="card card-sm border-start-3 border-azure text-decoration-none">
+                    <div class="card-body">
+                        <div class="subheader text-azure">Vốn hàng tồn kho</div>
+                        <div class="h2 text-dark">@Model.TongVonTonKho.ToString("N0") ₫</div>
+                        <div class="text-muted small">Kho: <strong>@Model.TongSoLuongTon</strong> cái <i class="ti ti-chevron-right float-end"></i></div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <a asp-controller="QuanLyDonHang" asp-action="Index" class="card card-sm border-start-3 border-green text-decoration-none">
+                    <div class="card-body">
+                        <div class="subheader text-green">Tiền vào (Doanh thu)</div>
+                        <div class="h2 text-dark">@Model.TienVao.ToString("N0") ₫</div>
+                        <div class="text-muted small">Xem đơn hàng kỳ này <i class="ti ti-chevron-right float-end"></i></div>
+                    </div>
+                </a>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-sm border-start-3 border-red">
+                    <div class="card-body">
+                        <div class="subheader text-red">Tiền ra (Giá vốn)</div>
+                        <div class="h2 text-dark">- @Model.TienRa.ToString("N0") ₫</div>
+                        <div class="text-muted small">Hàng đã bán kỳ này</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 col-lg-3">
+                <div class="card card-sm border-start-3 border-primary shadow-sm bg-primary-lt">
+                    <div class="card-body">
+                        <div class="subheader text-primary fw-bold">Lợi nhuận gộp</div>
+                        <div class="h2 text-primary">@Model.LoiNhuanGop.ToString("N0") ₫</div>
+                        <div class="text-muted small">Lãi ròng thực tế</div>
+                    </div>
+                </div>
+            </div>
+
+            @* --- BIỂU ĐỒ MIỀN SO SÁNH --- *@
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h3 class="card-title text-dark fw-bold">Phân tích xu hướng Thu - Chi</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="chart-finance-trend" style="min-height: 300px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            @* --- GIÁ TRỊ TỔNG KHO --- *@
+            <div class="col-lg-4">
+                <div class="card h-100">
+                    <div class="card-header bg-light">
+                        <h3 class="card-title">Khả năng thu hồi vốn</h3>
+                    </div>
+                    <div class="card-body d-flex flex-column justify-content-center text-center">
+                        <div class="mb-3">
+                            <div class="display-6 fw-bold text-green">@Model.GiaTriBanRaDuKien.ToString("N0") ₫</div>
+                            <div class="text-muted">Tổng tiền thu về tối đa</div>
+                        </div>
+                        <div class="progress progress-lg mb-3">
+                            <div class="progress-bar bg-green" style="width: 100%"></div>
+                        </div>
+                        <p class="text-muted small">Dữ liệu dựa trên kho thực tế.</p>
+                    </div>
+                </div>
+            </div>
+
+            @* --- CẢNH BÁO KHO --- *@
+            @if (Model.SanPhamSapHetHang > 0)
+            {
+                <div class="col-12">
+                    <div class="alert alert-important alert-warning shadow-sm" role="alert">
+                        <div class="d-flex align-items-center">
+                            <div><i class="ti ti-alert-triangle icon alert-icon me-2"></i></div>
+                            <div>Hiện có <strong>@Model.SanPhamSapHetHang</strong> sản phẩm sắp hết.</div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/dist/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (window.ApexCharts) {
+                new ApexCharts(document.getElementById('chart-finance-trend'), {
+                    chart: { type: 'area', height: 300, toolbar: { show: false }, fontFamily: 'inherit' },
+                    dataLabels: { enabled: false },
+                    stroke: { curve: 'smooth', width: 2 },
+                    fill: { type: 'gradient', gradient: { opacityFrom: 0.6, opacityTo: 0.1 } },
+                    series: [
+                        { name: 'Tiền vào', data: [@(Model.TienVao * 0.7m), @Model.TienVao] },
+                        { name: 'Tiền ra', data: [@(Model.TienRa * 0.7m), @Model.TienRa] }
+                    ],
+                    xaxis: { categories: ['Đầu kỳ', 'Cuối kỳ'] },
+                    yaxis: { labels: { formatter: function (val) { return (val / 1000000).toFixed(1) + 'Tr'; } } },
+                    colors: ['#2fb344', '#d63939'],
+                    tooltip: { theme: 'dark', shared: true, y: { formatter: function (val) { return val.toLocaleString('vi-VN') + " ₫"; } } }
+                }).render();
+            }
+        });
+    </script>
+}

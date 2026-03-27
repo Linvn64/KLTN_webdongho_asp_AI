@@ -1,0 +1,107 @@
+﻿@model WebDongHoLG.ViewModels.ChiTietSanPhamVM
+
+<div class="rating-filter mb-4 p-3 bg-light rounded d-flex align-items-center gap-2 flex-wrap">
+    <span class="fw-bold me-2">Bộ lọc:</span>
+    <button class="btn btn-sm btn-outline-danger filter-btn active" data-star="all">Tất cả</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="5">5 Sao</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="4">4 Sao</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="3">3 Sao</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="2">2 Sao</button>
+    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="1">1 Sao</button>
+</div>
+
+<div id="danhgia-container">
+    @if (Model.DanhGias == null || !Model.DanhGias.Any())
+    {
+        <div class="text-center py-4 text-muted">Chưa có đánh giá nào.</div>
+    }
+    else
+    {
+        foreach (var dg in Model.DanhGias)
+        {
+            @* Thêm class dg-item và data-star để JavaScript xử lý *@
+            <div class="border-bottom mb-3 pb-3 dg-item" data-star="@dg.SoSao" style="display: none;">
+                <div class="d-flex justify-content-between">
+                    <strong class="text-dark">@dg.TenNguoiDung</strong>
+                    <small class="text-muted">@dg.NgayDanhGia.ToString("dd/MM/yyyy")</small>
+                </div>
+                <div class="text-warning my-1">
+                    @for (int i = 1; i <= 5; i++)
+                    {
+                        <i class="fa fa-star @(i <= dg.SoSao ? "fas" : "far text-muted")"></i>
+                    }
+                    @if (!string.IsNullOrEmpty(dg.TenBienThe))
+                    {
+                        <small class="text-muted ms-2 fw-normal">| Phân loại: @dg.TenBienThe</small>
+                    }
+                </div>
+                <p class="mb-0 text-secondary" style="font-size: 14px;">@dg.NoiDung</p>
+            </div>
+        }
+    }
+</div>
+
+@if (Model.DanhGias != null && Model.DanhGias.Count > 5)
+{
+    <div class="text-center mt-3">
+        <button id="btn-load-more" class="btn btn-outline-danger btn-sm px-4">Xem thêm đánh giá</button>
+    </div>
+}
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        let visibleCount = 5;
+        let currentFilter = 'all';
+        const items = document.querySelectorAll('.dg-item');
+        const loadMoreBtn = document.getElementById('btn-load-more');
+
+        function updateDisplay() {
+            let count = 0;
+            items.forEach(item => {
+                const star = item.getAttribute('data-star');
+                if (currentFilter === 'all' || star === currentFilter) {
+                    if (count < visibleCount) {
+                        item.style.display = 'block';
+                        count++;
+                    } else {
+                        item.style.display = 'none';
+                    }
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            // Ẩn/hiện nút xem thêm
+            const totalFiltered = Array.from(items).filter(item =>
+                currentFilter === 'all' || item.getAttribute('data-star') === currentFilter
+            ).length;
+
+            if (loadMoreBtn) {
+                loadMoreBtn.style.display = count < totalFiltered ? 'inline-block' : 'none';
+            }
+        }
+
+        // Xử lý lọc sao
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.replace('btn-outline-danger', 'btn-outline-secondary'));
+                this.classList.replace('btn-outline-secondary', 'btn-outline-danger');
+
+                currentFilter = this.getAttribute('data-star');
+                visibleCount = 5; // Reset về 5 khi đổi lọc
+                updateDisplay();
+            });
+        });
+
+        // Xử lý xem thêm
+        if (loadMoreBtn) {
+            loadMoreBtn.addEventListener('click', function () {
+                visibleCount += 5;
+                updateDisplay();
+            });
+        }
+
+        // Chạy lần đầu
+        updateDisplay();
+    });
+</script>

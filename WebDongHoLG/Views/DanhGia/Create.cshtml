@@ -1,0 +1,40 @@
+﻿<div class="container py-5" style="max-width: 600px;">
+    <div class="card shadow-sm border-0">
+        <div class="card-body">
+            <h4 class="fw-bold mb-4 text-center">ĐÁNH GIÁ SẢN PHẨM</h4>
+            <div class="d-flex gap-3 mb-4 bg-light p-3 rounded">
+                <img src="@ViewBag.HinhAnh" style="width:70px;height:70px;object-fit:cover;">
+                <div>
+                    <div class="fw-bold">@ViewBag.TenSp</div>
+                    <div class="text-muted small">Phân loại: @ViewBag.PhanLoai</div>
+                </div>
+            </div>
+            <form asp-action="Create" method="post">
+                <input type="hidden" name="maSp" value="@ViewBag.MaSp" />
+                <input type="hidden" name="maDonHang" value="@ViewBag.MaDonHang" />
+                <input type="hidden" name="maBienThe" value="@ViewBag.MaBienThe" />
+                <input type="hidden" name="soSao" id="soSao" value="5" />
+                <div class="mb-4 text-center">
+                    <div id="star-rating" class="fs-1 text-warning" style="cursor:pointer;">
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            <i class="fas fa-star" data-val="@i"></i>
+                        }
+                    </div>
+                    <div id="star-text" class="fw-bold text-warning">Tuyệt vời</div>
+                </div>
+                <textarea name="noiDung" class="form-control mb-3" rows="4" placeholder="Cảm nhận của bạn..."></textarea>
+                <button type="submit" class="btn btn-danger w-100 fw-bold">GỬI ĐÁNH GIÁ</button>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script>
+        $('#star-rating i').click(function() {
+            let v = $(this).data('val'); $('#soSao').val(v);
+            $('#star-rating i').each(function(i){ $(this).toggleClass('fas', i < v).toggleClass('far', i >= v); });
+            const lbl = ['', 'Rất tệ', 'Tệ', 'Bình thường', 'Tốt', 'Tuyệt vời']; $('#star-text').text(lbl[v]);
+        });
+    </script>
+}

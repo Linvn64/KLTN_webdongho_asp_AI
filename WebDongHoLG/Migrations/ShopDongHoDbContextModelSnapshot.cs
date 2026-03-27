@@ -794,6 +794,12 @@ namespace WebDongHoLG.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("MaDanhGia"));
 
+                    b.Property<int?>("MaBienThe")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("MaDonHang")
+                        .HasColumnType("int");
+
                     b.Property<int?>("MaNguoiDung")
                         .HasColumnType("int")
                         .HasColumnName("maNguoiDung");
@@ -817,6 +823,10 @@ namespace WebDongHoLG.Migrations
 
                     b.HasKey("MaDanhGia")
                         .HasName("PK__DanhGia__6B15DD9A3DF1A8C8");
+
+                    b.HasIndex("MaBienThe");
+
+                    b.HasIndex("MaDonHang");
 
                     b.HasIndex("MaNguoiDung");
 
@@ -1147,6 +1157,16 @@ namespace WebDongHoLG.Migrations
 
             modelBuilder.Entity("WebDongHoLG.Models.DanhGium", b =>
                 {
+                    b.HasOne("WebDongHoLG.Data.BienTheSanPham", "MaBienTheNavigation")
+                        .WithMany()
+                        .HasForeignKey("MaBienThe")
+                        .HasConstraintName("FK_DanhGia_BienThe");
+
+                    b.HasOne("WebDongHoLG.Models.DonHang", "MaDonHangNavigation")
+                        .WithMany()
+                        .HasForeignKey("MaDonHang")
+                        .HasConstraintName("FK_DanhGia_DonHang");
+
                     b.HasOne("WebDongHoLG.Data.NguoiDung", "MaNguoiDungNavigation")
                         .WithMany("DanhGia")
                         .HasForeignKey("MaNguoiDung")
@@ -1156,6 +1176,10 @@ namespace WebDongHoLG.Migrations
                         .WithMany("DanhGia")
                         .HasForeignKey("MaSp")
                         .HasConstraintName("FK__DanhGia__maSp__6FE99F9F");
+
+                    b.Navigation("MaBienTheNavigation");
+
+                    b.Navigation("MaDonHangNavigation");
 
                     b.Navigation("MaNguoiDungNavigation");
 

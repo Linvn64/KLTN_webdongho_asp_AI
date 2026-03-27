@@ -1,0 +1,194 @@
+﻿@model IEnumerable<WebDongHoLG.Models.DonHang>
+@{
+    ViewData["Title"] = "Quản lý đơn hàng";
+    var currentStatus = ViewBag.CurrentStatus as string ?? "";
+    bool IsTab(string s) => string.Equals(currentStatus, s, StringComparison.OrdinalIgnoreCase);
+}
+
+<style>
+    .nav-tabs .nav-link {
+        border-bottom: 3px solid transparent;
+        color: #666;
+        font-weight: 500;
+        padding: 1rem 1.25rem;
+    }
+
+        .nav-tabs .nav-link.active {
+            color: #206bc4 !important;
+            border-bottom-color: #206bc4 !important;
+            background-color: rgba(32, 107, 196, 0.05) !important;
+        }
+
+    .badge-tab {
+        margin-left: 5px;
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+
+    .amount-text {
+        color: var(--tblr-body-color) !important;
+    }
+</style>
+
+<div class="page-header d-print-none">
+    <div class="container-xl">
+        <div class="row g-2 align-items-center">
+            <div class="col">
+                <h2 class="page-title">Danh sách đơn hàng</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="page-body">
+    <div class="container-xl">
+        <div class="card">
+            <div class="card-header border-bottom-0 pb-0">
+                <ul class="nav nav-tabs card-header-tabs">
+                    <li class="nav-item">
+                        <a class="nav-link @(IsTab("") ? "active" : "")" href="@Url.Action("Index", new { area = "Admin", showAll = ViewBag.ShowAll })">Tất cả</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(IsTab("Chờ xác nhận") ? "active" : "")" href="@Url.Action("Index", new { area = "Admin", status = "Chờ xác nhận", showAll = ViewBag.ShowAll })">Chờ xác nhận <span class="badge bg-blue-lt badge-tab">Online</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(IsTab("Chờ xử lý") ? "active" : "")" href="@Url.Action("Index", new { area = "Admin", status = "Chờ xử lý", showAll = ViewBag.ShowAll })">Chờ xử lý <span class="badge bg-yellow-lt badge-tab">COD</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(IsTab("Đang giao hàng") ? "active" : "")" href="@Url.Action("Index", new { area = "Admin", status = "Đang giao hàng", showAll = ViewBag.ShowAll })">Đang giao</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link @(IsTab("Hoàn thành") ? "active" : "")" href="@Url.Action("Index", new { area = "Admin", status = "Hoàn thành", showAll = ViewBag.ShowAll })">Hoàn thành</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card-body border-bottom py-3 bg-light-subtle">
+                <form method="get" asp-action="Index" class="row g-3 align-items-center">
+                    <input type="hidden" name="status" value="@currentStatus" />
+
+                    <div class="col-auto d-flex align-items-center gap-2">
+                        <label class="form-label mb-0 small fw-bold text-muted">LỌC NGÀY:</label>
+                        <input type="date" name="filterDate" class="form-control"
+                               value="@ViewBag.SelectedDate" onchange="this.form.submit()" style="width: 160px;">
+                    </div>
+
+                    <div class="col-auto">
+                        <a href="@Url.Action("Index", new { status = currentStatus, showAll = true })"
+                           class="btn @(ViewBag.ShowAll ? "btn-info" : "btn-outline-info") btn-sm px-3">
+                            <i class="fas fa-history me-1"></i> Xem tất cả các ngày
+                        </a>
+                        @if (ViewBag.ShowAll)
+                        {
+                            <a href="@Url.Action("Index", new { status = currentStatus, showAll = false })" class="btn btn-sm btn-ghost-secondary ms-1" title="Quay về xem hôm nay">
+                                <i class="fas fa-times"></i>
+                            </a>
+                        }
+                    </div>
+
+                    <div class="col-auto px-3 text-muted">|</div>
+
+                    <div class="col-md-3">
+                        <div class="input-group input-group-flat shadow-sm">
+                            <input type="text" name="searchString" value="@ViewBag.SearchString"
+                                   class="form-control" placeholder="Mã đơn hoặc tên khách..." autocomplete="off">
+                            <button type="submit" class="btn btn-link text-muted px-3 border-start">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col text-end">
+                        @if (ViewBag.ShowAll)
+                        {
+                            <span class="badge bg-info-lt p-2"><i class="fas fa-globe me-1"></i> Hiển thị toàn bộ dữ liệu</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-success-lt p-2"><i class="fas fa-calendar-day me-1"></i> Ngày: @ViewBag.SelectedDate</span>
+                        }
+                    </div>
+                </form>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table card-table table-vcenter text-nowrap datatable">
+                    <thead>
+                        <tr>
+                            <th>Mã đơn</th>
+                            <th>Khách hàng</th>
+                            <th>Ngày đặt</th>
+                            <th>Tổng tiền</th>
+                            <th>Thanh toán</th>
+                            <th>Trạng thái</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td><span class="text-muted">#@item.MaDonHang</span></td>
+                                <td class="fw-bold amount-text text-primary">@item.MaNguoiDungNavigation?.HoTen</td>
+                                <td>@item.NgayDat?.ToString("dd/MM/yyyy")</td>
+                                <td class="fw-bold amount-text">@item.TongTien?.ToString("#,##0")₫</td>
+                                <td>
+                                    @if (item.ThanhToan != null && item.ThanhToan.TrangThai == "Thành công")
+                                    {
+                                        <span class="badge bg-green text-white fw-bold px-2 py-1">
+                                            ĐÃ TRẢ (@item.ThanhToan.PhuongThuc.ToUpper())
+                                        </span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-secondary text-white fw-bold px-2 py-1">
+                                            CHƯA THU (@(item.ThanhToan?.PhuongThuc ?? "COD"))
+                                        </span>
+                                    }
+                                </td>
+                                <td>
+                                    @{
+                                        string bClass = item.TrangThai switch
+                                        {
+                                            "Hoàn thành" => "bg-success text-white",
+                                            "Chờ xác nhận" => "bg-azure text-white",
+                                            "Chờ xử lý" => "bg-warning text-dark",
+                                            "Đang giao hàng" => "bg-purple text-white",
+                                            "Đã hủy" => "bg-danger text-white",
+                                            _ => "bg-info text-white"
+                                        };
+                                    }
+                                    <span class="badge @bClass fw-bold text-uppercase px-2 py-1">@item.TrangThai</span>
+                                </td>
+                                <td>
+                                    @if (item.TrangThai == "Chờ xử lý" || item.TrangThai == "Chờ xác nhận")
+                                    {
+                                        <form asp-action="ConfirmOrder" method="post" style="display:inline;">
+                                            <input type="hidden" name="id" value="@item.MaDonHang" />
+                                            <button type="submit" class="btn btn-sm btn-primary fw-bold shadow-sm">Duyệt đơn</button>
+                                        </form>
+                                    }
+
+                                    @if (item.TrangThai == "Đang giao hàng")
+                                    {
+                                        <form asp-action="MarkAsDelivered" method="post" style="display:inline;">
+                                            <input type="hidden" name="id" value="@item.MaDonHang" />
+                                            <button type="submit" class="btn btn-sm btn-success fw-bold text-white shadow-sm">
+                                                <i class="fas fa-check-double me-1"></i> Giao xong
+                                            </button>
+                                        </form>
+                                    }
+
+                                    <a href="/Admin/QuanLyDonhang/Details/@item.MaDonHang"
+                                       class="btn btn-sm btn-outline-secondary fw-bold shadow-none border-secondary-subtle text-reset">
+                                        <i class="fas fa-eye me-1"></i> Chi tiết
+                                    </a>
+                                    <a href="/Admin/QuanLyDonhang/PrintLabel/@item.MaDonHang" target="_blank" class="btn btn-sm btn-info fw-bold">In nhãn</a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

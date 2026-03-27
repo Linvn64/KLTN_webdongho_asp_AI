@@ -5,6 +5,7 @@ wwwroot\avatarUploads\bfcdd884-c0a6-4977-b0d3-42798e98c2d0.jpeg
 wwwroot\avatarUploads\f20c27fa-8f2e-490e-90d2-157d3281bcc9_uwp4922231.jpeg
 wwwroot\avatarUploads\f615f2c9-374a-4876-8c65-b4aa63c55d71_relexdatejust.jpg
 wwwroot\css\auth\login.css
+wwwroot\css\sanphamdetail.css
 wwwroot\css\site.css
 wwwroot\dist\css\tabler-flags.css
 wwwroot\dist\css\tabler-flags.css.map

@@ -1,0 +1,53 @@
+﻿@model IEnumerable<WebDongHoLG.Models.DonHang>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title fw-bold text-primary">
+            <i class="ti ti-list-check me-1"></i> Đơn hàng mới đặt
+        </h3>
+        <div class="card-actions">
+            <a href="/Admin/QuanLyDonhang" class="btn btn-sm btn-ghost-primary">
+                Xem tất cả <i class="ti ti-arrow-right ms-1"></i>
+            </a>
+        </div>
+    </div>
+    <div class="table-responsive">
+        <table class="table card-table table-vcenter text-nowrap">
+            <thead>
+                <tr>
+                    <th class="w-1">Mã đơn</th>
+                    <th>Khách hàng</th>
+                    <th>Tổng tiền</th>
+                    <th>Ngày đặt</th>
+                    <th>Trạng thái</th>
+                    <th class="w-1"></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var don in Model)
+                {
+                    <tr>
+                        <td><span class="text-secondary fw-bold">#@don.MaDonHang</span></td>
+                        <td class="fw-medium">@don.MaNguoiDungNavigation?.HoTen</td>
+                        <td class="text-azure fw-bold">@don.TongTien?.ToString("N0")₫</td>
+                        <td class="text-muted small">@don.NgayDat?.ToString("dd/MM HH:mm")</td>
+                        <td>
+                            @{
+                                // Dùng class -lt của Tabler cho chữ nét và rõ trên mọi nền
+                                var lopMau = don.TrangThai == "Hoàn thành" ? "bg-green-lt" :
+                                don.TrangThai == "Đã hủy" ? "bg-red-lt" : "bg-warning-lt";
+                            }
+                            <span class="badge @lopMau">@don.TrangThai</span>
+                        </td>
+                        <td>
+                            <a asp-controller="QuanLyDonhang" asp-action="Details" asp-route-id="@don.MaDonHang"
+                               class="btn btn-sm btn-outline-info">
+                                Chi tiết
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

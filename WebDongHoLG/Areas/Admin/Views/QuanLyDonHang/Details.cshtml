@@ -1,0 +1,168 @@
+﻿@model WebDongHoLG.Models.DonHang
+@{
+    ViewData["Title"] = "Chi tiết đơn hàng #" + Model.MaDonHang;
+}
+
+<div class="container-xl">
+    <div class="page-header d-print-none">
+        <div class="row align-items-center">
+            <div class="col">
+                <h2 class="page-title">Chi tiết đơn hàng #@Model.MaDonHang</h2>
+            </div>
+            <div class="col-auto ms-auto">
+                <a href="/Admin/QuanLyDonHang/PrintLabel/@Model.MaDonHang" target="_blank" class="btn btn-sm btn-info">
+                    <i class="ti ti-tag"></i> In nhãn dán vận chuyển
+                </a>
+                <a href="/Admin/QuanLyDonHang" class="btn btn-sm btn-outline-secondary">Quay lại danh sách</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="row row-cards mt-3">
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header"><h3 class="card-title">Khách hàng</h3></div>
+                <div class="card-body">
+                    <p class="mb-1"><strong>@Model.MaNguoiDungNavigation?.HoTen</strong></p>
+                    <p class="text-muted mb-1 small">Email: @Model.MaNguoiDungNavigation?.Email</p>
+                    <p class="text-muted small">SĐT: @Model.MaDiaChiNavigation?.SdtNhanHang</p>
+                    <address class="small text-muted">
+                        Địa chỉ: @Model.MaDiaChiNavigation?.DiaChi
+                    </address>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100 border-left-lg border-success">
+                <div class="card-header"><h3 class="card-title">Thanh toán</h3></div>
+                <div class="card-body">
+                    <p class="mb-1">Phương thức: <strong>@(Model.ThanhToan?.PhuongThuc ?? "COD (Tiền mặt)")</strong></p>
+                    <p class="mb-1">
+                        Trạng thái:
+                        @{
+                            var trangThaiDon = Model.TrangThai?.Trim();
+                            var trangThaiTT = Model.ThanhToan?.TrangThai?.Trim();
+
+                            if (trangThaiTT == "Thành công" || trangThaiDon == "Hoàn thành")
+                            {
+                                <span class="badge bg-success-lt">Đã thanh toán</span>
+                            }
+                            else if (trangThaiDon != null && trangThaiDon.Contains("Đã hủy"))
+                            {
+                                <span class="badge bg-danger-lt">Giao dịch đã hủy</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-warning text-dark">@(trangThaiTT ?? "Chờ thu tiền")</span>
+                            }
+                        }
+                    </p>
+
+                    @if (Model.ThanhToan?.ThoiGianThanhToan != null)
+                    {
+                        <p class="small text-muted">Lúc: @Model.ThanhToan.ThoiGianThanhToan?.ToString("dd/MM/yyyy HH:mm")</p>
+                    }
+                    else if (trangThaiDon == "Hoàn thành")
+                    {
+                        <p class="small text-muted italic text-success">* Đã thu tiền khi giao hàng thành công</p>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-header"><h3 class="card-title">Vận chuyển</h3></div>
+                <div class="card-body">
+                    <p class="mb-1">Trạng thái đơn: <span class="badge bg-blue-lt text-primary">@Model.TrangThai</span></p>
+                    <p class="mb-1 small text-muted">Ngày đặt: @Model.NgayDat?.ToString("dd/MM/yyyy HH:mm")</p>
+                    <hr />
+                    @if (Model.TrangThai == "Chờ xử lý" || Model.TrangThai == "Chờ xác nhận")
+                    {
+                        <form asp-action="ConfirmOrder" method="post">
+                            <input type="hidden" name="id" value="@Model.MaDonHang" />
+                            <button type="submit" class="btn btn-primary w-100">Duyệt & Giao hàng</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card">
+                <div class="table-responsive">
+                    <table class="table table-vcenter card-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 1%">#</th>
+                                <th>Sản phẩm</th>
+                                <th class="text-center">Số lượng</th>
+                                <th class="text-end">Đơn giá</th>
+                                <th class="text-end">Thành tiền</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                int stt = 1;
+                            }
+                            @foreach (var item in Model.ChiTietDonHangs)
+                            {
+                                <tr>
+                                    <td>@(stt++)</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="@(item.MaBienTheNavigation?.ImageUrl ?? "/home/img/no-image.jpg")" width="40" height="40" class="me-2 rounded shadow-sm" style="object-fit: cover;">
+                                            <div>
+                                                <div class="font-weight-bold">@item.MaBienTheNavigation?.MaSpNavigation?.TenSanPham</div>
+                                                <div class="text-muted small">Phân loại: @item.MaBienTheNavigation?.MauSac</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">@item.SoLuong</td>
+                                    <td class="text-end">@item.DonGiaTaiThoiDiem?.ToString("#,##0")₫</td>
+                                    <td class="text-end font-weight-bold">@((item.DonGiaTaiThoiDiem * item.SoLuong)?.ToString("#,##0"))₫</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="card-footer bg-light">
+                    <div class="row">
+                        <div class="col-md-8"></div>
+                        <div class="col-md-4">
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Tổng tiền hàng:</span>
+                                <span class="fw-bold">@((Model.ChiTietDonHangs.Sum(x => x.DonGiaTaiThoiDiem * x.SoLuong))?.ToString("#,##0"))₫</span>
+                            </div>
+
+                            @{
+                                var tongGoc = Model.ChiTietDonHangs.Sum(x => x.DonGiaTaiThoiDiem * x.SoLuong) ?? 0;
+                                var tongCuoi = Model.TongTien ?? 0;
+                                var tienGiam = tongGoc - tongCuoi;
+                            }
+                            @if (tienGiam > 0)
+                            {
+                                <div class="d-flex justify-content-between mb-2 text-success">
+                                    <span>Voucher giảm giá:</span>
+                                    <span>- @tienGiam.ToString("#,##0")₫</span>
+                                </div>
+                            }
+
+                            <div class="d-flex justify-content-between mb-2">
+                                <span class="text-muted">Phí vận chuyển:</span>
+                                <span>0₫</span>
+                            </div>
+                            <hr />
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="h3 mb-0">Tổng thanh toán:</span>
+                                <span class="h1 text-danger mb-0">@Model.TongTien?.ToString("#,##0")₫</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

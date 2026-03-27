@@ -168,6 +168,14 @@ public partial class ShopDongHoDbContext : IdentityDbContext<IdentityUser, Ident
             entity.HasOne(d => d.MaSpNavigation).WithMany(p => p.DanhGia)
                 .HasForeignKey(d => d.MaSp)
                 .HasConstraintName("FK__DanhGia__maSp__6FE99F9F");
+            entity.HasOne(d => d.MaBienTheNavigation)
+                  .WithMany()
+                  .HasForeignKey(d => d.MaBienThe)
+                  .HasConstraintName("FK_DanhGia_BienThe");
+            entity.HasOne(d => d.MaDonHangNavigation)
+                 .WithMany()
+                 .HasForeignKey(d => d.MaDonHang)
+                 .HasConstraintName("FK_DanhGia_DonHang");
         });
 
         modelBuilder.Entity<DanhMucSanPham>(entity =>
