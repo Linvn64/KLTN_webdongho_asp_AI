@@ -70,9 +70,9 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                     TenHienThi = s.TenSanPham + (string.IsNullOrEmpty(s.DoiTuong) ? "" : " [" + s.DoiTuong + "]")
                 }),
                 "MaSp", "TenHienThi",
-                maSp 
+                maSp
             );
-            ViewBag.SelectedMaSp = maSp; 
+            ViewBag.SelectedMaSp = maSp;
             LoadFolderList();
             return View();
         }
@@ -470,5 +470,8 @@ namespace WebDongHoLG.Areas.Admin.Controllers
 
             return Json(data);
         }
+
+
+       
     }
 }

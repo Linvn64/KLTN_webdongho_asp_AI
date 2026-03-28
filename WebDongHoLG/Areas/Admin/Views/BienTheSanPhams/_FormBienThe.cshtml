@@ -27,6 +27,14 @@
                         <div class="col-md-4">
                             <label class="form-label">Size (mm)</label>
                             <input asp-for="DuongKinhMat" id="inputSize" type="number" class="form-control" />
+
+                            <div class="mt-2 border-top pt-2">
+                                <small class="text-muted fw-bold">Thêm nhiều size cùng lúc:</small>
+                                <div id="sizeTagContainer" class="d-flex flex-wrap gap-1 my-1"></div>
+                                <input type="number" id="sizeTagInput" class="form-control form-control-sm"
+                                       placeholder="Nhập size rồi Enter..." />
+                                <small class="text-muted" style="font-size:10px;">Chọn nhiều size → tự tạo từng biến thể</small>
+                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Chất liệu dây</label>
@@ -378,8 +386,87 @@
             }
         }
     });
-        // Thêm tạm vào trước submit để debug
-    document.getElementById("sharedForm").addEventListener("submit", function(e) {
-        alert("MainImage: " + document.getElementById("mainImageInput").value);
+            // ===== MULTI SIZE TAGS =====
+    let selectedSizes = [];
+
+    function addSizeTag() {
+        const input = document.getElementById("sizeTagInput");
+        const val = parseInt(input.value);
+        if (!val || selectedSizes.includes(val)) { input.value = ""; return; }
+        selectedSizes.push(val);
+        renderSizeTags();
+        input.value = "";
+    }
+
+    function removeSizeTag(size) {
+        selectedSizes = selectedSizes.filter(s => s !== size);
+        renderSizeTags();
+    }
+
+    function renderSizeTags() {
+        const container = document.getElementById("sizeTagContainer");
+        const singleInput = document.getElementById("inputSize");
+
+        container.innerHTML = selectedSizes.map(s => `
+            <span class="badge bg-blue-lt text-blue border" style="font-size:12px; cursor:pointer;"
+                  onclick="removeSizeTag(${s})">
+                ${s}mm &times;
+            </span>`).join("");
+
+        if (selectedSizes.length > 0) {
+            singleInput.disabled = true;
+            singleInput.style.opacity = "0.4";
+        } else {
+            singleInput.disabled = false;
+            singleInput.style.opacity = "1";
+        }
+    }
+
+    document.getElementById("sizeTagInput")?.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); addSizeTag(); }
+    });
+
+    // ===== SUBMIT NHIỀU LẦN THEO TỪNG SIZE =====
+    document.getElementById("sharedForm").addEventListener("submit", async function (e) {
+        // Không có multi-size → submit bình thường, không đụng gì
+        if (selectedSizes.length === 0) return;
+
+        e.preventDefault();
+
+        const form = this;
+        const sizeInput = document.getElementById("inputSize");
+        const skuInput  = document.getElementById("inputSku");
+
+        const btn = form.querySelector("button[type=submit]");
+        btn.disabled = true;
+        btn.innerHTML = `<span class="spinner-border spinner-border-sm me-1"></span> Đang tạo ${selectedSizes.length} biến thể...`;
+
+        const toSlugLocal = (str) => {
+            if (!str) return "";
+            return str.toString().toLowerCase()
+                .replace(/đ/g, 'd')
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "")
+                .replace(/[^\w\s-]/g, "")
+                .replace(/[\s_-]+/g, "-")
+                .replace(/^-+|-+$/g, "");
+        };
+
+        for (const size of selectedSizes) {
+            sizeInput.disabled = false;
+            sizeInput.value = size;
+
+            const productId  = document.getElementById("inputProduct").value;
+            const colorShort = toSlugLocal(document.getElementById("inputColor").value).toUpperCase() || "MAU";
+            skuInput.value   = `${productId}-${colorShort}-${size}`;
+
+            const formData = new FormData(form);
+            await fetch(form.action, {
+                method: "POST",
+                body: formData
+            });
+        }
+
+        window.location.href = "/Admin/BienTheSanPhams";
     });
 </script>

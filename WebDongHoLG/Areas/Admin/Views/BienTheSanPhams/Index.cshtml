@@ -3,7 +3,28 @@
     @{
         ViewData["Title"] = "Quản lý biến thể sản phẩm";
     }
+@if (TempData["Message"] != null)
+{
+    <div class="alert alert-important alert-@TempData["Type"] alert-dismissible shadow-sm" role="alert">
+        <div class="d-flex">
+            <div>
+                @if (TempData["Type"]?.ToString() == "success")
+                {
+                    <i class="ti ti-check icon alert-icon"></i>
+                }
+                else
+                {
 
+                    <i class="ti ti-alert-triangle icon alert-icon"></i>
+                }
+            </div>
+            <div>
+                @TempData["Message"]
+            </div>
+        </div>
+        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+    </div>
+}
     <div class="page-header d-print-none mb-3">
         <div class="row align-items-center">
             <div class="col">
@@ -16,6 +37,8 @@
                 <a asp-action="Create" class="btn btn-primary shadow-sm">
                     <i class="ti ti-plus me-2"></i> Thêm biến thể mới
                 </a>
+                 <a asp-area="Admin" asp-controller="SanPhams" asp-action="Trash" class="btn btn-danger">Ngừng hoạt động</a>
+
             </div>
         </div>
     </div>
@@ -24,7 +47,7 @@
         <div class="card-body">
             <form asp-action="Index" method="get" class="row g-2 align-items-end">
                 @* 1. Ô tìm kiếm - chiếm 4 cột *@
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <label class="form-label">Tìm kiếm</label>
                     <div class="input-icon">
                         <span class="input-icon-addon"><i class="ti ti-search"></i></span>
@@ -34,25 +57,15 @@
                 </div>
 
                 @* 2. Lọc theo hãng - chiếm 2 cột *@
-                <div class="col-md-2">
+                <div class="col-md-3">
                     <label class="form-label">Thương hiệu</label>
                     <select name="thuongHieuId" class="form-select" asp-items="ViewBag.ThuongHieuId">
                         <option value="">Tất cả</option>
                     </select>
                 </div>
 
-                @* 3. Lọc theo trạng thái - chiếm 2 cột *@
-                <div class="col-md-2">
-                    <label class="form-label">Trạng thái</label>
-                    <select name="isActive" class="form-select">
-                        <option value="">Tất cả</option>
-                        <option value="true" selected="@(ViewBag.CurrentStatus == true ? "selected" : null)">Đang bán</option>
-                        <option value="false" selected="@(ViewBag.CurrentStatus == false ? "selected" : null)">Ngừng bán</option>
-                    </select>
-                </div>
-
                 @* 4. Cụm nút bấm - chiếm 4 cột còn lại *@
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="d-flex gap-2">
                         <button type="submit" class="btn btn-primary w-100">
                             <i class="ti ti-filter me-1"></i> Lọc dữ liệu
@@ -114,18 +127,9 @@
                                     <div class="text-muted small" style="text-decoration: line-through;">@(item.GiaNhap?.ToString("N0")) đ</div>
                                 </td>
                                 <td>
-                                    @if (item.IsActive == true)
-                                    {
                                         <span class="status status-green">
                                             <span class="status-dot status-dot-animated"></span> Hoạt động
                                         </span>
-                                    }
-                                    else
-                                    {
-                                        <span class="status status-red">
-                                            <span class="status-dot"></span> Ngừng bán
-                                        </span>
-                                    }
                                 </td>
                                 <td class="text-end">
                                     <div class="d-flex justify-content-end gap-2">

@@ -12,6 +12,7 @@
             <a asp-action="Create" class="btn btn-primary">
                 <i class="ti ti-plus me-2"></i> Thêm sản phẩm
             </a>
+            <a asp-action="Trash" class="btn btn-danger">Ngừng hoạt động</a>
         </div>
     </div>
 </div>
@@ -81,6 +82,9 @@
             <tbody>
                 @foreach (var item in Model)
                 {
+                    if (item.IsActive == true)
+                    {
+                    
                     <!-- Hàng sản phẩm chính -->
                     <tr class="product-row" style="cursor:pointer;"
                         data-sp-id="@item.MaSp"
@@ -126,8 +130,11 @@
                                    class="btn btn-icon btn-outline-info" title="Xem">
                                     <i class="ti ti-eye"></i>
                                 </a>
-                                <a asp-action="Delete" asp-route-id="@item.MaSp"
-                                   class="btn btn-icon btn-outline-danger" title="Xóa">
+                                <a asp-action="Delete"
+                                   asp-route-id="@item.MaSp"
+                                   asp-route-returnUrl="@Context.Request.Path"
+                                   class="btn btn-icon btn-outline-danger"
+                                   title="Xóa">
                                     <i class="ti ti-trash"></i>
                                 </a>
                             </div>
@@ -145,6 +152,7 @@
                             </div>
                         </td>
                     </tr>
+                    }
                 }
             </tbody>
         </table>

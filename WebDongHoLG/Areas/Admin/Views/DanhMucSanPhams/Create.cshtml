@@ -1,0 +1,59 @@
+﻿@model WebDongHoLG.Models.DanhMucSanPham
+
+@{
+    ViewData["Title"] = "Thêm danh mục mới";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-primary">
+                <i class="ti ti-plus me-2"></i>Thêm danh mục sản phẩm mới
+            </h2>
+            <div class="text-muted mt-1 small">Vui lòng điền đầy đủ thông tin để phân loại sản phẩm tốt hơn.</div>
+        </div>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm border-0">
+            <form asp-action="Create" method="post">
+                <div class="card-body">
+                    <div asp-validation-summary="ModelOnly" class="alert alert-danger mb-3 small"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="TenDanhMuc" class="form-label fw-bold">Tên danh mục <span class="text-danger">*</span></label>
+                        <div class="input-icon">
+                            <span class="input-icon-addon text-primary"><i class="ti ti-tag"></i></span>
+                            <input asp-for="TenDanhMuc" class="form-control border-primary-subtle" placeholder="Ví dụ: Đồng hồ thông minh, Đồng hồ lặn..." />
+                        </div>
+                        <span asp-validation-for="TenDanhMuc" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="MoTa" class="form-label fw-bold">Mô tả danh mục</label>
+                        <textarea asp-for="MoTa" class="form-control border-primary-subtle" rows="6" placeholder="Nhập mô tả ngắn gọn về đặc điểm của nhóm sản phẩm này..."></textarea>
+                        <span asp-validation-for="MoTa" class="text-danger small"></span>
+                        <div class="form-hint small">Mẹo: Một mô tả hay sẽ giúp việc quản lý và tìm kiếm sản phẩm dễ dàng hơn.</div>
+                    </div>
+                </div>
+
+                <div class="card-footer bg-light-subtle d-flex justify-content-between align-items-center">
+                    <a asp-action="Index" class="btn btn-ghost-secondary">
+                        <i class="ti ti-arrow-left me-1"></i> Quay lại danh sách
+                    </a>
+                    <button type="submit" class="btn btn-primary shadow-sm px-4">
+                        <i class="ti ti-plus me-1"></i> Tạo danh mục
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

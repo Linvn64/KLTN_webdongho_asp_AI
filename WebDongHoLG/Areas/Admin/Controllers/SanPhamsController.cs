@@ -25,6 +25,7 @@ namespace WebDongHoLG.Areas.Admin.Controllers
             var query = _context.SanPhams
                 .Include(s => s.IdDanhMucNavigation)
                 .Include(s => s.ThuongHieuNavigation)
+                .Where(s => s.IsActive == true)
                 .AsQueryable();
 
             if (idDanhmuc.HasValue) query = query.Where(s => s.IdDanhMuc == idDanhmuc);
@@ -95,7 +96,7 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                 s.ThuongHieuId == sanPham.ThuongHieuId &&
                 s.IdDanhMuc == sanPham.IdDanhMuc &&
                 s.DoiTuong == sanPham.DoiTuong &&
-                s.MaSp != id  
+                s.MaSp != id
             );
 
             if (isDuplicate)
@@ -131,7 +132,7 @@ namespace WebDongHoLG.Areas.Admin.Controllers
 
             var sanPham = await _context.SanPhams
                 .Include(s => s.IdDanhMucNavigation)
-                .Include(s => s.ThuongHieuNavigation) 
+                .Include(s => s.ThuongHieuNavigation)
                 .FirstOrDefaultAsync(m => m.MaSp == id);
             if (sanPham == null)
             {
@@ -165,22 +166,72 @@ namespace WebDongHoLG.Areas.Admin.Controllers
         // POST: Admin/SanPhams/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id, string? returnUrl)
         {
             var sanPham = await _context.SanPhams.FindAsync(id);
+
             if (sanPham != null)
             {
-                _context.SanPhams.Remove(sanPham);
+                sanPham.IsActive = false;
+                _context.Update(sanPham);
+                await _context.SaveChangesAsync();
+
+                TempData["Type"] = "warning";
+                TempData["Message"] = $"Đã chuyển sản phẩm '{sanPham.TenSanPham}' vào thùng rác thành công!";
             }
 
-            await _context.SaveChangesAsync();
+            if (!string.IsNullOrEmpty(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool SanPhamExists(int id) => _context.SanPhams.Any(e => e.MaSp == id);
 
+        // Xem thùng rác
+        public async Task<IActionResult> Trash()
+        {
+            var listTrash = await _context.SanPhams
+                .Include(s => s.BienTheSanPhams)
+                .Where(s => s.IsActive == false)
+                .ToListAsync();
+            return View(listTrash);
+        }
 
-        
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Restore(int id, string type)
+        {
+            if (type == "SanPham")
+            {
+                var sp = await _context.SanPhams.FindAsync(id);
+                if (sp != null)
+                {
+                    sp.IsActive = true;
+                    _context.Update(sp);
+                    TempData["Message"] = $"Đã khôi phục sản phẩm: {sp.TenSanPham}";
+                }
+            }
+            else if (type == "BienThe")
+            {
+                var bt = await _context.BienTheSanPhams.FindAsync(id);
+                if (bt != null)
+                {
+                    bt.IsActive = true;
+                    _context.Update(bt);
+                    TempData["Message"] = $"Đã khôi phục biến thể SKU: {bt.MaSku}";
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            TempData["Type"] = "success";
+            return RedirectToAction(nameof(Trash));
+        }
+
+
     }
-   
+
 }

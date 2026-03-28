@@ -1,0 +1,57 @@
+﻿@model WebDongHoLG.Data.SanPham
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">Tên sản phẩm</label>
+        <input asp-for="TenSanPham" class="form-control" placeholder="Nhập tên sản phẩm..." />
+        <span asp-validation-for="TenSanPham" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label class="form-label fw-bold">Danh mục</label>
+        <select asp-for="IdDanhMuc" class="form-select" asp-items="ViewBag.IdDanhMuc">
+            <option value="">-- Chọn danh mục --</option>
+        </select>
+        <span asp-validation-for="IdDanhMuc" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <label class="form-label fw-bold">Thương hiệu</label>
+        <input type="text" name="NewThuongHieu" list="brandList" class="form-control"
+               placeholder="Chọn hoặc gõ thương hiệu mới..."
+               value="@(Model?.ThuongHieuNavigation?.TenThuongHieu)" />
+
+        <datalist id="brandList">
+            @foreach (var brand in (SelectList)ViewBag.ThuongHieuId)
+            {
+                <option value="@brand.Text"></option>
+            }
+        </datalist>
+        <span class="text-muted small">Mẹo: Gõ tên mới để tự động thêm.</span>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <label class="form-label fw-bold">Đối tượng</label>
+        <select asp-for="DoiTuong" class="form-select">
+            <option value="Nam">Nam</option>
+            <option value="Nữ">Nữ</option>
+            <option value="Unisex">Unisex</option>
+        </select>
+        <span asp-validation-for="DoiTuong" class="text-danger small"></span>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <label class="form-label fw-bold">Trạng thái</label>
+        <label class="form-check form-switch mt-2">
+            <input class="form-check-input" type="checkbox" name="IsActive" value="true" @(Model?.IsActive != false ? "checked" : "") />
+            <input type="hidden" name="IsActive" value="false" />
+            <span class="form-check-label">Cho phép hiển thị</span>
+        </label>
+    </div>
+
+    <div class="col-md-12 mb-3">
+        <label class="form-label fw-bold">Mô tả sản phẩm</label>
+        <textarea asp-for="MoTa" class="form-control" rows="5" placeholder="Nhập mô tả..."></textarea>
+        <span asp-validation-for="MoTa" class="text-danger small"></span>
+    </div>
+</div>

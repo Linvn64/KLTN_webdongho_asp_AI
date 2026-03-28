@@ -1,0 +1,97 @@
+﻿@model IEnumerable<WebDongHoLG.Models.DanhMucSanPham>
+
+@{
+    ViewData["Title"] = "Quản lý danh mục";
+}
+
+@* --- Tiêu đề trang --- *@
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-primary">
+                <i class="ti ti-category me-2"></i>Quản lý danh mục sản phẩm
+            </h2>
+        </div>
+        <div class="col-auto ms-auto">
+            <a asp-action="Create" class="btn btn-primary shadow-sm">
+                <i class="ti ti-plus me-2"></i> Thêm danh mục mới
+            </a>
+        </div>
+    </div>
+</div>
+
+@* --- Thẻ nội dung chính --- *@
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-hover card-table">
+            <thead class="bg-light">
+                <tr>
+                    <th style="width: 250px;">Tên danh mục</th>
+                    <th>Mô tả chi tiết</th>
+                    <th class="text-end" style="width: 150px;">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                @* Tạo icon ngẫu nhiên hoặc mặc định cho sinh động *@
+                                <div class="avatar avatar-xs bg-azure-lt text-azure">
+                                    <i class="ti ti-tag"></i>
+                                </div>
+                                <div class="fw-bold text-dark">@item.TenDanhMuc</div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="text-muted small text-truncate" style="max-width: 500px;" title="@item.MoTa">
+                                @(string.IsNullOrEmpty(item.MoTa) ? "Chưa có mô tả cho danh mục này." : item.MoTa)
+                            </div>
+                        </td>
+                        <td class="text-end">
+                            <div class="d-flex justify-content-end gap-2">
+                                <a asp-action="Edit" asp-route-id="@item.IdDanhMuc"
+                                   class="btn btn-icon btn-outline-warning" title="Chỉnh sửa">
+                                    <i class="ti ti-edit"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.IdDanhMuc"
+                                   class="btn btn-icon btn-outline-info" title="Xem chi tiết">
+                                    <i class="ti ti-eye"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.IdDanhMuc"
+                                   class="btn btn-icon btn-outline-danger" title="Xóa danh mục">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @* Phân chân trang để thông báo số lượng *@
+    <div class="card-footer d-flex align-items-center bg-white border-top-0">
+        <p class="m-0 text-muted">Hiển thị <span>@Model.Count()</span> danh mục</p>
+    </div>
+</div>
+
+<style>
+    /* Hiệu ứng hover cho hàng giống trang sản phẩm */
+    .table-hover tbody tr:hover {
+        background-color: rgba(32, 107, 196, 0.03) !important;
+        transition: 0.2s;
+    }
+
+    /* Làm đẹp nút thao tác */
+    .btn-icon {
+        width: 32px;
+        height: 32px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 6px;
+    }
+</style>

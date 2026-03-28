@@ -161,8 +161,9 @@
                                                 <span class="nav-link-title">Sản phẩm</span>
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="/Admin/SanPhams">Danh sách đồng hồ</a>
-                                                <a class="dropdown-item" asp-controller="BienTheSanPhams">Biến thể sản phẩm</a>
+                                                <a class="dropdown-item" asp-controller="SanPhams" asp-action="Index">Danh sách đồng hồ</a>
+                                                <a class="dropdown-item" asp-controller="BienTheSanPhams" asp-action="Index">Biến thể sản phẩm</a>
+                                                <a class="dropdown-item" asp-controller="DanhMucSanPhams" asp-action="Index">Danh mục sản phẩm</a>
                                             </div>
                                         </li>
                                     }
@@ -176,7 +177,7 @@
                                                 <span class="nav-link-title">Kho hàng</span>
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="/Admin/Khoes">Kiểm kê tồn kho</a>
+                                                <a class="dropdown-item" asp-controller="Khoes" asp-action="Index">Kiểm kê tồn kho</a>
                                                 <a class="dropdown-item" asp-controller=NhapKho" asp-action="Create">Nhập kho</a>
                                             </div>
                                         </li>
@@ -191,8 +192,8 @@
                                                 <span class="nav-link-title">Kinh doanh</span>
                                             </a>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="/Admin/QuanLyDonhang">Quản lý đơn hàng</a>
-                                                <a class="dropdown-item" href="/Admin/Vouchers">Voucher</a>
+                                                <a class="dropdown-item" asp-controller="QuanLyDonhang" asp-action="Index">Quản lý đơn hàng</a>
+                                                <a class="dropdown-item" asp-controller="Vouchers" asp-action="Index">Voucher</a>
                                             </div>
                                         </li>
                                     }
@@ -208,9 +209,9 @@
                                             <div class="dropdown-menu">
                                                 @if (User.IsInRole("Admin"))
                                                 {
-                                                    <a class="dropdown-item" href="/Admin/NguoiDungs">Danh sách khách hàng</a>
+                                                    <a class="dropdown-item" asp-controller="NguoiDungs" asp-action="Index">Danh sách khách hàng</a>
                                                 }
-                                                <a class="dropdown-item" href="/Admin/QuanLyDanhGia">Phản hồi & Đánh giá</a>
+                                                <a class="dropdown-item" asp-controller="QuanLyDanhGia" asp-action="Index">Phản hồi & Đánh giá</a>
                                             </div>
                                         </li>
                                     }
