@@ -2,7 +2,7 @@
 @using WebDongHoLG.Areas.Identity.Pages.Account
 @model RegisterModel
 @{
-    ViewData["Title"] = "Register";
+    ViewData["Title"] = "Đăng ký";
 }
 
 <div class="auth-container register-layout">
@@ -10,14 +10,14 @@
 
     <div class="auth-form">
         <div class="auth-card">
-            <h3>Create Account</h3>
+            <h3>Tạo tài khoản</h3>
 
             <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                 <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
 
                 <div class="form-floating mb-3">
-                    <input asp-for="Input.UserName" class="form-control" placeholder="Username" />
-                    <label asp-for="Input.UserName">UserName</label>
+                    <input asp-for="Input.UserName" class="form-control" placeholder="Tên đăng nhập" />
+                    <label asp-for="Input.UserName">Tên đăng nhập</label>
                     <span asp-validation-for="Input.UserName" class="text-danger"></span>
                 </div>
 
@@ -28,33 +28,33 @@
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input asp-for="Input.Password" id="passwordInput" class="form-control" type="password" placeholder="password" />
-                    <label asp-for="Input.Password">Password</label>
+                    <input asp-for="Input.Password" id="passwordInput" class="form-control" type="password" placeholder="Mật khẩu" />
+                    <label asp-for="Input.Password">Mật khẩu</label>
                     <span asp-validation-for="Input.Password" class="text-danger"></span>
                     <span class="toggle-password" onclick="togglePassword('passwordInput')">👁</span>
 
                 </div>
 
                 <div class="form-floating mb-3">
-                    <input asp-for="Input.ConfirmPassword" id="confirmPasswordInput" class="form-control" type="password" placeholder="confirm password" />
-                    <label asp-for="Input.ConfirmPassword">Confirm Password</label>
+                    <input asp-for="Input.ConfirmPassword" id="confirmPasswordInput" class="form-control" type="password" placeholder="Xác nhận mật khẩu" />
+                    <label asp-for="Input.ConfirmPassword">Xác nhận mật khẩu</label>
                     <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
                     <span class="toggle-password" onclick="togglePassword('confirmPasswordInput')">👁</span>
 
                 </div>
 
-                <button type="submit" class="btn btn-login w-100">Create Account</button>
+                <button type="submit" class="btn btn-login w-100">Đăng ký</button>
             </form>
 
             @* --- PHẦN ĐĂNG NHẬP GOOGLE --- *@
             <div class="mt-4">
-                <p class="text-center text-muted">Or register with</p>
+                <p class="text-center text-muted">Hoặc đăng nhập.</p>
                 <form id="external-account" asp-page="./ExternalLogin" asp-route-returnUrl="@Model.ReturnUrl" method="post">
                     <div>
                         @foreach (var provider in Model.ExternalLogins!)
                         {
                             <button type="submit" class="btn btn-outline-dark w-100 mb-2" name="provider" value="@provider.Name">
-                                <i class="fab fa-google text-danger me-2"></i> Continue with @provider.DisplayName
+                                <i class="fab fa-google text-danger me-2"></i> Tiếp tục với @provider.DisplayName
                             </button>
                         }
                     </div>
@@ -62,7 +62,10 @@
             </div>
 
             <div class="auth-links text-center mt-3">
-                <a asp-page="./Login">Already have an account? Log in</a>
+                <a asp-page="./Login" class="text-center">Bạn đã có tài khoản? Đăng nhập</a>
+            </div>
+            <div class="auth-links text-center mt-3">
+                <a asp-area="Default" asp-controller="Home" asp-action="Index" class="text-center text-bold">Trở về trang chủ</a>
             </div>
         </div>
     </div>

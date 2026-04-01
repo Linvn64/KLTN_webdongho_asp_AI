@@ -5,8 +5,10 @@ wwwroot\avatarUploads\bfcdd884-c0a6-4977-b0d3-42798e98c2d0.jpeg
 wwwroot\avatarUploads\f20c27fa-8f2e-490e-90d2-157d3281bcc9_uwp4922231.jpeg
 wwwroot\avatarUploads\f615f2c9-374a-4876-8c65-b4aa63c55d71_relexdatejust.jpg
 wwwroot\css\auth\login.css
+wwwroot\css\chat-style.css
 wwwroot\css\sanphamdetail.css
 wwwroot\css\site.css
+wwwroot\css\user-home.css
 wwwroot\dist\css\tabler-flags.css
 wwwroot\dist\css\tabler-flags.css.map
 wwwroot\dist\css\tabler-flags.min.css
@@ -2013,6 +2015,13 @@ wwwroot\hinhanhbienthe\citizen-tsuyosa-automatic-watch-nam\citizen-tsuyosa-autom
 wwwroot\hinhanhbienthe\citizen-tsuyosa-automatic-watch-nam\citizen-tsuyosa-automatic-watch-nam-vang-thep\shopping (1).webp
 wwwroot\hinhanhbienthe\citizen-tsuyosa-automatic-watch-nam\citizen-tsuyosa-automatic-watch-nam-vang-thep\shopping (3).webp
 wwwroot\hinhanhbienthe\citizen-tsuyosa-automatic-watch-nam\citizen-tsuyosa-automatic-watch-nam-vang-thep\shopping.webp
+wwwroot\hinhanhbienthe\daniel-wellington-classic-nu\daniel-wellington-classic-nu-xanh-thep\shopping (1).webp
+wwwroot\hinhanhbienthe\daniel-wellington-classic-nu\daniel-wellington-classic-nu-xanh-thep\shopping (2).webp
+wwwroot\hinhanhbienthe\daniel-wellington-classic-nu\daniel-wellington-classic-nu-xanh-thep\shopping (3).webp
+wwwroot\hinhanhbienthe\daniel-wellington-classic-nu\daniel-wellington-classic-nu-xanh-thep\shopping (4).webp
+wwwroot\hinhanhbienthe\daniel-wellington-classic-nu\daniel-wellington-classic-nu-xanh-thep\shopping (5).webp
+wwwroot\hinhanhbienthe\daniel-wellington-classic-nu\daniel-wellington-classic-nu-xanh-thep\shopping (6).webp
+wwwroot\hinhanhbienthe\daniel-wellington-classic-nu\daniel-wellington-classic-nu-xanh-thep\shopping.webp
 wwwroot\hinhanhbienthe\hublot-big-bang-unico-nam\hublot-big-bang-unico-nam-trang-cao-su-cao-cap\shopping (1).webp
 wwwroot\hinhanhbienthe\hublot-big-bang-unico-nam\hublot-big-bang-unico-nam-trang-cao-su-cao-cap\shopping.webp
 wwwroot\hinhanhbienthe\oceanus-ocw-t200s-nam\oceanus-ocw-t200s-nam-xanh-trang-thep-khong-gi\shopping (1).webp
@@ -2094,6 +2103,14 @@ wwwroot\hinhanhbienthe\rolex-submariner-date-nam\rolex-submariner-date-nam-hong-
 wwwroot\hinhanhbienthe\rolex-submariner-date-nam\rolex-submariner-date-nam-hong-nhat-day-vai-nato\uwp4922231.jpeg
 wwwroot\hinhanhbienthe\rolex-submariner-date\den.jpg
 wwwroot\hinhanhbienthe\rolex-submariner-date\trang.jpg
+wwwroot\hinhanhbienthe\rolex-submariner-nam\rolex-submariner-nam-vang-thep\shopping (1).webp
+wwwroot\hinhanhbienthe\rolex-submariner-nam\rolex-submariner-nam-vang-thep\shopping (2).webp
+wwwroot\hinhanhbienthe\rolex-submariner-nam\rolex-submariner-nam-vang-thep\shopping (3).webp
+wwwroot\hinhanhbienthe\rolex-submariner-nam\rolex-submariner-nam-vang-thep\shopping.webp
+wwwroot\hinhanhbienthe\rolex-submariner-nam\rolex-submariner-nam-xanh-thep\shopping (1).webp
+wwwroot\hinhanhbienthe\rolex-submariner-nam\rolex-submariner-nam-xanh-thep\shopping (2).webp
+wwwroot\hinhanhbienthe\rolex-submariner-nam\rolex-submariner-nam-xanh-thep\shopping (4).webp
+wwwroot\hinhanhbienthe\rolex-submariner-nam\rolex-submariner-nam-xanh-thep\shopping.webp
 wwwroot\hinhanhbienthe\rolex\citizen-c7.jpg
 wwwroot\hinhanhbienthe\rolex\ck.jpg
 wwwroot\hinhanhbienthe\rolex\f91w.jpg
@@ -2251,6 +2268,16 @@ wwwroot\home\shop-detail.html
 wwwroot\home\shop.html
 wwwroot\home\testimonial.html
 wwwroot\images\default-avatar.jpg
+wwwroot\images\home\chopard-luxshopping2.png.webp
+wwwroot\images\home\omega-luxshopping5.png.webp
+wwwroot\images\home\piaget-luxshopping2.png.webp
+wwwroot\images\home\thuonghieu\cartier-luxshopping4.png.webp
+wwwroot\images\home\thuonghieu\hublot-luxshopping2-1.png.webp
+wwwroot\images\home\thuonghieu\luxshopping102-1.png.webp
+wwwroot\images\home\thuonghieu\luxshoppingvn6-1.png.webp
+wwwroot\images\home\thuonghieu\patek-philippe-logo1-1.png.webp
+wwwroot\images\home\vacheron-constatin-luxshopping1.png.webp
+wwwroot\images\home\z7606362240303-121ad1c968ddc133b45c04e1dc6415aa.jpg.webp
 wwwroot\images\products\6dec2199-be15-49e2-8d7c-c7f7d3c574d1.jpg
 wwwroot\images\products\ae1200.jpg
 wwwroot\images\products\gw6.jpg
@@ -2283,7 +2310,9 @@ wwwroot\img\watch.jpg
 wwwroot\js\admin-setting.js
 wwwroot\js\auth.js
 wwwroot\js\bienthe.js
+wwwroot\js\chat-app.js
 wwwroot\js\giohang.js
+wwwroot\js\home.js
 wwwroot\js\layout.js
 wwwroot\js\nguoidung\checkout.js
 wwwroot\js\nguoidung\giohang.js
@@ -2291,6 +2320,7 @@ wwwroot\js\nguoidung\sanpham.js
 wwwroot\js\nguoidung\sanphamdetail.js
 wwwroot\js\nguoidung\themnhanhsanpham.js
 wwwroot\js\nhapkho.js
+wwwroot\js\sanpham.js
 wwwroot\js\site.js
 wwwroot\js\_formbienthe.js
 wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css

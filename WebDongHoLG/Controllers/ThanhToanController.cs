@@ -210,12 +210,7 @@ namespace WebDongHoLG.Controllers
             _vnPayService = vnPayService;
         }
 
-        // ==================== HELPER ====================
-
-        /// <summary>
-        /// Ghi nhận kết quả thanh toán vào bảng ThanhToan
-        /// và cập nhật trạng thái đơn hàng tương ứng
-        /// </summary>
+       
         private async Task LuuKetQuaThanhToan(int maDonHang, string phuongThuc, string trangThaiThanhToan, string trangThaiDonHang)
         {
             var donHang = await _context.DonHangs
@@ -224,10 +219,8 @@ namespace WebDongHoLG.Controllers
 
             if (donHang == null) return;
 
-            // Cập nhật trạng thái đơn hàng
             donHang.TrangThai = trangThaiDonHang;
 
-            // Nếu chưa có record ThanhToan thì tạo mới, có rồi thì cập nhật
             if (donHang.ThanhToan == null)
             {
                 var thanhToan = new ThanhToan
@@ -241,16 +234,14 @@ namespace WebDongHoLG.Controllers
             }
             else
             {
-                // Thanh toán lại → cập nhật record cũ
                 donHang.ThanhToan.PhuongThuc = phuongThuc;
                 donHang.ThanhToan.TrangThai = trangThaiThanhToan;
                 donHang.ThanhToan.ThoiGianThanhToan = DateTime.Now;
             }
-          
+
             await _context.SaveChangesAsync();
         }
 
-        // ==================== MOMO ====================
 
         [HttpPost]
         [Route("CreatePaymentUrl")]
@@ -263,12 +254,10 @@ namespace WebDongHoLG.Controllers
         [HttpGet]
         public async Task<IActionResult> PaymentCallBackMomo()
         {
-            // 1. Lấy resultCode (V2) hoặc errorCode (V1)
             var resultCode = HttpContext.Request.Query["resultCode"].ToString();
             var errorCode = HttpContext.Request.Query["errorCode"].ToString();
             var finalCode = (!string.IsNullOrEmpty(resultCode) ? resultCode : errorCode).Trim();
 
-            // 2. Lấy maDonHang từ orderId (vd: "28_6391007..." → 28)
             var orderIdString = HttpContext.Request.Query["orderId"].ToString().Trim();
             int maDonHang = 0;
 
@@ -278,14 +267,12 @@ namespace WebDongHoLG.Controllers
                 int.TryParse(mangChuoi[0], out maDonHang);
             }
 
-            // Fallback nếu rớt mạng
             if (maDonHang == 0) maDonHang = HttpContext.Session.GetInt32("PendingOrderId") ?? 0;
 
             if (maDonHang > 0)
             {
                 if (finalCode == "0")
                 {
-                    // ✅ Thanh toán thành công
                     await LuuKetQuaThanhToan(maDonHang, "MoMo", "Thành công", "Chờ xác nhận");
 
                     HttpContext.Session.Remove("PendingOrderId");
@@ -294,7 +281,6 @@ namespace WebDongHoLG.Controllers
                 }
                 else
                 {
-                    // ❌ Thanh toán thất bại / hủy
                     string trangThaiTT = finalCode switch
                     {
                         "1006" => "Đã hủy",
@@ -302,7 +288,6 @@ namespace WebDongHoLG.Controllers
                         _ => "Thất bại"
                     };
 
-                    // DonHang vẫn giữ "Chờ thanh toán" để khách có thể thử lại
                     await LuuKetQuaThanhToan(maDonHang, "MoMo", trangThaiTT, "Chờ thanh toán");
 
                     string msg = finalCode switch
@@ -325,7 +310,6 @@ namespace WebDongHoLG.Controllers
         [HttpPost]
         public IActionResult MomoNotify() => Ok();
 
-        // ==================== VNPAY ====================
 
         [HttpPost]
         public IActionResult CreatePaymentUrlVnpay(PaymentInformationModel model)
@@ -348,7 +332,6 @@ namespace WebDongHoLG.Controllers
 
             if (thanhCong && maDonHang.HasValue)
             {
-                // ✅ Thanh toán thành công
                 await LuuKetQuaThanhToan(maDonHang.Value, "VNPay", "Thành công", "Chờ xác nhận");
 
                 HttpContext.Session.Remove("PendingOrderId");
@@ -358,7 +341,6 @@ namespace WebDongHoLG.Controllers
 
             if (maDonHang.HasValue)
             {
-                // ❌ Thanh toán thất bại / hủy
                 string trangThaiTT = responseCode switch
                 {
                     "24" => "Đã hủy",
@@ -366,7 +348,6 @@ namespace WebDongHoLG.Controllers
                     _ => "Thất bại"
                 };
 
-                // DonHang vẫn giữ "Chờ thanh toán" để khách có thể thử lại
                 await LuuKetQuaThanhToan(maDonHang.Value, "VNPay", trangThaiTT, "Chờ thanh toán");
 
                 string msg = responseCode switch

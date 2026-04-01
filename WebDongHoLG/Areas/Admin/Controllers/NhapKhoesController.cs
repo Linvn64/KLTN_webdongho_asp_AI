@@ -125,13 +125,18 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                     bt.DuongKinhMat,
                     bt.ChatLieuDay,
                     bt.GiaNhap,
-                    TonHienTai = bt.Khos.FirstOrDefault() != null
-                        ? bt.Khos.FirstOrDefault().SoLuongTon
-                        : 0
+                    GiaNhapGanNhat = bt.NhapKhos
+                        .OrderByDescending(n => n.NgayNhap)
+                        .Select(n => (decimal?)n.GiaNhapLuuTru)
+                        .FirstOrDefault(),
+                    TonHienTai = bt.Khos
+                        .Select(k => k.SoLuongTon)
+                        .FirstOrDefault() ?? 0
                 })
-                .ToListAsync();
+                        .ToListAsync();
 
             return Json(data);
         }
+       
     }
 }

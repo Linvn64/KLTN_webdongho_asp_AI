@@ -452,10 +452,16 @@ namespace WebDongHoLG.Areas.Admin.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> GetBienTheBySpId(int maSp)
+        public async Task<IActionResult> GetBienTheBySpId(int maSp, bool? active)
         {
-            var data = await _context.BienTheSanPhams
-                .Where(b => b.MaSp == maSp)
+            var query = _context.BienTheSanPhams.Where(b => b.MaSp == maSp);
+
+            if (active.HasValue)
+            {
+                query = query.Where(b => b.IsActive == active.Value);
+            }
+
+            var data = await query
                 .Select(b => new {
                     b.MaBienThe,
                     b.MaSku,
@@ -472,6 +478,6 @@ namespace WebDongHoLG.Areas.Admin.Controllers
         }
 
 
-       
+
     }
 }

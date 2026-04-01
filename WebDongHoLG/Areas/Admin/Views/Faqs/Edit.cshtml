@@ -1,0 +1,31 @@
+﻿@model WebDongHoLG.Data.Faq
+
+@{
+    ViewData["Title"] = "Chỉnh sửa FAQ";
+    ViewData["FormAction"] = "Edit";
+    ViewData["SubmitText"] = "Cập nhật thay đổi";
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-body">
+                <i class="ti ti-edit me-2 text-warning"></i>@ViewData["Title"]
+            </h2>
+        </div>
+        <div class="col-auto ms-auto">
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="ti ti-arrow-left me-1"></i> Quay lại danh sách
+            </a>
+        </div>
+    </div>
+</div>
+
+@* Gọi Partial View dùng chung cho cả Create và Edit *@
+<partial name="_FormFaq" model="Model" view-data="ViewData" />
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

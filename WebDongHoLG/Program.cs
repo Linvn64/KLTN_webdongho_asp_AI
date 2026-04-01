@@ -1,10 +1,11 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;  
 using WebDongHoLG.Data;
 using WebDongHoLG.Services.Vnpay;
 using WebDongHoLG.ViewModels.momo;
 using WebDongHoLG.Services.Momo;
+using WebDongHoLG.Services.Chatbot;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -19,6 +20,12 @@ builder.Services.AddDbContext<ShopDongHoDbContext>(options =>
 
 // connnect vpn
 builder.Services.AddScoped<IVnPayService, VnPayService>();
+
+//chat bot
+builder.Services.AddHttpClient();  
+builder.Services.AddScoped<IChatbotService, ChatbotService>();
+builder.Services.AddMemoryCache();
+
 
 // Identity configuration
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>

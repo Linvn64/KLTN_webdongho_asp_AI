@@ -92,19 +92,20 @@ namespace WebDongHoLG.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
-            [Required]
-            [StringLength(100, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 6)]
+            [Required(ErrorMessage = "Vui lòng nhập mật khẩu.")]
+            [StringLength(100, ErrorMessage = "Mật khẩu phải từ {2} đến {1} ký tự.", MinimumLength = 6)]
             [DataType(DataType.Password)]
-            [Display(Name = "Password")]
+            [Display(Name = "Mật khẩu")]
             public string Password { get; set; }
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required(ErrorMessage = "Vui lòng xác nhận mật khẩu.")]
             [DataType(DataType.Password)]
-            [Display(Name = "Confirm password")]
-            [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
+            [Display(Name = "Xác nhận mật khẩu")]
+            [Compare("Password", ErrorMessage = "Mật khẩu xác nhận không khớp.")]
             public string ConfirmPassword { get; set; }
         }
 
@@ -154,8 +155,11 @@ namespace WebDongHoLG.Areas.Identity.Pages.Account
                         values: new { area = "Identity", userId = currentUserId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    await _emailSender.SendEmailAsync(
+                        Input.Email,
+                        "Xác nhận email",
+                        $"Vui lòng xác nhận tài khoản bằng cách <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>nhấn vào đây</a>."
+                    );
 
                     if (_userManager.Options.SignIn.RequireConfirmedAccount)
                     {
@@ -163,13 +167,25 @@ namespace WebDongHoLG.Areas.Identity.Pages.Account
                     }
                     else
                     {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
+                        TempData["SuccessMessage"] = "Đăng ký thành công! Vui lòng đăng nhập.";
+
+                        return RedirectToPage("/Account/Login", new { area = "Identity" });
                     }
                 }
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(string.Empty, error.Description);
+                    var message = error.Description;
+
+                    if (message.Contains("Password"))
+                        message = "Mật khẩu chưa đúng yêu cầu (có thể thiếu chữ hoa, số hoặc ký tự đặc biệt).";
+
+                    if (message.Contains("Email"))
+                        message = "Email đã tồn tại hoặc không hợp lệ.";
+
+                    if (message.Contains("UserName"))
+                        message = "Tên đăng nhập đã tồn tại.";
+
+                    ModelState.AddModelError(string.Empty, message);
                 }
             }
             return Page();

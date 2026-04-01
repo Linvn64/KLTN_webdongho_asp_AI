@@ -1,0 +1,89 @@
+﻿@model IEnumerable<WebDongHoLG.Data.Faq>
+
+@{
+    ViewData["Title"] = "Câu hỏi thường gặp";
+    // Layout tùy thuộc vào giao diện người dùng của bạn
+    // Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 col-md-10">
+
+            <div class="text-center mb-5">
+                <h1 class="display-6 fw-bold text-dark mb-3">Chúng tôi có thể giúp gì cho bạn?</h1>
+                <p class="text-secondary">Dưới đây là tổng hợp các câu hỏi thường gặp nhất từ khách hàng.</p>
+            </div>
+
+            @if (Model != null && Model.Any())
+            {
+                <div class="accordion accordion-flush shadow-sm rounded-4 bg-white border" id="faqAccordion">
+                    @foreach (var item in Model)
+                    {
+                        <div class="accordion-item border-bottom">
+                            <h2 class="accordion-header" id="heading-@item.IdFaq">
+                                <button class="accordion-button collapsed fw-bold fs-5 py-4 text-dark"
+                                        type="button"
+                                        data-bs-toggle="collapse"
+                                        data-bs-target="#collapse-@item.IdFaq"
+                                        aria-expanded="false"
+                                        aria-controls="collapse-@item.IdFaq">
+                                    @item.CauHoi
+                                </button>
+                            </h2>
+                            <div id="collapse-@item.IdFaq"
+                                 class="accordion-collapse collapse"
+                                 aria-labelledby="heading-@item.IdFaq"
+                                 data-bs-parent="#faqAccordion">
+                                <div class="accordion-body text-secondary lh-lg pt-0 pb-4 faq-user-content">
+                                    @* Dùng Html.Raw để hiển thị định dạng và ảnh từ Summernote *@
+                                    @Html.Raw(item.CauTraLoi)
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="text-center py-5 bg-light rounded-4">
+                    <p class="text-muted mb-0">Hiện tại chưa có câu hỏi nào được cập nhật.</p>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+<style>
+    /* Làm đẹp cho khối Accordion */
+    .accordion-button:not(.collapsed) {
+        color: #0d6efd; /* Đổi màu xanh khi câu hỏi được mở ra */
+        background-color: #f8f9fa; /* Nền xám nhạt khi mở */
+        box-shadow: none;
+    }
+
+    .accordion-button:focus {
+        box-shadow: none;
+        border-color: rgba(0,0,0,.125);
+    }
+
+    .accordion-item:last-child {
+        border-bottom: none !important;
+    }
+
+    /* Đảm bảo ảnh chèn từ Admin không bị tràn khung ở trang người dùng */
+    .faq-user-content img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+        margin: 15px 0;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Căn chỉnh lại các list (danh sách) nếu có chèn từ editor */
+    .faq-user-content ul, .faq-user-content ol {
+        padding-left: 1.5rem;
+        margin-bottom: 1rem;
+    }
+</style>

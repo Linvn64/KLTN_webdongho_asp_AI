@@ -19,8 +19,7 @@ namespace WebDongHoLG.Controllers
         }
         
 
-        public async Task<IActionResult> Index(int? danhmuc, int? thuonghieu,
-     string? keyword, string? doiTuong, string? sapXep, int page = 1)
+        public async Task<IActionResult> Index(int? danhmuc, int? thuonghieu, string? keyword, string? doiTuong, string? sapXep, string? locMacDinh, int page = 1)
         {
             var query = _context.SanPhams
                 .Include(s => s.IdDanhMucNavigation)
@@ -67,6 +66,7 @@ namespace WebDongHoLG.Controllers
                 };
             }).ToList();
 
+
             var nhomSanPhams = allVMs
                 .GroupBy(s => new { s.TenSp, s.TenThuongHieu })
                 .Select(g => new SanPhamNhomVM
@@ -83,13 +83,43 @@ namespace WebDongHoLG.Controllers
                 })
                 .AsQueryable();
 
-            nhomSanPhams = sapXep switch
+            IOrderedQueryable<SanPhamNhomVM>? ordered = null;
+
+            if (!string.IsNullOrEmpty(locMacDinh))
             {
-                "gia-tang" => nhomSanPhams.OrderBy(s => s.GiaBanThapNhat),
-                "gia-giam" => nhomSanPhams.OrderByDescending(s => s.GiaBanThapNhat),
-                "ten-az" => nhomSanPhams.OrderBy(s => s.TenSp),
-                _ => nhomSanPhams.OrderBy(s => s.TenSp)
-            };
+                ordered = locMacDinh switch
+                {
+                    "ban-chay" => nhomSanPhams.OrderByDescending(s => s.DanhSachTheoDoiTuong.Count),
+                    "moi-nhat" => nhomSanPhams.OrderByDescending(s => s.MaSpDaiDien),
+                    _ => nhomSanPhams.OrderBy(s => s.TenSp)
+                };
+            }
+
+            if (!string.IsNullOrEmpty(sapXep))
+            {
+                if (ordered != null)
+                {
+                    ordered = sapXep switch
+                    {
+                        "gia-tang" => ordered.ThenBy(s => s.GiaBanThapNhat),
+                        "gia-giam" => ordered.ThenByDescending(s => s.GiaBanThapNhat),
+                        "ten-az" => ordered.ThenBy(s => s.TenSp),
+                        _ => ordered
+                    };
+                }
+                else
+                {
+                    ordered = sapXep switch
+                    {
+                        "gia-tang" => nhomSanPhams.OrderBy(s => s.GiaBanThapNhat),
+                        "gia-giam" => nhomSanPhams.OrderByDescending(s => s.GiaBanThapNhat),
+                        "ten-az" => nhomSanPhams.OrderBy(s => s.TenSp),
+                        _ => nhomSanPhams.OrderBy(s => s.TenSp)
+                    };
+                }
+            }
+
+            nhomSanPhams = ordered ?? nhomSanPhams.OrderBy(s => s.TenSp);
 
             int totalItems = nhomSanPhams.Count();
             int totalPages = (int)Math.Ceiling(totalItems / (double)PAGE_SIZE);
@@ -104,6 +134,7 @@ namespace WebDongHoLG.Controllers
             ViewBag.CurrentPage = page;
             ViewBag.TotalPages = totalPages;
             ViewBag.TotalItems = totalItems;
+            ViewBag.CurrentLoc = locMacDinh;
 
             return View(data);
         }

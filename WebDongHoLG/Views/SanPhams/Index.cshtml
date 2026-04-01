@@ -14,13 +14,40 @@
     </div>
 }
 
+@section FilterBar {
+    <div class="d-flex align-items-center mb-3">
+
+        <!-- RIGHT -->
+        <form method="get" asp-action="Index" class="d-flex gap-2 ms-auto">
+
+            <input type="hidden" name="keyword" value="@ViewBag.CurrentKeyword" />
+            <input type="hidden" name="danhmuc" value="@ViewBag.CurrentDanhMuc" />
+
+            <select name="locMacDinh" class="form-select form-select-sm"
+                    onchange="this.form.submit()">
+                <option value="">Mặc định</option>
+                <option value="ban-chay" selected="@(ViewBag.CurrentLoc == "ban-chay" ? "selected" : null)">Bán chạy</option>
+                <option value="moi-nhat" selected="@(ViewBag.CurrentLoc == "moi-nhat" ? "selected" : null)">Mới nhất</option>
+            </select>
+
+            <select name="sapXep" class="form-select form-select-sm"
+                    onchange="this.form.submit()">
+                <option value="">Sắp xếp</option>
+                <option value="gia-tang" selected="@(ViewBag.CurrentSapXep == "gia-tang" ? "selected" : null)">Giá tăng</option>
+                <option value="gia-giam" selected="@(ViewBag.CurrentSapXep == "gia-giam" ? "selected" : null)">Giá giảm</option>
+                <option value="ten-az" selected="@(ViewBag.CurrentSapXep == "ten-az" ? "selected" : null)">Tên A-Z</option>
+            </select>
+
+        </form>
+    </div>
+}
 <div class="row mb-3">
     <div class="col-md-6 d-flex align-items-center gap-2">
         <span class="text-muted small">
             Tìm thấy <strong>@ViewBag.TotalItems</strong> sản phẩm
         </span>
     </div>
-    <div class="col-md-6 d-flex justify-content-end gap-2">
+    @* <div class="col-md-6 d-flex justify-content-end gap-2">
         <form method="get" asp-action="Index" class="d-flex gap-2">
             @if (ViewBag.CurrentDanhMuc != null)
             {
@@ -44,7 +71,9 @@
                 </option>
             </select>
         </form>
-    </div>
+    </div> *@
+
+
 </div>
 
 @await Html.PartialAsync("MatHangSanPham", Model)
@@ -55,19 +84,33 @@
         <div class="pagination d-flex justify-content-center mt-5">
             @if ((int)ViewBag.CurrentPage > 1)
             {
-                <a href="?page=@((int)ViewBag.CurrentPage - 1)&danhmuc=@ViewBag.CurrentDanhMuc&keyword=@ViewBag.CurrentKeyword&sapXep=@ViewBag.CurrentSapXep"
+                <a href="?page=@((int)ViewBag.CurrentPage - 1)
+                            &danhmuc=@ViewBag.CurrentDanhMuc
+                            &keyword=@ViewBag.CurrentKeyword
+                            &sapXep=@ViewBag.CurrentSapXep
+                            &locMacDinh=@ViewBag.CurrentLoc"
                    class="rounded">&laquo;</a>
             }
             @for (int i = 1; i <= (int)ViewBag.TotalPages; i++)
             {
-                <a href="?page=@i&danhmuc=@ViewBag.CurrentDanhMuc&keyword=@ViewBag.CurrentKeyword&sapXep=@ViewBag.CurrentSapXep"
+                <a href="?page=@i
+                        &danhmuc=@ViewBag.CurrentDanhMuc
+                        &keyword=@ViewBag.CurrentKeyword
+                        &sapXep=@ViewBag.CurrentSapXep
+                        &locMacDinh=@ViewBag.CurrentLoc"
                    class="@((int)ViewBag.CurrentPage == i ? "active " : "")rounded">@i</a>
             }
             @if ((int)ViewBag.CurrentPage < (int)ViewBag.TotalPages)
             {
-                <a href="?page=@((int)ViewBag.CurrentPage + 1)&danhmuc=@ViewBag.CurrentDanhMuc&keyword=@ViewBag.CurrentKeyword&sapXep=@ViewBag.CurrentSapXep"
+                <a href="?page=@((int)ViewBag.CurrentPage + 1)
+                        &danhmuc=@ViewBag.CurrentDanhMuc
+                        &keyword=@ViewBag.CurrentKeyword
+                        &sapXep=@ViewBag.CurrentSapXep
+                        &locMacDinh=@ViewBag.CurrentLoc"
                    class="rounded">&raquo;</a>
             }
         </div>
     </div>
 }
+
+<script src="~/js/nguoidung/themnhanhsanpham.js"></script>

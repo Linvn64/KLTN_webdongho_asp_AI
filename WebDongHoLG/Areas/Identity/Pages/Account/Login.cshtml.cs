@@ -114,18 +114,29 @@ namespace WebDongHoLG.Areas.Identity.Pages.Account
 
                 var userName = Input.UserNameOrEmail;
 
-
                 if (Input.UserNameOrEmail.Contains("@"))
                 {
+                    var email = Input.UserNameOrEmail.ToLower();
 
-                    var user = await _userManager.FindByEmailAsync(Input.UserNameOrEmail);
-                    if (user != null)
+                    var isValidEmail = new EmailAddressAttribute().IsValid(email);
+
+                    if (!isValidEmail)
                     {
-
-                        userName = user.UserName;
+                        ModelState.AddModelError("", "Email không đúng định dạng (ví dụ: abc@gmail.com).");
+                        return Page();
                     }
-                }
 
+                    // 🔥 Convert email → username
+                    var user = await _userManager.FindByEmailAsync(email);
+
+                    if (user == null)
+                    {
+                        ModelState.AddModelError("", "Email không tồn tại.");
+                        return Page();
+                    }
+
+                    userName = user.UserName; 
+                }
 
                 var result = await _signInManager.PasswordSignInAsync(
                     userName,

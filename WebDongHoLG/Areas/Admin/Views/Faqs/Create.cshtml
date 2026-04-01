@@ -1,0 +1,75 @@
+﻿@model WebDongHoLG.Data.Faq
+
+@{
+    ViewData["Title"] = "Thêm mới FAQ";
+}
+
+<!-- Summernote CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title">Thêm câu hỏi thường gặp mới</h2>
+            <div class="text-muted mt-1">Bạn có thể soạn thảo văn bản và kéo thả ảnh trực tiếp vào ô nội dung.</div>
+        </div>
+        <div class="col-auto ms-auto">
+            <a asp-action="Index" class="btn btn-secondary">
+                <i class="ti ti-arrow-left me-2"></i> Quay lại
+            </a>
+        </div>
+    </div>
+</div>
+
+<form asp-action="Create" class="card shadow-sm">
+    <div class="card-body">
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <div class="mb-3">
+            <label asp-for="CauHoi" class="form-label fw-bold">Câu hỏi</label>
+            <input asp-for="CauHoi" class="form-control form-control-lg" placeholder="Nhập tiêu đề câu hỏi..." />
+            <span asp-validation-for="CauHoi" class="text-danger"></span>
+        </div>
+        <div class="mb-3">
+            <label asp-for="CauTraLoi" class="form-label fw-bold">Câu trả lời (Chèn ảnh tại đây)</label>
+            <textarea asp-for="CauTraLoi" id="summernote" class="form-control"></textarea>
+            <span asp-validation-for="CauTraLoi" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="TrangThai" class="form-label fw-bold">Trạng thái</label>
+            <select asp-for="TrangThai" class="form-select">
+                <option value="Hoạt động">Hoạt động</option>
+                <option value="Bản nháp" selected>Bản nháp</option>
+                <option value="Lưu trữ">Lưu trữ</option>
+            </select>
+        </div>
+    </div>
+    <div class="card-footer bg-light d-flex justify-content-end gap-2">
+        <button type="submit" class="btn btn-primary px-4">Lưu câu hỏi</button>
+    </div>
+</form>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $('#summernote').summernote({
+                placeholder: 'Nhập nội dung... Kéo thả ảnh vào đây để chèn.',
+                tabsize: 2,
+                height: 300,
+                toolbar: [
+                    ['style', ['style']],
+                    ['font', ['bold', 'underline', 'clear']],
+                    ['color', ['color']],
+                    ['para', ['ul', 'ol', 'paragraph']],
+                    ['table', ['table']],
+                    ['insert', ['link', 'picture', 'video']],
+                    ['view', ['fullscreen', 'codeview']]
+                ]
+            });
+        });
+    </script>
+}   

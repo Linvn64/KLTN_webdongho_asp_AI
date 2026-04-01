@@ -34,10 +34,9 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                 .ToListAsync();
 
             ViewBag.DanhSachSanPham = await _context.SanPhams
-                .Where(s => s.IsActive == true)
-                .OrderBy(s => s.TenSanPham)
-                .Select(s => new { s.MaSp, s.TenSanPham })
-                .ToListAsync();
+                 .OrderBy(s => s.TenSanPham)
+                 .Select(s => new { s.MaSp, s.TenSanPham })
+                 .ToListAsync();
 
             ViewBag.CurrentMaSp = maSp;
             ViewBag.CurrentSoSao = soSao;

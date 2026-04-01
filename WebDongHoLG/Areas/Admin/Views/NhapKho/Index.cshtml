@@ -28,28 +28,29 @@
     </div>
 }
 
+<!-- Stats -->
 <div class="row row-deck row-cards mb-3">
     <div class="col-sm-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
-                <div class="subheader">Tổng lần nhập</div>
-                <div class="h1 mb-0 text-primary">@ViewBag.TongLanNhap</div>
+                <div class="subheader text-secondary">Tổng lần nhập</div>
+                <div class="h1 mb-0 text-primary fw-bold">@ViewBag.TongLanNhap</div>
             </div>
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
-                <div class="subheader">Tổng số lượng</div>
-                <div class="h1 mb-0 text-azure">@ViewBag.TongSoLuong</div>
+                <div class="subheader text-secondary">Tổng số lượng</div>
+                <div class="h1 mb-0 text-azure fw-bold">@ViewBag.TongSoLuong</div>
             </div>
         </div>
     </div>
     <div class="col-sm-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
-                <div class="subheader">Tổng giá trị nhập</div>
-                <div class="h1 mb-0 text-green">
+                <div class="subheader text-secondary">Tổng giá trị nhập</div>
+                <div class="h1 mb-0 text-green fw-bold">
                     @(((decimal)ViewBag.TongGiaTri).ToString("N0")) ₫
                 </div>
             </div>
@@ -57,11 +58,12 @@
     </div>
 </div>
 
-<div class="card mb-3 shadow-sm">
+<!-- Filter -->
+<div class="card mb-3 shadow-sm border-0">
     <div class="card-body">
         <form method="get" class="row g-2 align-items-end">
             <div class="col-md-3">
-                <label class="form-label">Tìm kiếm</label>
+                <label class="form-label text-secondary">Tìm kiếm</label>
                 <div class="input-icon">
                     <span class="input-icon-addon"><i class="ti ti-search"></i></span>
                     <input type="text" name="searchString" value="@ViewBag.CurrentSearch"
@@ -69,11 +71,11 @@
                 </div>
             </div>
             <div class="col-md-3">
-                <label class="form-label">Từ ngày</label>
+                <label class="form-label text-secondary">Từ ngày</label>
                 <input type="date" name="tuNgay" value="@ViewBag.TuNgay" class="form-control" />
             </div>
             <div class="col-md-3">
-                <label class="form-label">Đến ngày</label>
+                <label class="form-label text-secondary">Đến ngày</label>
                 <input type="date" name="denNgay" value="@ViewBag.DenNgay" class="form-control" />
             </div>
             <div class="col-md-3 d-flex gap-2">
@@ -88,16 +90,17 @@
     </div>
 </div>
 
-<div class="card shadow-sm">
+<!-- Table -->
+<div class="card shadow-sm border-0">
     <div class="table-responsive">
-        <table class="table table-vcenter table-hover card-table">
-            <thead>
+        <table class="table table-vcenter table-hover table-striped table-bordered card-table align-middle">
+            <thead class="table-light">
                 <tr>
                     <th>Thời gian</th>
                     <th>Sản phẩm</th>
                     <th>SKU</th>
                     <th>Màu / Size</th>
-                    <th class="text-center">Số lượng nhập</th>
+                    <th class="text-center">Số lượng</th>
                     <th class="text-end">Giá nhập</th>
                     <th class="text-end">Thành tiền</th>
                     <th>Người nhập</th>
@@ -107,53 +110,65 @@
                 @if (!Model.Any())
                 {
                     <tr>
-                        <td colspan="8" class="text-center py-5 text-muted">
+                        <td colspan="8" class="text-center py-5 text-secondary">
                             <i class="ti ti-inbox fs-1 d-block mb-2"></i>
                             Chưa có lịch sử nhập kho nào.
                         </td>
                     </tr>
                 }
+
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td class="text-muted small">
-                            <div class="fw-bold">@item.NgayNhap.ToString("dd/MM/yyyy")</div>
+                        <td class="small text-secondary">
+                            <div class="fw-bold text-dark">
+                                @item.NgayNhap.ToString("dd/MM/yyyy")
+                            </div>
                             <div>@item.NgayNhap.ToString("HH:mm")</div>
                         </td>
+
                         <td class="fw-bold text-primary">
                             @(item.MaBienTheNavigation?.MaSpNavigation?.TenSanPham ?? "N/A")
                         </td>
+
                         <td class="font-monospace small">
                             @(item.MaBienTheNavigation?.MaSku ?? "-")
                         </td>
+
                         <td>
-                            <span class="badge bg-blue-lt">
+                            <span class="badge bg-blue text-white">
                                 @(item.MaBienTheNavigation?.MauSac ?? "-")
                             </span>
                             @if (item.MaBienTheNavigation?.DuongKinhMat != null)
                             {
-                                <span class="text-muted small ms-1">
+                                <span class="text-secondary small ms-1">
                                     @item.MaBienTheNavigation.DuongKinhMat mm
                                 </span>
                             }
                         </td>
+
                         <td class="text-center">
-                            <span class="badge bg-green fw-bold fs-6">
+                            <span class="badge bg-green text-white fw-bold fs-6">
                                 +@item.SoLuongNhap
                             </span>
                         </td>
-                        <td class="text-end">
+
+                        <td class="text-end fw-medium">
                             @item.GiaNhapLuuTru.ToString("N0") ₫
                         </td>
-                        <td class="text-end fw-bold text-success">
+
+                        <td class="text-end fw-bold text-green">
                             @((item.SoLuongNhap * item.GiaNhapLuuTru).ToString("N0")) ₫
                         </td>
+
                         <td>
                             <div class="d-flex align-items-center gap-2">
-                                <span class="avatar avatar-xs bg-blue-lt">
+                                <span class="avatar avatar-xs bg-blue text-white">
                                     <i class="ti ti-user"></i>
                                 </span>
-                                <span class="small">@(item.NguoiNhap ?? "N/A")</span>
+                                <span class="small text-secondary">
+                                    @(item.NguoiNhap ?? "N/A")
+                                </span>
                             </div>
                         </td>
                     </tr>

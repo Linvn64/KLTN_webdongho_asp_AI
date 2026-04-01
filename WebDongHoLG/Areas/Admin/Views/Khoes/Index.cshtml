@@ -19,72 +19,78 @@
     </div>
 </div>
 
+<!-- Stats -->
 <div class="row row-deck row-cards mb-3">
     <div class="col-sm-6 col-lg-3">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
-                <div class="subheader">Tổng biến thể</div>
-                <div class="h1 mb-0 text-primary">@ViewBag.TongBienThe</div>
-                <div class="text-muted small">đang theo dõi</div>
+                <div class="subheader text-secondary">Tổng biến thể</div>
+                <div class="h1 mb-0 text-primary fw-bold">@ViewBag.TongBienThe</div>
+                <div class="text-secondary small">đang theo dõi</div>
             </div>
         </div>
     </div>
+
     <div class="col-sm-6 col-lg-3">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0">
             <div class="card-body">
-                <div class="subheader">Tổng tồn kho</div>
-                <div class="h1 mb-0 text-azure">@ViewBag.TongTon</div>
-                <div class="text-muted small">sản phẩm</div>
+                <div class="subheader text-secondary">Tổng tồn kho</div>
+                <div class="h1 mb-0 text-azure fw-bold">@ViewBag.TongTon</div>
+                <div class="text-secondary small">sản phẩm</div>
             </div>
         </div>
     </div>
+
     <div class="col-sm-6 col-lg-3">
         <div class="card shadow-sm border-warning">
             <div class="card-body">
-                <div class="subheader text-warning">Sắp hết hàng</div>
-                <div class="h1 mb-0 text-warning">@ViewBag.SapHetHang</div>
-                <div class="text-muted small">tồn kho ≤ @nguong</div>
+                <div class="subheader text-warning fw-bold">Sắp hết hàng</div>
+                <div class="h1 mb-0 text-warning fw-bold">@ViewBag.SapHetHang</div>
+                <div class="text-secondary small">tồn kho ≤ @nguong</div>
             </div>
         </div>
     </div>
+
     <div class="col-sm-6 col-lg-3">
         <div class="card shadow-sm border-danger">
             <div class="card-body">
-                <div class="subheader text-danger">Hết hàng</div>
-                <div class="h1 mb-0 text-danger">@ViewBag.HetHang</div>
-                <div class="text-muted small">tồn kho = 0</div>
+                <div class="subheader text-danger fw-bold">Hết hàng</div>
+                <div class="h1 mb-0 text-danger fw-bold">@ViewBag.HetHang</div>
+                <div class="text-secondary small">tồn kho = 0</div>
             </div>
         </div>
     </div>
 </div>
 
+<!-- Alert -->
 @if ((int)ViewBag.SapHetHang > 0)
 {
     <div class="alert alert-warning shadow-sm mb-3">
         <div class="d-flex align-items-center">
             <i class="ti ti-alert-triangle me-2 fs-3"></i>
             <div>
-                <strong>Cảnh báo!</strong> Có <strong>@ViewBag.SapHetHang</strong> biến thể
-                sắp hết hàng (tồn kho ≤ @nguong).
+                <strong>Cảnh báo!</strong> Có <strong>@ViewBag.SapHetHang</strong> biến thể sắp hết hàng.
                 <a href="?sapHetHang=true" class="alert-link ms-1">Xem ngay →</a>
             </div>
         </div>
     </div>
 }
 
-<div class="card mb-3 shadow-sm">
+<!-- Filter -->
+<div class="card mb-3 shadow-sm border-0">
     <div class="card-body">
         <form method="get" class="row g-2 align-items-end">
             <div class="col-md-4">
-                <label class="form-label">Tìm kiếm</label>
+                <label class="form-label text-secondary">Tìm kiếm</label>
                 <div class="input-icon">
                     <span class="input-icon-addon"><i class="ti ti-search"></i></span>
                     <input type="text" name="searchString" value="@ViewBag.CurrentSearch"
                            class="form-control" placeholder="Tên sản phẩm, SKU..." />
                 </div>
             </div>
+
             <div class="col-md-3">
-                <label class="form-label">Thương hiệu</label>
+                <label class="form-label text-secondary">Thương hiệu</label>
                 <select name="thuongHieuId" class="form-select">
                     <option value="">Tất cả</option>
                     @foreach (var th in ViewBag.ThuongHieus)
@@ -96,8 +102,9 @@
                     }
                 </select>
             </div>
+
             <div class="col-md-3">
-                <label class="form-label">Trạng thái tồn</label>
+                <label class="form-label text-secondary">Trạng thái</label>
                 <select name="sapHetHang" class="form-select">
                     <option value="">Tất cả</option>
                     <option value="true" selected="@(ViewBag.CurrentSapHetHang == true ? "selected" : null)">
@@ -105,11 +112,12 @@
                     </option>
                 </select>
             </div>
+
             <div class="col-md-2 d-flex gap-2">
                 <button type="submit" class="btn btn-primary w-100">
                     <i class="ti ti-filter me-1"></i>Lọc
                 </button>
-                <a asp-action="Index" class="btn btn-outline-secondary btn-icon" title="Tải lại">
+                <a asp-action="Index" class="btn btn-outline-secondary btn-icon">
                     <i class="ti ti-refresh"></i>
                 </a>
             </div>
@@ -117,21 +125,23 @@
     </div>
 </div>
 
-<div class="card shadow-sm">
+<!-- Table -->
+<div class="card shadow-sm border-0">
     <div class="table-responsive">
-        <table class="table table-vcenter table-hover card-table">
-            <thead>
+        <table class="table table-vcenter table-hover table-striped table-bordered align-middle">
+            <thead class="table-light">
                 <tr>
                     <th style="width:30px;"></th>
                     <th>Sản phẩm</th>
                     <th>Thương hiệu</th>
                     <th>Đối tượng</th>
-                    <th class="text-center">Số biến thể</th>
-                    <th class="text-center">Tổng tồn</th>
+                    <th class="text-center">Biến thể</th>
+                    <th class="text-center">Tồn</th>
                     <th class="text-center">Trạng thái</th>
                     <th class="text-end">Thao tác</th>
                 </tr>
             </thead>
+
             <tbody>
                 @foreach (var sp in Model)
                 {
@@ -139,118 +149,87 @@
                     var tongTonSp = bienThes.Sum(bt => bt.Khos.FirstOrDefault()?.SoLuongTon ?? 0);
                     var coSapHet = bienThes.Any(bt => (bt.Khos.FirstOrDefault()?.SoLuongTon ?? 0) <= nguong);
                     var coHetHang = bienThes.Any(bt => (bt.Khos.FirstOrDefault()?.SoLuongTon ?? 0) <= 0);
-                    var spRowClass = coHetHang ? "table-danger" : (coSapHet ? "table-warning" : "");
 
-                    <!-- Chỉ 1 hàng sản phẩm duy nhất -->
-                    <tr class="@spRowClass" style="cursor:pointer;"
-                        onclick="toggleKho(@sp.MaSp, this)">
+                    <tr onclick="toggleKho(@sp.MaSp, this)" style="cursor:pointer;">
                         <td>
-                            <i class="ti ti-chevron-right text-muted toggle-icon-kho" style="transition:0.2s;"></i>
+                            <i class="ti ti-chevron-right text-secondary toggle-icon-kho"></i>
                         </td>
+
                         <td>
                             <div class="fw-bold text-primary">@sp.TenSanPham</div>
-                            <div class="text-muted small">@(sp.IdDanhMucNavigation?.TenDanhMuc ?? "")</div>
+                            <div class="text-secondary small">@(sp.IdDanhMucNavigation?.TenDanhMuc ?? "")</div>
                         </td>
+
                         <td>
-                            <span class="badge bg-primary-lt">
+                            <span class="badge bg-blue text-white">
                                 @(sp.ThuongHieuNavigation?.TenThuongHieu ?? "N/A")
                             </span>
                         </td>
-                        <td class="text-muted small">@sp.DoiTuong</td>
+
+                        <td class="text-secondary small">@sp.DoiTuong</td>
+
                         <td class="text-center">
-                            <span class="badge bg-azure-lt">@bienThes.Count</span>
+                            <span class="badge bg-azure text-white">@bienThes.Count</span>
                         </td>
+
                         <td class="text-center">
-                            <span class="h4 fw-bold @(tongTonSp <= 0 ? "text-danger" : coSapHet ? "text-warning" : "text-success")">
+                            <span class="fw-bold @(tongTonSp <= 0 ? "text-danger" : coSapHet ? "text-warning" : "text-success")">
                                 @tongTonSp
                             </span>
                         </td>
+
                         <td class="text-center">
                             @if (coHetHang)
                             {
-                                <span class="badge bg-red fw-bold">Có hết hàng</span>
+                                <span class="badge bg-red text-white fw-bold">Hết hàng</span>
                             }
                             else if (coSapHet)
                             {
-                                <span class="badge bg-warning fw-bold">
-                                    <i class="ti ti-alert-triangle me-1"></i>Sắp hết
-                                </span>
+                                <span class="badge bg-warning text-dark fw-bold">Sắp hết</span>
                             }
                             else
                             {
-                                <span class="badge bg-green-lt fw-bold">Còn hàng</span>
+                                <span class="badge bg-green text-white fw-bold">Còn hàng</span>
                             }
                         </td>
-                        <!-- Nút nhập kho nhanh -->
+
                         <td class="text-end" onclick="event.stopPropagation()">
                             <a href="/Admin/NhapKho/Create?maSp=@sp.MaSp"
-                               class="btn btn-sm btn-outline-primary" title="Nhập kho nhanh">
-                                <i class="ti ti-truck-delivery me-1"></i>Nhập kho
+                               class="btn btn-sm btn-outline-primary">
+                                <i class="ti ti-truck-delivery me-1"></i>Nhập
                             </a>
                         </td>
                     </tr>
 
-                    <!-- Hàng biến thể (ẩn ban đầu) -->
+                    <!-- Detail -->
                     <tr id="kho-row-@sp.MaSp" class="d-none">
-                        <td colspan="8" class="p-0 border-top-0">
-                            <table class="table table-sm table-vcenter mb-0 bg-white">
+                        <td colspan="8" class="p-0">
+                            <table class="table table-sm table-striped table-bordered mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <td style="width:30px;"></td>
-                                        <th>Ảnh</th>
+                                        <th></th>
                                         <th>SKU</th>
-                                        <th>Màu sắc</th>
+                                        <th>Màu</th>
                                         <th>Size</th>
-                                        <th>Chất liệu dây</th>
-                                        <th class="text-center">Tồn kho</th>
-                                        <th class="text-center">Trạng thái</th>
+                                        <th>Dây</th>
+                                        <th class="text-center">Tồn</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @foreach (var bt in bienThes)
                                     {
                                         var ton = bt.Khos.FirstOrDefault()?.SoLuongTon ?? 0;
-                                        var btRowClass = ton <= 0 ? "table-danger" : (ton <= nguong ? "table-warning" : "");
 
-                                        <tr class="@btRowClass">
+                                        <tr>
                                             <td></td>
-                                            <td>
-                                                @if (!string.IsNullOrEmpty(bt.ImageUrl))
-                                                {
-                                                    <span class="avatar avatar-sm border shadow-sm"
-                                                          style="background-image:url('@bt.ImageUrl')"></span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="avatar avatar-sm border">
-                                                        <i class="ti ti-photo-off"></i>
-                                                    </span>
-                                                }
-                                            </td>
                                             <td class="font-monospace small">@bt.MaSku</td>
-                                            <td><span class="badge bg-blue-lt">@bt.MauSac</span></td>
-                                            <td class="text-muted small">
+                                            <td><span class="badge bg-blue text-white">@bt.MauSac</span></td>
+                                            <td class="text-secondary small">
                                                 @(bt.DuongKinhMat != null ? bt.DuongKinhMat + " mm" : "-")
                                             </td>
-                                            <td class="text-muted small">@(bt.ChatLieuDay ?? "-")</td>
-                                            <td class="text-center">
-                                                <span class="h4 fw-bold @(ton <= 0 ? "text-danger" : ton <= nguong ? "text-warning" : "text-success")">
-                                                    @ton
-                                                </span>
-                                            </td>
-                                            <td class="text-center">
-                                                @if (ton <= 0)
-                                                {
-                                                    <span class="badge bg-red fw-bold">Hết hàng</span>
-                                                }
-                                                else if (ton <= nguong)
-                                                {
-                                                    <span class="badge bg-warning fw-bold">Sắp hết</span>
-                                                }
-                                                else
-                                                {
-                                                    <span class="badge bg-green-lt fw-bold">Còn hàng</span>
-                                                }
+                                            <td class="text-secondary small">@(bt.ChatLieuDay ?? "-")</td>
+                                            <td class="text-center fw-bold @(ton <= 0 ? "text-danger" : ton <= nguong ? "text-warning" : "text-success")">
+                                                @ton
                                             </td>
                                         </tr>
                                     }
@@ -269,10 +248,10 @@
         function toggleKho(maSp, row) {
             const khoRow = document.getElementById(`kho-row-${maSp}`);
             const icon = row.querySelector('.toggle-icon-kho');
-            const isHidden = khoRow.classList.contains('d-none');
+            const show = khoRow.classList.contains('d-none');
 
-            khoRow.classList.toggle('d-none', !isHidden);
-            icon.style.transform = isHidden ? 'rotate(90deg)' : 'rotate(0deg)';
+            khoRow.classList.toggle('d-none', !show);
+            icon.style.transform = show ? 'rotate(90deg)' : 'rotate(0deg)';
         }
     </script>
 }

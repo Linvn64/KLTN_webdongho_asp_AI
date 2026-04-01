@@ -1,0 +1,90 @@
+﻿@model WebDongHoLG.Data.Faq
+
+<!-- Summernote CSS -->
+<link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+
+<div class="row row-cards">
+    <div class="col-12">
+        <form asp-action="@ViewData["FormAction"]" method="post" class="card shadow-sm border-0">
+            <div class="card-status-top bg-primary"></div>
+            <div class="card-body">
+                <div asp-validation-summary="ModelOnly" class="alert alert-important alert-danger" role="alert"></div>
+
+                @if (ViewData["FormAction"]?.ToString() == "Edit")
+                {
+                    <input type="hidden" asp-for="IdFaq" />
+                }
+
+                <div class="row">
+                    <!-- Câu hỏi -->
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="CauHoi" class="form-label text-body fw-bold">Câu hỏi <span class="text-danger">*</span></label>
+                        <input asp-for="CauHoi" class="form-control form-control-lg bg-body text-body" placeholder="Nhập tiêu đề câu hỏi..." />
+                        <span asp-validation-for="CauHoi" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Câu trả lời (Summernote) -->
+                    <div class="col-md-12 mb-3">
+                        <label asp-for="CauTraLoi" class="form-label text-body fw-bold">Nội dung câu trả lời <span class="text-danger">*</span></label>
+                        <textarea asp-for="CauTraLoi" id="summernote" class="form-control"></textarea>
+                        <span asp-validation-for="CauTraLoi" class="text-danger small"></span>
+                    </div>
+
+                    <!-- Trạng thái -->
+                    <div class="col-md-4 mb-3">
+                        <label asp-for="TrangThai" class="form-label text-body fw-bold">Trạng thái</label>
+                        <select asp-for="TrangThai" class="form-select bg-body text-body">
+                            <option value="Hoạt động">Hoạt động</option>
+                            <option value="Bản nháp">Bản nháp</option>
+                            <option value="Lưu trữ">Lưu trữ</option>
+                        </select>
+                        <span asp-validation-for="TrangThai" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Nút bấm -->
+            <div class="card-footer bg-transparent d-flex justify-content-end gap-2">
+                <a asp-action="Index" class="btn btn-link link-secondary">Hủy bỏ</a>
+                <button type="submit" class="btn btn-primary px-4 shadow-sm">
+                    <i class="ti ti-check me-1"></i> @ViewData["SubmitText"]
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#summernote').summernote({
+            height: 350,
+            placeholder: 'Nhập nội dung và chèn ảnh tại đây...',
+            toolbar: [
+                ['style', ['style']],
+                ['font', ['bold', 'underline', 'clear']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['insert', ['link', 'picture', 'video']],
+                ['view', ['fullscreen', 'codeview']]
+            ]
+        });
+
+        // Tối ưu Summernote cho Dark Mode
+        $('.note-editor').addClass('card border-0');
+        $('.note-toolbar').addClass('bg-body-tertiary border-bottom-0');
+        $('.note-editable').addClass('bg-body text-body');
+    });
+</script>
+
+<style>
+    /* Đảm bảo nội dung trong editor hiển thị rõ trong dark mode */
+    .note-editable {
+        color: var(--tblr-body-color) !important;
+    }
+
+    .note-placeholder {
+        color: var(--tblr-secondary) !important;
+    }
+</style>

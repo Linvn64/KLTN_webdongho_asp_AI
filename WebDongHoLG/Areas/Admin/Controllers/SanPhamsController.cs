@@ -190,17 +190,18 @@ namespace WebDongHoLG.Areas.Admin.Controllers
 
         private bool SanPhamExists(int id) => _context.SanPhams.Any(e => e.MaSp == id);
 
-        // Xem thùng rác
         public async Task<IActionResult> Trash()
         {
-            var listTrash = await _context.SanPhams
+            var trashList = await _context.SanPhams
+                .Include(s => s.IdDanhMucNavigation)
                 .Include(s => s.BienTheSanPhams)
-                .Where(s => s.IsActive == false)
+                .Where(s => s.IsActive == false || s.BienTheSanPhams.Any(bt => bt.IsActive == false))
                 .ToListAsync();
-            return View(listTrash);
+
+            return View(trashList);
         }
 
-
+       
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Restore(int id, string type)

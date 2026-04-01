@@ -1,0 +1,157 @@
+﻿@model IEnumerable<WebDongHoLG.Data.Faq>
+
+@{
+    ViewData["Title"] = "Quản lý FAQ";
+    var search = Context.Request.Query["search"].ToString();
+    var currentStatus = Context.Request.Query["trangThai"].ToString();
+}
+
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-body">
+                <i class="ti ti-help-octagon me-2 text-primary"></i>Danh sách câu hỏi thường gặp
+            </h2>
+        </div>
+        <div class="col-auto ms-auto">
+            <a asp-action="Create" class="btn btn-primary shadow-sm">
+                <i class="ti ti-plus me-2"></i>Thêm mới
+            </a>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3 shadow-sm border-0 bg-body-tertiary">
+    <div class="card-body">
+        <form method="get" class="row g-2">
+            <div class="col-md-6">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0">
+                        <i class="ti ti-search text-secondary"></i>
+                    </span>
+                    <input type="text" name="search" class="form-control border-start-0 text-body bg-body" placeholder="Tìm tên câu hỏi..." value="@search">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="trangThai" class="form-select bg-body text-body">
+                    <option value="">-- Trạng thái --</option>
+                    <option value="Hoạt động" selected="@(currentStatus == "Hoạt động")">Hoạt động</option>
+                    <option value="Bản nháp" selected="@(currentStatus == "Bản nháp")">Bản nháp</option>
+                    <option value="Lưu trữ" selected="@(currentStatus == "Lưu trữ")">Lưu trữ</option>
+                </select>
+            </div>
+            <div class="col-md-3 d-flex gap-2">
+                <a asp-action="Index" class="btn btn-outline-secondary w-50">Tải lại</a>
+                <button type="submit" class="btn btn-primary w-50">Lọc dữ liệu</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-hover card-table">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-secondary small fw-bold">NỘI DUNG CÂU HỎI</th>
+                    <th style="width:180px;" class="text-secondary small fw-bold">TRẠNG THÁI</th>
+                    <th class="text-end text-secondary small fw-bold" style="width:120px;">THAO TÁC</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr class="faq-row" style="cursor:pointer;" onclick="toggleAnswer(@item.IdFaq, this)">
+                        <td>
+                            <div class="d-flex align-items-center gap-2">
+                                <i class="ti ti-chevron-right text-secondary toggle-icon" id="icon-@item.IdFaq" style="transition:0.2s;"></i>
+                                <div>
+                                    <div class="fw-bold text-primary">@item.CauHoi</div>
+                                    <div class="text-secondary small text-truncate" style="max-width:500px;">
+                                        @* Xóa tag HTML để hiện preview text *@
+                                        @(System.Text.RegularExpressions.Regex.Replace(item.CauTraLoi ?? "", "<.*?>", string.Empty))
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            @if (item.TrangThai == "Hoạt động")
+                            {
+                                <span class="status status-green"><span class="status-dot status-dot-animated"></span> Hoạt động</span>
+                            }
+                            else if (item.TrangThai == "Bản nháp")
+                            {
+
+                                <span class="status status-warning"><span class="status-dot"></span> Bản nháp</span>
+                            }
+                            else
+                            {
+
+                                <span class="status status-red"><span class="status-dot"></span> Lưu trữ</span>
+                            }
+                        </td>
+                        <td class="text-end" onclick="event.stopPropagation()">
+                            <div class="d-flex justify-content-end gap-2 flex-nowrap">
+                                <a asp-action="Edit" asp-route-id="@item.IdFaq"
+                                   class="btn btn-sm btn-outline-warning"
+                                   title="Sửa">
+                                    <i class="ti ti-edit"></i>
+                                </a>
+
+                                <a asp-action="Details" asp-route-id="@item.IdFaq"
+                                   class="btn btn-sm btn-outline-info"
+                                   title="Xem">
+                                    <i class="ti ti-eye"></i>
+                                </a>
+
+                                <a asp-action="Delete" asp-route-id="@item.IdFaq"
+                                   class="btn btn-sm btn-outline-danger"
+                                   title="Xóa">
+                                    <i class="ti ti-trash"></i>
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr id="answer-row-@item.IdFaq" class="d-none">
+                        <td colspan="3" class="p-0 border-top-0 bg-body-tertiary">
+                            <div class="p-4 faq-render text-body">
+                                @Html.Raw(item.CauTraLoi)
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        function toggleAnswer(id, row) {
+            const answerRow = document.getElementById('answer-row-' + id);
+            const icon = document.getElementById('icon-' + id);
+            if (answerRow.classList.contains('d-none')) {
+                answerRow.classList.remove('d-none');
+                icon.style.transform = 'rotate(90deg)';
+                row.classList.add('bg-primary-lt');
+            } else {
+                answerRow.classList.add('d-none');
+                icon.style.transform = 'rotate(0deg)';
+                row.classList.remove('bg-primary-lt');
+            }
+        }
+    </script>
+    <style>
+        .faq-render img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        /* Fix màu chữ trong Dark Mode cho nội dung từ Editor */
+        .faq-render * {
+            color: inherit !important;
+            background-color: transparent !important;
+        }
+    </style>
+}

@@ -63,8 +63,11 @@ namespace WebDongHoLG.Controllers
                 }
                 else if (status == "Đang giao hàng")
                 {
-                    
                     query = query.Where(d => d.TrangThai.Trim() == "Đang giao hàng" || d.TrangThai.Trim() == "Đã giao hàng");
+                }
+                else if (status == "Đã hủy")
+                {
+                    query = query.Where(d => d.TrangThai.Trim().StartsWith("Đã hủy"));
                 }
                 else
                 {

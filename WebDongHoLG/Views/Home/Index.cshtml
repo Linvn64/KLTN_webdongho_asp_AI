@@ -1,8 +1,122 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@model IEnumerable<WebDongHoLG.Data.SanPham>
+@{
+    ViewData["Title"] = "Luxury Shopping - Thế giới đồng hồ hiệu";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@section Styles {
+    <link rel="stylesheet" href="~/css/user-home.css" asp-append-version="true" />
+}
+
+<section class="lux-slider container-fluid px-0">
+    <div class="swiper pri-slider">
+        <div class="swiper-wrapper">
+            <div class="swiper-slide">
+                <a href="#"><img src="~/images/home/chopard-luxshopping2.png.webp" class="img-fluid w-100" alt="Omega"></a>
+            </div>
+            <div class="swiper-slide">
+                <a href="#"><img src="~/images/home/omega-luxshopping5.png.webp" class="img-fluid w-100" alt="Chopard"></a>
+            </div>
+            <div class="swiper-slide">
+                <a href="#"><img src="~/images/home/piaget-luxshopping2.png.webp" class="img-fluid w-100" alt="Vacheron"></a>
+            </div>
+            <div class="swiper-slide">
+                <a href="#"><img src="~/images/home/vacheron-constatin-luxshopping1.png.webp" class="img-fluid w-100" alt="Piaget"></a>
+            </div>
+            <div class="swiper-slide">
+                <a href="#"><img src="~/images/home/z7606362240303-121ad1c968ddc133b45c04e1dc6415aa.jpg.webp" class="img-fluid w-100" alt="Bvlgari"></a>
+            </div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+        <div class="swiper-pagination"></div>
+    </div>
+</section>
+
+<section class="container slider-brand mt-5">
+    <div class="fix-title text-center mb-4">
+        <h2 class="text-uppercase fw-bold">Đồng hồ Hiệu</h2>
+    </div>
+    <div class="swiper brand-logo-slider overflow-hidden">
+        <div class="swiper-wrapper align-items-center">
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/cartier-luxshopping4.png.webp" width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/hublot-luxshopping2-1.png.webp" width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/luxshopping102-1.png.webp"width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/luxshoppingvn6-1.png.webp" width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/patek-philippe-logo1-1.png.webp" width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/cartier-luxshopping4.png.webp" width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/hublot-luxshopping2-1.png.webp" width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/luxshopping102-1.png.webp" width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/luxshoppingvn6-1.png.webp" width="120"></div>
+            <div class="swiper-slide text-center"><img src="~/images/home/thuonghieu/patek-philippe-logo1-1.png.webp" width="120"></div>
+        </div>
+    </div>
+</section>
+
+<section class="container slider-popular mt-5">
+    <div class="fix-title text-center mb-4">
+        <h2 class="text-uppercase fw-bold">TOP Thương hiệu</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-6">
+            <div class="featured-item position-relative overflow-hidden rounded shadow-sm">
+                <a href="#"><img src="https://cdn.luxshopping.vn/Thumnails/Uploads/Images/bvlgari-luxshopping-2026.png.webp" class="img-fluid w-100 transition-zoom"></a>
+                <div class="featured-content p-3 text-center bg-white">
+                    <img src="https://cdn.luxshopping.vn/Thumnails/Uploads/Images/bvl-luxshopping1-1.png.webp" width="80">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="featured-item position-relative overflow-hidden rounded shadow-sm">
+                <a href="#"><img src="https://cdn.luxshopping.vn/Thumnails/Uploads/Images/rolex-luxshopping-2026-1.png.webp" class="img-fluid w-100 transition-zoom"></a>
+                <div class="featured-content p-3 text-center bg-white">
+                    <img src="https://cdn.luxshopping.vn/Thumnails/Uploads/Images/luxshopping102-1.png.webp" width="80">
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="container mt-5 mb-5 Arrival-Section">
+    <div class="fix-title text-center mb-5">
+        <h2 class="text-uppercase fw-bold border-bottom d-inline-block pb-2">New Arrival</h2>
+    </div>
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            var firstBT = item.BienTheSanPhams?.FirstOrDefault();
+            <div class="col-6 col-md-4 col-lg-3">
+                <div class="product-box bg-white h-100 border-0 text-center position-relative shadow-sm p-3">
+                    <a asp-controller="SanPhams" asp-action="Detail" asp-route-id="@item.MaSp" class="text-decoration-none text-dark">
+                        <div class="product-image-container mb-3">
+                            <img src="@(firstBT?.ImageUrl ?? "/images/no-image.jpg")" class="img-fluid" alt="@item.TenSanPham">
+                        </div>
+
+                        <div class="product-info">
+                            <p class="text-muted small mb-1 uppercase" style="letter-spacing: 1px;">
+                                @item.ThuongHieuNavigation?.TenThuongHieu
+                            </p>
+                            <h3 class="product-title fs-6 fw-bold text-truncate px-2">@item.TenSanPham</h3>
+                            <p class="product-price mt-2 mb-0">
+                                <span class="sale-price text-danger fw-bold fs-5">
+                                    @(firstBT?.GiaBan?.ToString("N0") ?? "Liên hệ") ₫
+                                </span>
+                            </p>
+                        </div>
+                    </a>
+                    <div class="product-actions mt-3">
+
+                        <button type="button" onclick="muaNgay()"  class="btn btn-sm btn-dark w-100 rounded-0 py-2 btn-buy-now" >
+                            MUA NGAY
+                        </button>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</section>
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script src="~/js/home.js" asp-append-version="true"></script>
+    <script src="~/js/nguoidung/sanphamdetail.js" asp-append-version="true"></script>
+
+}

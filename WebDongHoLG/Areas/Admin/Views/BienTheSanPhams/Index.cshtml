@@ -1,8 +1,9 @@
-﻿    @model IEnumerable<WebDongHoLG.Data.BienTheSanPham>
+﻿@model IEnumerable<WebDongHoLG.Data.BienTheSanPham>
 
-    @{
-        ViewData["Title"] = "Quản lý biến thể sản phẩm";
-    }
+@{
+    ViewData["Title"] = "Quản lý biến thể sản phẩm";
+}
+
 @if (TempData["Message"] != null)
 {
     <div class="alert alert-important alert-@TempData["Type"] alert-dismissible shadow-sm" role="alert">
@@ -14,7 +15,6 @@
                 }
                 else
                 {
-
                     <i class="ti ti-alert-triangle icon alert-icon"></i>
                 }
             </div>
@@ -22,158 +22,191 @@
                 @TempData["Message"]
             </div>
         </div>
-        <a class="btn-close" data-bs-dismiss="alert" aria-label="close"></a>
+        <a class="btn-close" data-bs-dismiss="alert"></a>
     </div>
 }
-    <div class="page-header d-print-none mb-3">
-        <div class="row align-items-center">
-            <div class="col">
-                <h2 class="page-title text-primary">
-                    <i class="ti ti-layers-subtract me-2"></i>Biến thể sản phẩm
-                </h2>
-                <div class="text-secondary mt-1">Danh sách chi tiết màu sắc, kích thước và giá bán</div>
-            </div>
-            <div class="col-auto ms-auto">
-                <a asp-action="Create" class="btn btn-primary shadow-sm">
-                    <i class="ti ti-plus me-2"></i> Thêm biến thể mới
-                </a>
-                 <a asp-area="Admin" asp-controller="SanPhams" asp-action="Trash" class="btn btn-danger">Ngừng hoạt động</a>
 
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-primary">
+                <i class="ti ti-layers-subtract me-2"></i>Biến thể sản phẩm
+            </h2>
+
+            <!-- FIX: text-secondary -> text-muted -->
+            <div class="text-muted mt-1">
+                Danh sách chi tiết màu sắc, kích thước và giá bán
             </div>
         </div>
-    </div>
 
-    <div class="card mb-3 border-0 shadow-sm">
-        <div class="card-body">
-            <form asp-action="Index" method="get" class="row g-2 align-items-end">
-                @* 1. Ô tìm kiếm - chiếm 4 cột *@
-                <div class="col-md-6">
-                    <label class="form-label">Tìm kiếm</label>
-                    <div class="input-icon">
-                        <span class="input-icon-addon"><i class="ti ti-search"></i></span>
-                        <input type="text" name="searchString" value="@ViewBag.CurrentSearch"
-                               class="form-control" placeholder="Tên sản phẩm, SKU...">
-                    </div>
-                </div>
+        <div class="col-auto ms-auto">
+            <a asp-action="Create" class="btn btn-primary shadow-sm">
+                <i class="ti ti-plus me-2"></i> Thêm biến thể mới
+            </a>
 
-                @* 2. Lọc theo hãng - chiếm 2 cột *@
-                <div class="col-md-3">
-                    <label class="form-label">Thương hiệu</label>
-                    <select name="thuongHieuId" class="form-select" asp-items="ViewBag.ThuongHieuId">
-                        <option value="">Tất cả</option>
-                    </select>
-                </div>
-
-                @* 4. Cụm nút bấm - chiếm 4 cột còn lại *@
-                <div class="col-md-3">
-                    <div class="d-flex gap-2">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="ti ti-filter me-1"></i> Lọc dữ liệu
-                        </button>
-                        <a asp-action="Index" class="btn btn-outline-secondary btn-icon" title="Tải lại">
-                            <i class="ti ti-refresh"></i>
-                        </a>
-                    </div>
-                </div>
-            </form>
+            <a asp-area="Admin" asp-controller="SanPhams" asp-action="Trash"
+               class="btn btn-outline-danger">
+                Ngừng hoạt động
+            </a>
         </div>
     </div>
+</div>
 
-    <div class="card shadow-sm">
-        <div class="table-responsive">
-            <table class="table table-vcenter table-hover card-table">
-                <thead>
-                    <tr>
-                        <th>Ảnh</th>
-                        <th>Sản phẩm gốc</th>
-                        <th>Màu sắc</th>
-                        <th>Thông số</th>
-                        <th>Mã SKU</th>
-                        <th>Giá bán</th>
-                        <th>Trạng thái</th>
-                        <th class="text-end">Thao tác</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @if (Model.Any())
+<div class="card mb-3 border-0 shadow-sm">
+    <div class="card-body">
+        <form asp-action="Index" method="get" class="row g-2 align-items-end">
+
+            <div class="col-md-6">
+                <label class="form-label">Tìm kiếm</label>
+                <div class="input-icon">
+                    <span class="input-icon-addon"><i class="ti ti-search"></i></span>
+                    <input type="text" name="searchString"
+                           value="@ViewBag.CurrentSearch"
+                           class="form-control"
+                           placeholder="Tên sản phẩm, SKU...">
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <label class="form-label">Thương hiệu</label>
+                <select name="thuongHieuId" class="form-select" asp-items="ViewBag.ThuongHieuId">
+                    <option value="">Tất cả</option>
+                </select>
+            </div>
+
+            <div class="col-md-3">
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">
+                        <i class="ti ti-filter me-1"></i> Lọc dữ liệu
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary btn-icon">
+                        <i class="ti ti-refresh"></i>
+                    </a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="table-responsive">
+        <table class="table table-vcenter table-hover card-table">
+
+            <!-- FIX: thêm bg-body -->
+            <thead class="bg-body">
+                <tr>
+                    <th>Ảnh</th>
+                    <th>Sản phẩm gốc</th>
+                    <th>Màu sắc</th>
+                    <th>Thông số</th>
+                    <th>Mã SKU</th>
+                    <th>Giá bán</th>
+                    <th>Trạng thái</th>
+                    <th class="text-end">Thao tác</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @if (Model.Any())
+                {
+                    @foreach (var item in Model)
                     {
-                        @foreach (var item in Model)
-                        {
-                            <tr>
+                        <tr>
                             <td>
                                 @if (!string.IsNullOrEmpty(item.ImageUrl))
                                 {
-                                    <img src="@item.ImageUrl" class="avatar avatar-sm shadow-sm border" style="object-fit: cover; background-color: #fff;" alt="Ảnh SP" />
+                                    <!-- FIX: bỏ background trắng -->
+                                    <img src="@item.ImageUrl"
+                                         class="avatar avatar-sm shadow-sm border"
+                                         style="object-fit: cover;"
+                                         alt="Ảnh SP" />
                                 }
                                 else
                                 {
-                                    <span class="avatar avatar-sm shadow-sm border"><i class="ti ti-photo-off"></i></span>
+                                    <span class="avatar avatar-sm shadow-sm border">
+                                        <i class="ti ti-photo-off"></i>
+                                    </span>
                                 }
                             </td>
-                                <td>
-                                    <div class="fw-bold text-primary">@(item.MaSpNavigation?.TenSanPham ?? "N/A") @item.MaSpNavigation.DoiTuong</div>
-                                    <div class="text-muted small">Mã SP: #@item.MaSp</div>
-                                </td>
-                                <td>
-                                    <span class="badge bg-blue-lt">@item.MauSac</span>
-                                </td>
-                                <td>
-                                    <div class="small text-muted">Mặt: <b>@item.DuongKinhMat mm</b></div>
-                                    <div class="small text-muted">Dây: <b>@item.ChatLieuDay</b></div>
-                                </td>
-                                <td class="text-secondary font-monospace">@item.MaSku</td>
-                                <td>
-                                    <div class="fw-bold text-danger">@(item.GiaBan?.ToString("N0")) đ</div>
-                                    <div class="text-muted small" style="text-decoration: line-through;">@(item.GiaNhap?.ToString("N0")) đ</div>
-                                </td>
-                                <td>
-                                        <span class="status status-green">
-                                            <span class="status-dot status-dot-animated"></span> Hoạt động
-                                        </span>
-                                </td>
-                                <td class="text-end">
-                                    <div class="d-flex justify-content-end gap-2">
-                                        <a asp-action="Edit" asp-route-id="@item.MaBienThe" class="btn btn-icon btn-outline-warning" title="Sửa">
-                                            <i class="ti ti-edit"></i>
-                                        </a>
-                                        <a asp-action="Details" asp-route-id="@item.MaBienThe" class="btn btn-icon btn-outline-info" title="Xem">
-                                            <i class="ti ti-eye"></i>
-                                        </a>
-                                        <a asp-action="Delete" asp-route-id="@item.MaBienThe" class="btn btn-icon btn-outline-danger" title="Xóa">
-                                            <i class="ti ti-trash"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="8" class="text-center py-4 text-muted small italic">
-                                Không tìm thấy biến thể nào phù hợp với bộ lọc.
+
+                            <td>
+                                <div class="fw-bold text-primary">
+                                    @(item.MaSpNavigation?.TenSanPham ?? "N/A") @item.MaSpNavigation.DoiTuong
+                                </div>
+
+                                <!-- FIX: text-secondary -> text-muted -->
+                                <div class="text-muted small">
+                                    Mã SP: #@item.MaSp
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="badge bg-blue-lt">@item.MauSac</span>
+                            </td>
+
+                            <td>
+                                <div class="small text-muted">
+                                    Mặt: <b class="text-body">@item.DuongKinhMat mm</b>
+                                </div>
+                                <div class="small text-muted">
+                                    Dây: <b class="text-body">@item.ChatLieuDay</b>
+                                </div>
+                            </td>
+
+                            <!-- FIX: text-secondary -> text-body -->
+                            <td class="text-body font-monospace">
+                                @item.MaSku
+                            </td>
+
+                            <td>
+                                <!-- FIX: text-danger -> text-primary (dễ nhìn hơn dark mode) -->
+                                <div class="fw-bold text-primary">
+                                    @(item.GiaBan?.ToString("N0")) đ
+                                </div>
+
+                                <div class="text-muted small text-decoration-line-through">
+                                    @(item.GiaNhap?.ToString("N0")) đ
+                                </div>
+                            </td>
+
+                            <td>
+                                <span class="status status-green">
+                                    <span class="status-dot status-dot-animated"></span>
+                                    Hoạt động
+                                </span>
+                            </td>
+
+                            <td class="text-end">
+                                <div class="d-flex justify-content-end gap-2">
+                                    <a asp-action="Edit" asp-route-id="@item.MaBienThe"
+                                       class="btn btn-icon btn-outline-warning">
+                                        <i class="ti ti-edit"></i>
+                                    </a>
+
+                                    <a asp-action="Details" asp-route-id="@item.MaBienThe"
+                                       class="btn btn-icon btn-outline-info">
+                                        <i class="ti ti-eye"></i>
+                                    </a>
+
+                                    <a asp-action="Delete" asp-route-id="@item.MaBienThe"
+                                       class="btn btn-icon btn-outline-danger">
+                                        <i class="ti ti-trash"></i>
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     }
-                </tbody>
-            </table>
-        </div>
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="8" class="text-center py-4 text-muted small">
+                            Không tìm thấy biến thể nào phù hợp.
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
-
-    @if (!Model.Any() && string.IsNullOrEmpty(ViewBag.CurrentSearch) && ViewBag.CurrentStatus == null)
-    {
-        <div class="empty mt-5">
-            <div class="empty-icon">
-                <i class="ti ti-box" style="font-size: 4rem;"></i>
-            </div>
-            <p class="empty-title">Chưa có biến thể nào</p>
-            <p class="empty-subtitle text-muted">
-                Hãy bắt đầu bằng cách thêm các tùy chọn màu sắc hoặc kích thước cho sản phẩm của bạn.
-            </p>
-            <div class="empty-action">
-                <a asp-action="Create" class="btn btn-primary">
-                    <i class="ti ti-plus me-2"></i> Thêm biến thể đầu tiên
-                </a>
-            </div>
-        </div>
-    }
+</div>

@@ -5,19 +5,17 @@
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
-    background: linear-gradient( 135deg, #fdfbfb, #ebedee );
+    background: linear-gradient(135deg, #f8f5f0, #e8e2d6);
 }
 
-/* MAIN LAYOUT */
 .register-layout {
     flex-direction: row-reverse;
 }
+
 .auth-container {
     display: flex;
     min-height: 100vh;
 }
-
-/* LEFT IMAGE */
 
 .auth-image {
     flex: 1;
@@ -29,15 +27,13 @@ body {
 .overlay {
     position: absolute;
     inset: 0;
-    background: linear-gradient( rgba(0,0,0,0.35), rgba(0,0,0,0.55) );
+    background: linear-gradient( rgba(20, 15, 10, 0.4), rgba(0, 0, 0, 0.7) );
     display: flex;
     justify-content: center;
     align-items: center;
     color: white;
     text-align: center;
 }
-
-/* RIGHT FORM AREA */
 
 .auth-form {
     flex: 1;
@@ -46,67 +42,72 @@ body {
     align-items: center;
 }
 
-/* CARD */
-
 .auth-card {
     width: 380px;
     padding: 45px;
     border-radius: 18px;
-    background: rgba(255,255,255,0.85);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: blur(12px);
-    box-shadow: 0 15px 35px rgba(0,0,0,0.12);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
     transition: all .3s ease;
+    border: 1px solid #dcd3c1;
 }
 
     .auth-card:hover {
         transform: translateY(-6px);
     }
 
-/* INPUT */
+    .auth-card h2 {
+        color: #4a3b28; 
+        font-weight: 700;
+    }
 
 .form-control {
-    border-radius: 12px;
-    border: 1px solid #e5e7eb;
+    border-radius: 8px; 
+    border: 1px solid #dcd3c1;
+    padding: 12px;
 }
 
     .form-control:focus {
-        border-color: #a78bfa;
-        box-shadow: 0 0 0 0.2rem rgba(167,139,250,.2);
+        border-color: #b29c6e;
+        box-shadow: 0 0 0 0.2rem rgba(178, 156, 110, 0.2);
     }
 
-/* BUTTON */
-
 .btn-login {
-    background: linear-gradient( 135deg, #ff7a7a, #ffb86c );
+    background: linear-gradient(135deg, #4a3b28, #b29c6e);
     border: none;
     padding: 12px;
-    border-radius: 12px;
+    border-radius: 8px;
     color: white;
     font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
     transition: all .25s ease;
+    cursor: pointer;
 }
 
     .btn-login:hover {
         transform: translateY(-2px);
-        box-shadow: 0 10px 20px rgba(255,122,122,.35);
+        box-shadow: 0 8px 15px rgba(74, 59, 40, 0.3);
+        filter: brightness(1.1);
     }
-
-/* LINKS */
 
 .auth-links {
     display: flex;
     justify-content: space-between;
-    margin-top: 15px;
+    margin-top: 20px;
 }
 
     .auth-links a {
         text-decoration: none;
-        color: #8b5cf6;
+        color: #7a6a53; 
         font-weight: 500;
+        font-size: 14px;
     }
 
         .auth-links a:hover {
-            text-decoration: underline;
+            color: #b29c6e; 
+            text-decoration: none;
         }
 
 .password-wrapper {
@@ -116,13 +117,14 @@ body {
 .toggle-password {
     position: absolute;
     right: 12px;
-    top: 18px; /* fixed position inside input */
-
+    top: 15px;
     cursor: pointer;
     font-size: 18px;
-    opacity: 0.6;
+    color: #7a6a53;
+    opacity: 0.7;
 }
 
     .toggle-password:hover {
         opacity: 1;
+        color: #b29c6e;
     }

@@ -127,6 +127,7 @@
                         {
                             <a asp-area="Identity" asp-page="/Account/Login" class="btn btn-outline-primary btn-sm">Đăng nhập</a>
                         }
+                    
                     </div>
                 </div>
             </div>
@@ -179,6 +180,8 @@
                                             <div class="dropdown-menu">
                                                 <a class="dropdown-item" asp-controller="Khoes" asp-action="Index">Kiểm kê tồn kho</a>
                                                 <a class="dropdown-item" asp-controller=NhapKho" asp-action="Create">Nhập kho</a>
+                                                <a class="dropdown-item" asp-controller=NhapKho" asp-action="Index">Lịch sử nhập kho</a>
+
                                             </div>
                                         </li>
                                     }
@@ -212,6 +215,7 @@
                                                     <a class="dropdown-item" asp-controller="NguoiDungs" asp-action="Index">Danh sách khách hàng</a>
                                                 }
                                                 <a class="dropdown-item" asp-controller="QuanLyDanhGia" asp-action="Index">Phản hồi & Đánh giá</a>
+                                                <a class="dropdown-item" asp-controller="Faqs" asp-action="Index">FAQ</a>
                                             </div>
                                         </li>
                                     }

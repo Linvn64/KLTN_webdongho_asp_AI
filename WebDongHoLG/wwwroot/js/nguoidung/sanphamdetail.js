@@ -206,7 +206,7 @@ function themVaoGio() {
             cancelButtonText: 'Để sau'
         }).then((result) => {
             if (result.isConfirmed) {
-                window.location.href = `/Account/Login?ReturnUrl=${window.location.pathname}`;
+                window.location.href = `/Identity/Account/Login?ReturnUrl=${window.location.pathname}`;
             }
         });
         return;
@@ -225,7 +225,7 @@ function themVaoGio() {
 
 function muaNgay() {
     if (!isLoggedIn) {
-        window.location.href = `/Account/Login?ReturnUrl=${window.location.pathname}`;
+        window.location.href = `/Identity/Account/Login?ReturnUrl=${window.location.pathname}`;
         return;
     }
 
@@ -233,10 +233,16 @@ function muaNgay() {
     const qty = document.getElementById("txtSoLuong").value;
 
     if (!maBT || maBT === "0") {
-        Swal.fire("Thông báo", "Vui lòng chọn Màu sắc / Kích thước!", "warning");
+        Swal.fire({
+            title: "Thông báo",
+            text: "Vui lòng chọn Màu sắc / Kích thước trước khi mua!",
+            icon: "warning",
+            confirmButtonColor: "#b29c6e" 
+        });
         return;
     }
 
+    // 4. Chuyển hướng đến trang thanh toán với tham số mua ngay
     window.location.href = `/Checkout/Index?selectedIds=${maBT}&qty=${qty}&isBuyNow=true`;
 }
 

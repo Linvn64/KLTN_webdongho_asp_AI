@@ -3,137 +3,146 @@
     ViewData["Title"] = "Quản lý đánh giá";
 }
 
-<div class="page-header d-print-none">
-    <div class="container-xl">
-        <div class="row g-2 align-items-center">
-            <div class="col">
-                <h2 class="page-title">Quản lý đánh giá</h2>
-            </div>
+<div class="page-header d-print-none mb-3">
+    <div class="row align-items-center">
+        <div class="col">
+            <h2 class="page-title text-primary">Quản lý đánh giá</h2>
         </div>
     </div>
 </div>
 
-<div class="page-body">
-    <div class="container-xl">
-        <div class="card">
+<div class="card shadow-sm">
 
-            @* Bộ lọc *@
-            <div class="card-header">
-                <form method="get" class="row g-2 align-items-end w-100">
-                    <div class="col-md-5">
-                        <label class="form-label text-muted small mb-1">Sản phẩm</label>
-                        <select name="maSp" class="form-select">
-                            <option value="">-- Tất cả sản phẩm --</option>
-                            @foreach (var sp in ViewBag.DanhSachSanPham)
-                            {
-                                <option value="@sp.MaSp" @@(ViewBag.CurrentMaSp == sp.MaSp ? "selected" : "")>
-                                    @sp.TenSanPham
-                                </option>
-                            }
-                        </select>
-                    </div>
-                    <div class="col-md-3">
-                        <label class="form-label text-muted small mb-1">Số sao</label>
-                        <select name="soSao" class="form-select">
-                            <option value="">-- Tất cả --</option>
-                            @for (int i = 5; i >= 1; i--)
-                            {
-                                <option value="@i" @@(ViewBag.CurrentSoSao == i ? "selected" : "")>
-                                    @i sao
-                                </option>
-                            }
-                        </select>
-                    </div>
-                    <div class="col-md-2">
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-filter me-1"></i> Lọc
-                        </button>
-                    </div>
-                    <div class="col-md-2">
-                        <a href="/Admin/QuanLyDanhGia" class="btn btn-outline-secondary w-100">
-                            Xóa lọc
-                        </a>
-                    </div>
-                </form>
+    <!-- FILTER -->
+    <div class="card-header">
+        <form method="get" class="row g-2 align-items-end w-100">
+
+            <div class="col-md-5">
+                <label class="form-label text-secondary small">Sản phẩm</label>
+                <select name="maSp" class="form-select">
+                    <option value="">-- Tất cả sản phẩm --</option>
+                    @foreach (var sp in ViewBag.DanhSachSanPham)
+                    {
+                        <option value="@sp.MaSp" @@(ViewBag.CurrentMaSp= =sp.MaSp ? "selected" : "" )>
+                            @sp.TenSanPham
+                        </option>
+                    }
+                </select>
             </div>
 
-            @* Bảng đánh giá *@
-            <div class="table-responsive">
-                <table class="table card-table table-vcenter">
-                    <thead>
-                        <tr>
-                            <th>Sản phẩm</th>
-                            <th>Khách hàng</th>
-                            <th>Số sao</th>
-                            <th>Nội dung</th>
-                            <th>Ngày đánh giá</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @if (!Model.Any())
-                        {
-                            <tr>
-                                <td colspan="5" class="text-center text-muted py-4">
-                                    Không có đánh giá nào
-                                </td>
-                            </tr>
-                        }
-                        else
-                        {
-                            foreach (var dg in Model)
-                            {
-                                <tr>
-                                    <td>
-                                        <a href="/SanPhams/Detail/@dg.MaSp" target="_blank"
-                                           class="fw-bold text-primary">
-                                            @dg.MaSpNavigation?.TenSanPham
-                                        </a>
-                                    </td>
-                                    <td>@dg.MaNguoiDungNavigation?.HoTen</td>
-                                    <td>
-                                        @for (int i = 1; i <= 5; i++)
-                                        {
-                                            <i class="fa fa-star @(i <= (dg.SoSao ?? 0) ? "text-warning" : "text-muted")"
-                                               style="font-size: 13px;"></i>
-                                        }
-                                        <span class="ms-1 text-muted small">(@dg.SoSao)</span>
-                                    </td>
-                                    <td style="max-width: 300px;">
-                                        <span class="text-truncate d-block" style="max-width:280px;"
-                                              title="@dg.NoiDung">
-                                            @dg.NoiDung
-                                        </span>
-                                    </td>
-                                    <td class="text-muted">
-                                        @dg.NgayDanhGia?.ToString("dd/MM/yyyy HH:mm")
-                                    </td>
-                                    <td class="text-center">
-                                        <a asp-action="Delete" asp-route-id="@dg.MaDanhGia" class="btn btn-sm btn-outline-danger">
-                                            <i class="fas fa-trash me-1"></i> Xóa
-                                        </a>
-                                    </td>
-                                </tr>
-                            }
-                        }
-                    </tbody>
-                </table>
+            <div class="col-md-3">
+                <label class="form-label text-secondary small">Số sao</label>
+                <select name="soSao" class="form-select">
+                    <option value="">-- Tất cả --</option>
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        <option value="@i" @@(ViewBag.CurrentSoSao= =i ? "selected" : "" )>
+                            @i sao
+                        </option>
+                    }
+                </select>
             </div>
 
-            @* Tổng kết *@
-            <div class="card-footer text-muted small">
-                Tổng: <strong>@Model.Count()</strong> đánh giá
-                @if (Model.Any())
-                {
-                    <span class="ms-3">
-                        Trung bình:
-                        <strong class="text-warning">
-                            @Model.Average(dg => dg.SoSao ?? 0).ToString("0.0") sao
-                        </strong>
-                    </span>
-                }
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="ti ti-filter me-1"></i> Lọc
+                </button>
             </div>
 
-        </div>
+            <div class="col-md-2">
+                <a href="/Admin/QuanLyDanhGia" class="btn btn-outline-secondary w-100">
+                    Reset
+                </a>
+            </div>
+
+        </form>
     </div>
+
+    <!-- TABLE -->
+    <div class="table-responsive">
+        <table class="table table-vcenter table-hover card-table">
+            <thead class="table-light">
+                <tr>
+                    <th class="text-secondary">Sản phẩm</th>
+                    <th class="text-secondary">Khách hàng</th>
+                    <th class="text-secondary">Số sao</th>
+                    <th class="text-secondary">Nội dung</th>
+                    <th class="text-secondary">Ngày đánh giá</th>
+                    <th class="text-center text-secondary">Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="6" class="text-center text-muted py-4">
+                            Không có đánh giá nào
+                        </td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var dg in Model)
+                    {
+                        <tr>
+                            <td>
+                                <a href="/SanPhams/Detail/@dg.MaSp" target="_blank"
+                                   class="fw-bold text-primary">
+                                    @dg.MaSpNavigation?.TenSanPham
+                                </a>
+                            </td>
+
+                            <td class="text-body">
+                                @dg.MaNguoiDungNavigation?.HoTen
+                            </td>
+
+                            <td>
+                                @for (int i = 1; i <= 5; i++)
+                                {
+                                    <i class="ti ti-star-filled @(i <= (dg.SoSao ?? 0) ? "text-warning" : "text-muted")"></i>
+                                }
+                                <span class="ms-1 text-muted small">(@dg.SoSao)</span>
+                            </td>
+
+                            <td style="max-width: 300px;">
+                                <span class="text-muted small text-truncate d-block"
+                                      style="max-width:280px;"
+                                      title="@dg.NoiDung">
+                                    @dg.NoiDung
+                                </span>
+                            </td>
+
+                            <td class="text-muted small">
+                                @dg.NgayDanhGia?.ToString("dd/MM/yyyy HH:mm")
+                            </td>
+
+                            <td class="text-center">
+                                <a asp-action="Delete"
+                                   asp-route-id="@dg.MaDanhGia"
+                                   class="btn btn-sm btn-outline-danger">
+                                    <i class="ti ti-trash me-1"></i> Xóa
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="card-footer text-muted small">
+        Tổng: <strong>@Model.Count()</strong> đánh giá
+
+        @if (Model.Any())
+        {
+            <span class="ms-3">
+                Trung bình:
+                <strong class="text-warning">
+                    @Model.Average(dg => dg.SoSao ?? 0).ToString("0.0") sao
+                </strong>
+            </span>
+        }
+    </div>
+
 </div>

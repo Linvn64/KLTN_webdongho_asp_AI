@@ -1,1 +1,18 @@
-[]
+[
+  {
+    "ContainingType": "WebDongHoLG.Controllers.ChatbotController",
+    "Method": "Ask",
+    "RelativePath": "api/Chatbot/ask",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "WebDongHoLG.Controllers.ChatRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  }
+]

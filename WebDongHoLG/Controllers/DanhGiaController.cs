@@ -30,7 +30,7 @@ public class DanhGiaController : Controller
             .Include(ct => ct.MaBienTheNavigation).ThenInclude(bt => bt.MaSpNavigation)
             .Include(ct => ct.MaDonHangNavigation)
             .FirstOrDefaultAsync(ct => ct.MaDonHang == maDonHang &&
-                                     ct.MaBienThe == maBienThe && // QUAN TRỌNG: Lọc chính xác mã biến thể
+                                     ct.MaBienThe == maBienThe && 
                                      ct.MaBienTheNavigation.MaSp == maSp &&
                                      ct.MaDonHangNavigation.MaNguoiDung == user.MaNguoiDung &&
                                      ct.MaDonHangNavigation.TrangThai.Contains("Hoàn thành"));
@@ -39,7 +39,7 @@ public class DanhGiaController : Controller
 
         ViewBag.MaSp = maSp;
         ViewBag.MaDonHang = maDonHang;
-        ViewBag.MaBienThe = chiTiet.MaBienThe; // Lúc này nó sẽ là 53 hoặc 54 tùy nút bạn ấn
+        ViewBag.MaBienThe = chiTiet.MaBienThe; 
         ViewBag.TenSp = chiTiet.MaBienTheNavigation.MaSpNavigation.TenSanPham;
         ViewBag.PhanLoai = $"{chiTiet.MaBienTheNavigation.MauSac} - {chiTiet.MaBienTheNavigation.DuongKinhMat}mm";
         ViewBag.HinhAnh = chiTiet.MaBienTheNavigation.ImageUrl;
