@@ -27,94 +27,8 @@
 
     <!-- Template Stylesheet -->
     <link href="~/home/css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/user-home.css?v=1.1" asp-append-version="true" />
 
-    <style>
-        .back-to-top {
-            background-color: #b29c6e !important;
-            border-color: #b29c6e !important;
-            color: white !important;
-        }
-        .fa-shopping-bag {
-            color: #b29c6e !important; 
-        }
-
-            .fa-shopping-bag:hover {
-                color: #8e7a55 !important;
-                transition: 0.3s;
-            }
-
-        .position-absolute.bg-secondary {
-            background-color: #222 !important; 
-            color: #ffffff !important;
-            border: 1px solid #b29c6e;
-        }
-
-        .user-dropdown .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            right: 0;
-            z-index: 1000;
-        }
-
-        .user-dropdown:hover .dropdown-menu {
-            display: block;
-        }
-
-        @@keyframes slideIn {
-            from {
-                transform: translateX(120%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        @@keyframes slideOut {
-            from {
-                transform: translateX(0);
-                opacity: 1;
-            }
-
-            to {
-                transform: translateX(120%);
-                opacity: 0;
-            }
-        }
-
-        :root {
-            --bs-primary: #b29c6e !important;
-            --bs-secondary: #111 !important;
-        }
-
-        .text-primary {
-            color: #b29c6e !important;
-        }
-
-        .bg-primary {
-            background-color: #b29c6e !important;
-        }
-
-        .btn-primary {
-            background-color: #b29c6e;
-            border-color: #b29c6e;
-            color: white;
-        }
-
-        body {
-            font-family: 'Open Sans', sans-serif;
-        }
-
-        h1, h2, h3, .navbar-brand {
-            font-family: 'Raleway', sans-serif;
-            font-weight: 800;
-            letter-spacing: 1px;
-        }
-
-    </style>
     @RenderSection("Styles", required: false)
 
 </head>
@@ -148,26 +62,33 @@
                     <small class="me-3"><i class="fas fa-map-marker-alt me-2 text-secondary"></i> <a href="#" class="text-white">UNETI UNIVERSITY</a></small>
                     <small class="me-3"><i class="fas fa-envelope me-2 text-secondary"></i><a href="#" class="text-white">gmail@uneti.com</a></small>
                 </div>
-                <div class="top-link pe-2">
-                    <a href="#" class="text-white"><small class="text-white mx-2">Privacy Policy</small>/</a>
-                    <a href="#" class="text-white"><small class="text-white mx-2">Terms of Use</small>/</a>
-                    <a href="#" class="text-white"><small class="text-white ms-2">Sales and Refunds</small></a>
-                </div>
             </div>
         </div>
         <div class="container px-0">
             <nav class="navbar navbar-light bg-white navbar-expand-xl">
-                <a href="index.html" class="navbar-brand"><h1 class="text-primary display-6">LGWATCH</h1></a>
+                <a asp-area="Default" asp-controller="Home" asp-action="Index" class="navbar-brand"><h1 class="text-primary display-6">LGWATCH</h1></a>
                 <button class="navbar-toggler py-2 px-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse">
                     <span class="fa fa-bars text-primary"></span>
                 </button>
                 <div class="collapse navbar-collapse bg-white" id="navbarCollapse">
                     <div class="navbar-nav mx-auto">
-                        <a asp-controller="Home" asp-action="Index" class="nav-item nav-link active">Home</a>
-                        <a asp-controller="SanPhams" asp-action="Index" class="nav-item nav-link">Shop</a>
-                        <a asp-controller="Home" asp-action="Faq" class="nav-item nav-link">FAQ</a>
-                        <a href="contact.html" class="nav-item nav-link">Contact</a>
-                    </div>
+                        @{
+                            var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+                            var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+                        }
+
+                        <a asp-area="Default" asp-controller="Home" asp-action="Index"
+                           class="nav-item nav-link @(currentController == "Home" && currentAction == "Index" ? "active" : "")">Trang chủ</a>
+
+                        <a asp-area="Default" asp-controller="SanPhams" asp-action="Index"
+                           class="nav-item nav-link @(currentController == "SanPhams" ? "active" : "")">Sản phẩm</a>
+
+                        <a asp-area="Default" asp-controller="Home" asp-action="Faq"
+                           class="nav-item nav-link @(currentAction == "Faq" ? "active" : "")">FAQ</a>
+
+                        <a asp-area="Default" asp-controller="Home" asp-action="Contact"
+                           class="nav-item nav-link @(currentAction == "Contact" ? "active" : "")">Liên hệ</a>
+                    </div>                   
                     <div class="d-flex m-3 me-0">
                         <button class="btn-search btn border border-secondary btn-md-square rounded-circle bg-white me-4" data-bs-toggle="modal" data-bs-target="#searchModal"><i class="fas fa-search text-primary"></i></button>
                         <a asp-controller="GioHangs" asp-action="Index" class="position-relative me-4 my-auto">
@@ -203,7 +124,7 @@
                     <form action="/SanPhams/Search" method="get" class="w-75 mx-auto">
                         <div class="input-group d-flex">
                             <input id="searchText" name="keyword" type="search" class="form-control p-3"
-                                   placeholder="Nhập tên đồng hồ cần tìm..." aria-describedby="search-icon-1">
+                                   placeholder="Nhập tên đồng hồ hoặc thương hiệu cần tìm..." aria-describedby="search-icon-1">
                             <button type="submit" class="input-group-text p-3">
                                 <i class="fa fa-search"></i>
                             </button>
@@ -212,10 +133,9 @@
                 </div>
             </div>
         </div>
-    </div>
-    <!-- Modal Search End -->
+    </div>    <!-- Modal Search End -->
 
-    <div style="margin-top: 180px;">
+    <div style="margin-top: 150px;">
         <main role="main" class="pb-3">
             <div class="container">
                 @RenderBody()

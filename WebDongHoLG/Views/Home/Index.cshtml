@@ -103,12 +103,31 @@
                             </p>
                         </div>
                     </a>
-                    <div class="product-actions mt-3">
 
-                        <button type="button" onclick="muaNgay()"  class="btn btn-sm btn-dark w-100 rounded-0 py-2 btn-buy-now" >
-                            MUA NGAY
-                        </button>
+                    @{
+                        bool conHangDeBan = item.BienTheSanPhams != null &&
+                        item.BienTheSanPhams.Any(bt => bt.Khos != null && bt.Khos.Sum(k => k.SoLuongTon) > 0);
+                    }
+
+                    <div class="product-actions mt-3">
+                        @if (conHangDeBan)
+                        {
+                            <button type="button"
+                                    onclick="moModalMuaNgay(@item.MaSp)"
+                                    class="btn btn-primary rounded-pill px-3 py-2 w-100 text-center shadow-sm">
+                                <i class="fa fa-shopping-bag me-1"></i>MUA NGAY
+                            </button>
+                        }
+                        else
+                        {
+                            <button type="button"
+                                    class="btn btn-secondary rounded-pill px-3 py-2 w-100 text-center shadow-sm"
+                                    disabled style="cursor: not-allowed; opacity: 0.6;">
+                                <i class="fa fa-pause-circle me-1"></i>TẠM HẾT HÀNG
+                            </button>
+                        }
                     </div>
+
                 </div>
             </div>
         }

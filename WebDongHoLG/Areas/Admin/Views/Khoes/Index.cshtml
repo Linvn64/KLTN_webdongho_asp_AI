@@ -22,27 +22,27 @@
 <!-- Stats -->
 <div class="row row-deck row-cards mb-3">
     <div class="col-sm-6 col-lg-3">
-        <div class="card shadow-sm border-0">
-            <div class="card-body">
-                <div class="subheader text-secondary">Tổng biến thể</div>
-                <div class="h1 mb-0 text-primary fw-bold">@ViewBag.TongBienThe</div>
-                <div class="text-secondary small">đang theo dõi</div>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-sm-6 col-lg-3">
-        <div class="card shadow-sm border-0">
+        <div class="card shadow-sm border-0 border-start border-azure border-3">
             <div class="card-body">
                 <div class="subheader text-secondary">Tổng tồn kho</div>
                 <div class="h1 mb-0 text-azure fw-bold">@ViewBag.TongTon</div>
-                <div class="text-secondary small">sản phẩm</div>
+                <div class="text-secondary small">sản phẩm trong kho</div>
             </div>
         </div>
     </div>
 
     <div class="col-sm-6 col-lg-3">
-        <div class="card shadow-sm border-warning">
+        <div class="card shadow-sm border-0 border-start border-green border-3">
+            <div class="card-body">
+                <div class="subheader text-green fw-bold">Giá trị vốn tồn kho</div>
+                <div class="h1 mb-0 text-green fw-bold">@ViewBag.TongGiaTriTon.ToString("N0") ₫</div>
+                <div class="text-secondary small">tổng vốn hiện có</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card shadow-sm border-warning border-3 border-top-0 border-end-0 border-bottom-0">
             <div class="card-body">
                 <div class="subheader text-warning fw-bold">Sắp hết hàng</div>
                 <div class="h1 mb-0 text-warning fw-bold">@ViewBag.SapHetHang</div>
@@ -52,16 +52,15 @@
     </div>
 
     <div class="col-sm-6 col-lg-3">
-        <div class="card shadow-sm border-danger">
+        <div class="card shadow-sm border-danger border-3 border-top-0 border-end-0 border-bottom-0">
             <div class="card-body">
                 <div class="subheader text-danger fw-bold">Hết hàng</div>
                 <div class="h1 mb-0 text-danger fw-bold">@ViewBag.HetHang</div>
-                <div class="text-secondary small">tồn kho = 0</div>
+                <div class="text-secondary small">biến thể hết hàng</div>
             </div>
         </div>
     </div>
 </div>
-
 <!-- Alert -->
 @if ((int)ViewBag.SapHetHang > 0)
 {

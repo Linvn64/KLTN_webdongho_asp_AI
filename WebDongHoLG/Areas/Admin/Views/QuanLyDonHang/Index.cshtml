@@ -40,6 +40,79 @@
     </div>
 </div>
 
+<div class="row row-cards mb-4">
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm border-left-lg border-primary shadow-sm h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-primary text-white avatar avatar-md">
+                            <i class="ti ti-currency-dollar" style="font-size: 20px;"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-muted text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Doanh Thu (Ko Ship)</div>
+                        <div class="text-primary fw-bold" style="font-size: 1.1rem;">@String.Format("{0:#,##0}", ViewBag.TongDoanhThuKhongShip)₫</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm border-left-lg border-primary shadow-sm h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-primary text-white avatar avatar-md">
+                            <i class="ti ti-currency-dollar" style="font-size: 20px;"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-muted text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Thanh Toán (Có Ship)</div>
+                        <div class="text-primary fw-bold" style="font-size: 1.1rem;">@String.Format("{0:#,##0}", ViewBag.TongDoanhThuCoShip)₫</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm border-left-lg border-info shadow-sm h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-info text-white avatar avatar-md">
+                            <i class="ti ti-truck-delivery" style="font-size: 20px;"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-muted text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Phí Vận Chuyển</div>
+                        <div class="text-info fw-bold" style="font-size: 1.1rem;">+ @String.Format("{0:#,##0}", ViewBag.TongPhiShip)₫</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-6 col-lg-3">
+        <div class="card card-sm border-left-lg border-success shadow-sm h-100">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-success text-white avatar avatar-md">
+                            <i class="ti ti-ticket" style="font-size: 20px;"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-muted text-uppercase" style="font-size: 10px; letter-spacing: 0.5px;">Voucher Giảm Giá</div>
+                        <div class="text-success fw-bold" style="font-size: 1.1rem;">- @String.Format("{0:#,##0}", ViewBag.TongVoucher)₫</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 <div class="page-body">
     <div class="container-xl">
         <div class="card">

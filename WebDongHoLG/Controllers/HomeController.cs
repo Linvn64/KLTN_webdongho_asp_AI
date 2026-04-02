@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using WebDongHoLG.Data;
 using WebDongHoLG.Models;
+using WebDongHoLG.ViewModels;
 
 namespace WebDongHoLG.Controllers
 {
@@ -21,7 +22,8 @@ namespace WebDongHoLG.Controllers
         {
             var listProduct = await _context.SanPhams
                 .Include(s => s.ThuongHieuNavigation) 
-                .Include(s => s.BienTheSanPhams)      
+                .Include(s => s.BienTheSanPhams)
+                .ThenInclude(bt => bt.Khos)
                 .Where(s => s.IsActive == true)
                 .ToListAsync();
 
@@ -42,12 +44,29 @@ namespace WebDongHoLG.Controllers
         // Ví dụ trong Controllers/HomeController.cs
         public async Task<IActionResult> Faq()
         {
-            // Chỉ lấy các FAQ được phép hiển thị
             var danhSachFaq = await _context.Faqs
                 .Where(f => f.TrangThai == "Hoạt động")
                 .ToListAsync();
 
             return View(danhSachFaq);
+        }
+
+
+        [HttpPost]
+        public IActionResult SendMessage(ContactMessage model)
+        {
+            if (ModelState.IsValid)
+            {
+                TempData["Success"] = "Cảm ơn bạn! Tin nhắn đã được gửi thành công.";
+                return RedirectToAction("Index");
+            }
+            return View("Index", model);
+        }
+
+
+        public IActionResult Contact()
+        {
+            return View();
         }
     }
 }

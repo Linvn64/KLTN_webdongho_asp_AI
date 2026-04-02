@@ -19,23 +19,69 @@
     </div>
 </div>
 
-<div class="card mb-3 border-0 shadow-sm">
-    <div class="card-body">
-        <form asp-action="Index" method="get" class="row g-2">
-            <div class="col-md-10">
-                <div class="input-icon">
-                    <span class="input-icon-addon"><i class="ti ti-search"></i></span>
-                    <input type="text" name="searchString" class="form-control" placeholder="Tìm tên mã Voucher...">
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card card-sm bg-primary-lt border-primary shadow-sm">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-auto">
+                        <span class="bg-primary text-white avatar avatar-lg">
+                            <i class="ti ti-report-money" style="font-size: 24px;"></i>
+                        </span>
+                    </div>
+                    <div class="col">
+                        <div class="font-weight-medium text-uppercase text-muted mb-1" style="letter-spacing: 0.05em;">
+                            Tổng ngân sách đã tiêu cho khuyến mãi
+                        </div>
+                        <div class="h1 mb-0 fw-bold text-primary">
+                            @String.Format("{0:#,##0}", ViewBag.TongNganSachVoucher ?? 0)₫
+                        </div>
+                    </div>
+                    <div class="col-auto text-end text-muted">
+                        <small>Dựa trên tất cả đơn hàng đã phát sinh</small>
+                    </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<div class="card mb-3 shadow-sm border-0">
+    <div class="card-body">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label fw-bold">Tìm mã Voucher</label>
+                <input type="text" name="searchName" class="form-control" placeholder="Nhập tên mã..." value="@ViewBag.SearchName">
+            </div>
+
             <div class="col-md-2">
-                <button type="submit" class="btn btn-outline-primary w-100">
-                    <i class="ti ti-filter me-1"></i> Lọc
+                <label class="form-label fw-bold">Trạng thái</label>
+                <select name="status" class="form-select">
+                    <option value="">Tất cả</option>
+                    <option value="active" selected="@(ViewBag.CurrentStatus == "active")">Đang chạy</option>
+                    <option value="inactive" selected="@(ViewBag.CurrentStatus == "inactive")">Ngừng hoạt động</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label class="form-label fw-bold">Từ ngày</label>
+                <input type="date" name="tuNgay" class="form-control" value="@ViewBag.TuNgay">
+            </div>
+            <div class="col-md-2">
+                <label class="form-label fw-bold">Đến ngày</label>
+                <input type="date" name="denNgay" class="form-control" value="@ViewBag.DenNgay">
+            </div>
+
+            <div class="col-md-3 d-flex gap-2">
+                <button type="submit" class="btn btn-primary w-100">
+                    <i class="ti ti-filter me-1"></i> Áp dụng bộ lọc
                 </button>
+                <a asp-action="Index" class="btn btn-outline-secondary w-50">Làm mới</a>
             </div>
         </form>
     </div>
 </div>
+
 
 @* SỬA LẠI DÒNG ID DƯỚI ĐÂY CHO ĐÚNG *@
 <div class="card shadow-sm border-0" id="js-list">
@@ -49,6 +95,7 @@
                     <th><button class="table-sort sort" data-sort="sort-date">Thời hạn</button></th>
                     <th class="text-center">Sử dụng</th>
                     <th class="text-center">Trạng thái</th>
+                    <th class="text-center">Ngân sách đã dùng</th>
                     <th class="text-end">Thao tác</th>
                 </tr>
             </thead>
@@ -114,17 +161,48 @@
                                 }
                             </td>
 
+                            <td>
+                                @{
+                                    var thongKe = ViewBag.ThongKeVoucher as Dictionary<int?, decimal>;
+                                    decimal tongTien = 0;
+
+                                    if (thongKe != null && thongKe.ContainsKey(item.MaVoucher))
+                                    {
+                                        tongTien = thongKe[item.MaVoucher];
+                                    }
+                                }
+                                <span class="text-danger fw-bold">
+                                    @tongTien.ToString("#,##0")₫
+                                </span>
+                            </td>
+
                             <td class="text-end">
                                 <div class="d-flex justify-content-end gap-2">
-                                    <a asp-action="Edit" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-warning">
-                                        <i class="ti ti-edit"></i>
-                                    </a>
-                                    <a asp-action="Details" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-info">
-                                        <i class="ti ti-eye"></i>
-                                    </a>
-                                    <a asp-action="ToggleStatus" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-danger">
-                                        <i class="ti @(item.IsActive == true ? "ti-power" : "ti-circle-check")"></i>
-                                    </a>
+                                    @if (item.DaDung > 0)
+                                    {
+                                        <a asp-action="Details" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-info" title="Xem chi tiết">
+                                            <i class="ti ti-eye"></i>
+                                        </a>
+                                        <a asp-action="ToggleStatus" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-danger" title="Bật/Tắt">
+                                            <i class="ti @(item.IsActive == true ? "ti-power" : "ti-circle-check")"></i>
+                                        </a>
+                                        <span class="text-muted small mt-1" style="font-size: 11px;">(Đã phát sinh GD)</span>
+                                    }
+                                    else
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-warning" title="Sửa">
+                                            <i class="ti ti-edit"></i>
+                                        </a>
+                                        <a asp-action="Details" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-info" title="Xem chi tiết">
+                                            <i class="ti ti-eye"></i>
+                                        </a>
+                                        <a asp-action="ToggleStatus" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-danger" title="Bật/Tắt">
+                                            <i class="ti @(item.IsActive == true ? "ti-power" : "ti-circle-check")"></i>
+                                        </a>
+                                        <a asp-action="Delete" asp-route-id="@item.MaVoucher" class="btn btn-icon btn-outline-dark" title="Xóa vĩnh viễn">
+                                            <i class="ti ti-trash"></i>
+                                        </a>
+                                    }
                                 </div>
                             </td>
                         </tr>

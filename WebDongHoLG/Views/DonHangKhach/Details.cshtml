@@ -237,45 +237,57 @@
         @* 4. Phần tổng kết tiền - Căn lề thẳng hàng tuyệt đối *@
         <div class="payment-details">
             <div class="price-table">
-                <div class="price-row">
-                    <div class="price-label">Tổng tiền hàng</div>
-                    <div class="price-value">@((Model.ChiTietDonHangs.Sum(x => (decimal?)(x.DonGiaTaiThoiDiem * x.SoLuong)) ?? 0).ToString("#,##0")) ₫</div>
-                </div>
-
                 @{
-                    var tongTienHang = Model.ChiTietDonHangs.Sum(x => (decimal?)(x.DonGiaTaiThoiDiem * x.SoLuong)) ?? 0;
-                    var thanhTien = Model.TongTien ?? 0;
-                    var tienGiam = tongTienHang - thanhTien;
+                    // 1. Tính toán trước khi hiển thị (Ép kiểu decimal để an toàn tuyệt đối)
+                    var tongTienHangGoc = Model.ChiTietDonHangs.Sum(x => (x.DonGiaTaiThoiDiem ?? 0) * (x.SoLuong ?? 0));
+                    var phiShip = Model.PhiVanChuyen;
+                    var tienVoucher = Model.TienGiamGia;
+                    var tongThanhToan = Model.TongTien;
+                    decimal hienThanhTien = (decimal)(Model.TongTien ?? 0m);
                 }
 
-                @if (tienGiam > 0)
+                <div class="price-row">
+                    <div class="price-label">Tổng tiền hàng</div>
+                    <div class="price-value">@tongTienHangGoc.ToString("#,##0") ₫</div>
+                </div>
+
+                @if (tienVoucher > 0)
                 {
                     <div class="price-row">
                         <div class="price-label">Voucher giảm giá</div>
-                        <div class="price-value text-success">- @tienGiam.ToString("#,##0") ₫</div>
+                        <div class="price-value text-success">- @tienVoucher.ToString("#,##0") ₫</div>
                     </div>
                 }
 
                 <div class="price-row">
                     <div class="price-label">Phí vận chuyển</div>
-                    <div class="price-value">0 ₫</div>
+                    <div class="price-value">
+                        @if (phiShip > 0)
+                        {
+                            <span>+ @phiShip.ToString("#,##0") ₫</span>
+                        }
+                        else
+                        {
+                            <span class="text-success fw-bold">Miễn phí</span>
+                        }
+                    </div>
                 </div>
 
                 <div class="price-row final-row">
                     <div class="price-label total-label fw-bold">Thành tiền</div>
-                    <div class="price-value total-price">@((Model.TongTien ?? 0).ToString("#,##0")) ₫</div>
+                    <div class="price-value total-price">@hienThanhTien.ToString("#,##0") ₫</div>
                 </div>
 
                 <div class="price-row mt-2">
                     <div class="price-label">Trạng thái thanh toán</div>
                     <div class="price-value">
-                        @if (Model.ThanhToan?.TrangThai == "Thành công" || trangThai == "Chờ xác nhận")
+                        @if (Model.ThanhToan?.TrangThai == "Thành công" || Model.ThanhToan?.TrangThai == "Đã thanh toán" || trangThai == "Hoàn thành")
                         {
                             <span class="text-success fw-bold"><i class="fas fa-check-circle"></i> Đã thanh toán</span>
                         }
-                        else if (trangThai == "Chờ xử lý")
+                        else if (trangThai == "Chờ xử lý" || trangThai == "Chờ xác nhận")
                         {
-                            <span class="text-muted fw-bold">Thanh toán khi nhận hàng</span>
+                            <span class="text-muted fw-bold">Thanh toán khi nhận hàng (COD)</span>
                         }
                         else
                         {

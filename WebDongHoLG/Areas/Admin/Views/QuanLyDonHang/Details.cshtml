@@ -98,6 +98,7 @@
                                 <th style="width: 1%">#</th>
                                 <th>Sản phẩm</th>
                                 <th class="text-center">Số lượng</th>
+                                <th class="text-end text-azure">Giá vốn (nhập)</th> 
                                 <th class="text-end">Đơn giá</th>
                                 <th class="text-end">Thành tiền</th>
                             </tr>
@@ -120,6 +121,9 @@
                                         </div>
                                     </td>
                                     <td class="text-center">@item.SoLuong</td>
+                                    <td class="text-end text-azure italic">
+                                        @((item.MaBienTheNavigation?.GiaNhap ?? 0).ToString("#,##0"))₫
+                                    </td>
                                     <td class="text-end">@item.DonGiaTaiThoiDiem?.ToString("#,##0")₫</td>
                                     <td class="text-end font-weight-bold">@((item.DonGiaTaiThoiDiem * item.SoLuong)?.ToString("#,##0"))₫</td>
                                 </tr>
@@ -129,39 +133,38 @@
                 </div>
 
                 <div class="card-footer bg-light">
-                    <div class="row">
-                        <div class="col-md-8"></div>
-                        <div class="col-md-4">
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted">Tổng tiền hàng:</span>
-                                <span class="fw-bold">@((Model.ChiTietDonHangs.Sum(x => x.DonGiaTaiThoiDiem * x.SoLuong))?.ToString("#,##0"))₫</span>
-                            </div>
-
-                            @{
-                                var tongGoc = Model.ChiTietDonHangs.Sum(x => x.DonGiaTaiThoiDiem * x.SoLuong) ?? 0;
-                                var tongCuoi = Model.TongTien ?? 0;
-                                var tienGiam = tongGoc - tongCuoi;
-                            }
-                            @if (tienGiam > 0)
-                            {
-                                <div class="d-flex justify-content-between mb-2 text-success">
-                                    <span>Voucher giảm giá:</span>
-                                    <span>- @tienGiam.ToString("#,##0")₫</span>
+                        <div class="row">
+                            <div class="col-md-8"></div>
+                            <div class="col-md-4">
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Tổng tiền hàng:</span>
+                                    @* Dùng String.Format để ép kiểu định dạng số *@
+                                    <span class="fw-bold">@String.Format("{0:#,##0}", Model.TongTien + Model.TienGiamGia - Model.PhiVanChuyen)₫</span>
                                 </div>
-                            }
 
-                            <div class="d-flex justify-content-between mb-2">
-                                <span class="text-muted">Phí vận chuyển:</span>
-                                <span>0₫</span>
-                            </div>
-                            <hr />
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="h3 mb-0">Tổng thanh toán:</span>
-                                <span class="h1 text-danger mb-0">@Model.TongTien?.ToString("#,##0")₫</span>
+                                @if (Model.TienGiamGia > 0)
+                                {
+                                    <div class="d-flex justify-content-between mb-2 text-success">
+                                        <span>Voucher giảm giá:</span>
+                                        <span>- @String.Format("{0:#,##0}", Model.TienGiamGia)₫</span>
+                                    </div>
+                                }
+
+                                <div class="d-flex justify-content-between mb-2">
+                                    <span class="text-muted">Phí vận chuyển:</span>
+                                    <span>+ @String.Format("{0:#,##0}", Model.PhiVanChuyen)₫</span>
+                                </div>
+
+                                <hr />
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="h3 mb-0">Tổng thanh toán:</span>
+                                    <span class="h1 text-danger mb-0">@String.Format("{0:#,##0}", Model.TongTien)₫</span>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                
             </div>
         </div>
     </div>

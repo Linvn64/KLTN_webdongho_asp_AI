@@ -23,8 +23,23 @@
                     </div>
                     <div id="star-text" class="fw-bold text-warning">Tuyệt vời</div>
                 </div>
-                <textarea name="noiDung" class="form-control mb-3" rows="4" placeholder="Cảm nhận của bạn..."></textarea>
-                <button type="submit" class="btn btn-danger w-100 fw-bold">GỬI ĐÁNH GIÁ</button>
+                <textarea name="noiDung" id="reviewEditor" class="form-control mb-3" rows="4" placeholder="Cảm nhận của bạn..."></textarea>
+
+                <link href="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.css" rel="stylesheet">
+                <script src="https://cdn.jsdelivr.net/npm/summernote@0.8.18/dist/summernote-lite.min.js"></script>
+
+                <script>
+                    $(document).ready(function() {
+                        $('#reviewEditor').summernote({
+                            height: 150,
+                            placeholder: 'Hãy chia sẻ cảm nhận và chèn ảnh thực tế tại đây...',
+                            toolbar: [
+                                ['font', ['bold', 'underline', 'clear']],
+                                ['insert', ['picture']] // Chỉ giữ nút chèn ảnh cho gọn
+                            ]
+                        });
+                    });
+                </script>                <button type="submit" class="btn btn-danger w-100 fw-bold">GỬI ĐÁNH GIÁ</button>
             </form>
         </div>
     </div>

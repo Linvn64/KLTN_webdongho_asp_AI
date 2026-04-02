@@ -23,7 +23,6 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                 .Include(d => d.ThanhToan)
                 .AsQueryable();
 
-            
             if (!showAll)
             {
                 DateTime dateToFilter = filterDate ?? DateTime.Today;
@@ -32,8 +31,21 @@ namespace WebDongHoLG.Areas.Admin.Controllers
             }
             else
             {
-                ViewBag.SelectedDate = ""; 
+                ViewBag.SelectedDate = "";
             }
+
+          
+            var queryThongKe = query.Where(d => d.TrangThai.Trim() == "Hoàn thành" || d.TrangThai.Trim() == "Đã giao hàng");
+
+            decimal tongCoShip = await queryThongKe.SumAsync(d => (decimal?)d.TongTien) ?? 0m;
+            decimal tongPhiShip = await queryThongKe.SumAsync(d => (decimal?)d.PhiVanChuyen) ?? 0m;
+            decimal tongVoucher = await queryThongKe.SumAsync(d => (decimal?)d.TienGiamGia) ?? 0m;
+            decimal tongKhongShip = tongCoShip - tongPhiShip;
+
+            ViewBag.TongDoanhThuKhongShip = tongKhongShip;
+            ViewBag.TongDoanhThuCoShip = tongCoShip;
+            ViewBag.TongPhiShip = tongPhiShip;
+            ViewBag.TongVoucher = tongVoucher;
 
             if (!string.IsNullOrEmpty(status))
             {
@@ -54,6 +66,7 @@ namespace WebDongHoLG.Areas.Admin.Controllers
 
             return View(result);
         }
+
         [HttpPost]
         public async Task<IActionResult> ConfirmOrder(int id)
         {

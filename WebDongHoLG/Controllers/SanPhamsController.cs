@@ -9,7 +9,7 @@ namespace WebDongHoLG.Controllers
     public class SanPhamsController : Controller
     {
         private readonly ShopDongHoDbContext _context;
-        private const int PAGE_SIZE = 9;
+        private const int PAGE_SIZE = 12;
         private readonly UserManager<IdentityUser> _userManager;
 
         public SanPhamsController(ShopDongHoDbContext context, UserManager<IdentityUser> userManager)
@@ -17,10 +17,13 @@ namespace WebDongHoLG.Controllers
             _context = context;
             _userManager = userManager;
         }
-        
+
 
         public async Task<IActionResult> Index(int? danhmuc, int? thuonghieu, string? keyword, string? doiTuong, string? sapXep, string? locMacDinh, int page = 1)
         {
+            // ==========================================
+            // BƯỚC 1: DỰNG CÂU QUERY (CHƯA GỌI DATABASE)
+            // ==========================================
             var query = _context.SanPhams
                 .Include(s => s.IdDanhMucNavigation)
                 .Include(s => s.ThuongHieuNavigation)
@@ -29,6 +32,9 @@ namespace WebDongHoLG.Controllers
                 .Where(s => s.IsActive == true)
                 .AsQueryable();
 
+            // ==========================================
+            // BƯỚC 2: LỌC DỮ LIỆU BẰNG SQL
+            // ==========================================
             if (danhmuc.HasValue)
                 query = query.Where(s => s.IdDanhMuc == danhmuc);
 
@@ -41,13 +47,22 @@ namespace WebDongHoLG.Controllers
             if (!string.IsNullOrEmpty(keyword))
             {
                 keyword = keyword.ToLower();
+
                 query = query.Where(s =>
+                    // 1. Tìm trong Tên sản phẩm
                     s.TenSanPham.ToLower().Contains(keyword) ||
-                    s.BienTheSanPhams.Any(bt => bt.MauSac.ToLower().Contains(keyword)));
+
+                    // 2. TÌM TRONG TÊN THƯƠNG HIỆU (Đây là phần em cần thêm)
+                    s.ThuongHieuNavigation.TenThuongHieu.ToLower().Contains(keyword) ||
+
+                    // 3. Tìm trong Màu sắc của biến thể (Code cũ của em)
+                    s.BienTheSanPhams.Any(bt => bt.MauSac.ToLower().Contains(keyword))
+                );
             }
 
             var sanPhams = await query.ToListAsync();
 
+            // BƯỚC 3: MAPPING VÀ GOM NHÓM BIẾN THỂ
             var allVMs = sanPhams.Select(s => {
                 var bienThes = s.BienTheSanPhams.Where(bt => bt.IsActive == true).ToList();
                 return new SanPhamVM
@@ -66,7 +81,6 @@ namespace WebDongHoLG.Controllers
                 };
             }).ToList();
 
-
             var nhomSanPhams = allVMs
                 .GroupBy(s => new { s.TenSp, s.TenThuongHieu })
                 .Select(g => new SanPhamNhomVM
@@ -80,50 +94,55 @@ namespace WebDongHoLG.Controllers
                     ConHang = g.Any(s => s.ConHang),
                     MaSpDaiDien = g.First().MaSp,
                     DanhSachTheoDoiTuong = g.OrderBy(s => s.DoiTuong).ToList()
-                })
-                .AsQueryable();
-
-            IOrderedQueryable<SanPhamNhomVM>? ordered = null;
+                }).ToList(); 
+            // BƯỚC 4: THUẬT TOÁN SẮP XẾP ĐA CHIỀU
+            IEnumerable<SanPhamNhomVM> ordered = nhomSanPhams;
 
             if (!string.IsNullOrEmpty(locMacDinh))
             {
                 ordered = locMacDinh switch
                 {
-                    "ban-chay" => nhomSanPhams.OrderByDescending(s => s.DanhSachTheoDoiTuong.Count),
-                    "moi-nhat" => nhomSanPhams.OrderByDescending(s => s.MaSpDaiDien),
-                    _ => nhomSanPhams.OrderBy(s => s.TenSp)
+                    "ban-chay" => ordered.OrderByDescending(s => s.DanhSachTheoDoiTuong.Count),
+                    "moi-nhat" => ordered.OrderByDescending(s => s.MaSpDaiDien),
+                    _ => ordered.OrderBy(s => s.TenSp)
                 };
             }
 
             if (!string.IsNullOrEmpty(sapXep))
             {
-                if (ordered != null)
+                if (ordered is IOrderedEnumerable<SanPhamNhomVM> tempOrdered && !string.IsNullOrEmpty(locMacDinh))
                 {
                     ordered = sapXep switch
                     {
-                        "gia-tang" => ordered.ThenBy(s => s.GiaBanThapNhat),
-                        "gia-giam" => ordered.ThenByDescending(s => s.GiaBanThapNhat),
-                        "ten-az" => ordered.ThenBy(s => s.TenSp),
-                        _ => ordered
+                        "gia-tang" => tempOrdered.ThenBy(s => s.GiaBanThapNhat),
+                        "gia-giam" => tempOrdered.ThenByDescending(s => s.GiaBanThapNhat),
+                        "ten-az" => tempOrdered.ThenBy(s => s.TenSp),
+                        _ => tempOrdered
                     };
                 }
                 else
                 {
                     ordered = sapXep switch
                     {
-                        "gia-tang" => nhomSanPhams.OrderBy(s => s.GiaBanThapNhat),
-                        "gia-giam" => nhomSanPhams.OrderByDescending(s => s.GiaBanThapNhat),
-                        "ten-az" => nhomSanPhams.OrderBy(s => s.TenSp),
-                        _ => nhomSanPhams.OrderBy(s => s.TenSp)
+                        "gia-tang" => ordered.OrderBy(s => s.GiaBanThapNhat),
+                        "gia-giam" => ordered.OrderByDescending(s => s.GiaBanThapNhat),
+                        "ten-az" => ordered.OrderBy(s => s.TenSp),
+                        _ => ordered.OrderBy(s => s.TenSp)
                     };
                 }
             }
 
-            nhomSanPhams = ordered ?? nhomSanPhams.OrderBy(s => s.TenSp);
+            if (string.IsNullOrEmpty(locMacDinh) && string.IsNullOrEmpty(sapXep))
+            {
+                ordered = ordered.OrderBy(s => s.TenSp);
+            }
 
-            int totalItems = nhomSanPhams.Count();
+            // BƯỚC 5: PHÂN TRANG (PAGINATION) VÀ TRẢ VỀ VIEW
+      
+            int totalItems = ordered.Count();
             int totalPages = (int)Math.Ceiling(totalItems / (double)PAGE_SIZE);
-            var data = nhomSanPhams.Skip((page - 1) * PAGE_SIZE).Take(PAGE_SIZE).ToList();
+
+            var data = ordered.Skip((page - 1) * PAGE_SIZE).Take(PAGE_SIZE).ToList();
 
             ViewBag.ThuongHieus = await _context.ThuongHieus.ToListAsync();
             ViewBag.CurrentDanhMuc = danhmuc;
@@ -259,11 +278,11 @@ namespace WebDongHoLG.Controllers
 
             return View(vm);
         }
-        public async Task<IActionResult> Search(string keyword)
-        {
-            return RedirectToAction(nameof(Index), new { keyword });
-        }
 
+        public IActionResult Search(string keyword, int? thuonghieu)
+        {
+            return RedirectToAction(nameof(Index), new { keyword = keyword, thuonghieu = thuonghieu });
+        }
 
         [HttpGet]
         public async Task<IActionResult> GetBienTheChonNhanh(int maSp)

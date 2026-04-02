@@ -1,15 +1,24 @@
 ﻿function updatePriceWithVoucher(phanTramGiam) {
     const tongTienHang = parseFloat(document.getElementById("valTongTienHang").value) || 0;
-    const phiShip = parseFloat(document.getElementById("valPhiShip").value) || 0;
+
+    const phiShip = (tongTienHang >= 5000000) ? 0 : 30000;
+
     const giamGia = tongTienHang * phanTramGiam;
     const tongCuoi = tongTienHang - giamGia + phiShip;
 
     document.getElementById("displayGiamGia").innerText =
         "- " + Math.round(giamGia).toLocaleString("vi-VN") + " ₫";
+
+    const displayPhiShip = document.getElementById("displayPhiShip");
+    if (phiShip === 0) {
+        displayPhiShip.innerHTML = '<span class="text-success fw-bold">Miễn phí</span>';
+    } else {
+        displayPhiShip.innerText = phiShip.toLocaleString("vi-VN") + " ₫";
+    }
+
     document.getElementById("displayTongThanhToan").innerText =
         Math.round(tongCuoi).toLocaleString("vi-VN") + " ₫";
 }
-
 function changeDefaultAddress(maDiaChi) {
     fetch(`/Checkout/SelectAddress?maDc=${maDiaChi}`)
         .then(() => location.reload());

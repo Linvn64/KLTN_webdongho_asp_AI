@@ -161,36 +161,66 @@
                             <div class="p-4 border-top">
                                 @if (Model.DanhSachVoucher != null && Model.DanhSachVoucher.Any())
                                 {
-                                    foreach (var v in Model.DanhSachVoucher)
+                                    @foreach (var v in Model.DanhSachVoucher)
                                     {
                                         var conLai = (v.SoLuong ?? 0) - (v.DaDung ?? 0);
+                                        double donToiThieu = Convert.ToDouble(v.GiaTriToiThieu);
+                                        bool duDieuKienTien = Model.TongTienHang >= donToiThieu;
                                         bool dungNgay = Model.NgayHeThong >= v.NgayBatDau && Model.NgayHeThong <= v.NgayKetThuc;
-                                        bool isActive = v.IsActive == true && dungNgay && conLai > 0;
-                                        <div class="form-check d-flex align-items-center p-3 border rounded mb-2 @(isActive ? "border-danger" : "voucher-disabled")"
-                                             style="@(isActive ? "cursor:pointer;" : "pointer-events:none;")">
+
+                                        bool isActive = (v.IsActive == true) && dungNgay && (conLai > 0) && duDieuKienTien;
+
+                                        <div class="form-check d-flex align-items-center p-3 border rounded mb-2"
+                                             style="background-color: @(isActive ? "#fff" : "#fdfdfd");
+                                                border-color: @(isActive ? "#ee4d2d" : "#dee2e6") !important;
+                                                border-style: @(isActive ? "solid" : "dashed") !important;">
+
                                             <input class="form-check-input me-2" type="radio"
                                                    name="MaVoucherChon" id="v-@v.MaVoucher" value="@v.MaVoucher"
                                                    @(isActive ? "" : "disabled")
-                                                   @(Model.MaVoucherChon == v.MaVoucher ? "checked" : "")
-                                                   onchange="updatePriceWithVoucher(@v.PhanTramGiam)">
-                                            <label class="form-check-label w-100" for="v-@v.MaVoucher">
-                                                <div class="d-flex justify-content-between">
-                                                    <span class="fw-bold @(isActive ? "text-danger" : "")">@v.TenVoucher</span>
+                                                   @(Model.MaVoucherChon == v.MaVoucher && isActive ? "checked" : "")
+                                                   onchange="updatePriceWithVoucher(@v.PhanTramGiam)"
+                                                   style="cursor: @(isActive ? "pointer" : "default");">
+
+                                            <label class="form-check-label w-100" for="v-@v.MaVoucher"
+                                                   style="cursor: @(isActive ? "pointer" : "default"); opacity: 1 !important;">
+
+                                                <div class="d-flex justify-content-between align-items-center">
+                                                    <span class="fw-bold @(isActive ? "text-danger" : "text-dark")">
+                                                        @v.TenVoucher
+                                                    </span>
+
                                                     <span class="badge @(isActive ? "bg-danger" : "bg-secondary")">
                                                         Giảm @(v.PhanTramGiam * 100)%
                                                     </span>
                                                 </div>
-                                                <small class="text-muted">
-                                                    Hạn: @v.NgayKetThuc.ToString("dd/MM/yyyy") — Còn @conLai lượt
+
+                                                <div class="mt-1" style="font-size: 0.9rem; color: #333;">
+                                                    <i class="fas fa-shopping-bag me-1 @(duDieuKienTien ? "text-success" : "text-muted")"></i>
+                                                    Đơn tối thiểu: <strong>@donToiThieu.ToString("#,##0") ₫</strong>
+                                                </div>
+
+                                                <small class="text-muted d-block mt-1">
+                                                    <i class="far fa-clock me-1"></i> Hạn: @v.NgayKetThuc.ToString("dd/MM/yyyy")
                                                 </small>
+
+                                                @if (!duDieuKienTien)
+                                                {
+                                                    <div class="text-danger fw-bold mt-1" style="font-size: 0.75rem;">
+                                                        <i class="fas fa-info-circle me-1"></i> Mua thêm @((donToiThieu - Model.TongTienHang).ToString("#,##0")) ₫ để dùng mã này
+                                                    </div>
+                                                }
+                                                else if (conLai <= 0)
+                                                {
+                                                    <div class="text-muted mt-1" style="font-size: 0.75rem;">
+                                                        <i class="fas fa-times-circle me-1"></i> Rất tiếc, mã đã hết lượt dùng
+                                                    </div>
+                                                }
                                             </label>
                                         </div>
                                     }
                                 }
-                                else
-                                {
                                     <p class="text-muted mb-0">Không có voucher khả dụng.</p>
-                                }
                             </div>
                         </div>
                     </div>
@@ -213,7 +243,9 @@
                         </div>
                         <div class="d-flex justify-content-between mb-3">
                             <span>Phí vận chuyển</span>
-                            <span id="displayPhiShip">@Model.PhiVanChuyen.ToString("#,##0") ₫</span>
+                            <span id="displayPhiShip" class="fw-bold">
+                                @(Model.TongTienHang >= 5000000 ? "Miễn phí" : "30,000 ₫")
+                            </span>
                         </div>
 
                         <div class="mb-4">

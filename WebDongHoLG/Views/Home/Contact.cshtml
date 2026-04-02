@@ -1,0 +1,81 @@
+﻿@model WebDongHoLG.ViewModels.ContactMessage
+@{
+    ViewData["Title"] = "Liên hệ - LG Watch";
+}
+
+<div class="container-fluid contact py-5">
+    <div class="container py-5">
+        <div class="p-5 bg-light rounded shadow-sm">
+            <div class="row g-4">
+                <div class="col-12">
+                    <div class="text-center mx-auto" style="max-width: 700px;">
+                        <h1 class="text-primary">Gửi lời nhắn cho chúng tôi</h1>
+                        <p class="mb-4">Nếu bạn có thắc mắc về sản phẩm hoặc cần tư vấn chọn đồng hồ phù hợp, đừng ngần ngại để lại thông tin bên dưới.</p>
+                    </div>
+                </div>
+
+                <div class="col-lg-12">
+                    <div class="h-100 rounded shadow-sm border" style="overflow: hidden;">
+                        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3723.9244039130004!2d105.81645417534444!3d21.035710580615286!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ab0d127a01e7%3A0xab06f03126759888!2zTG90dGUgQ2VudGVyIEjDoCBO4buZaQ!5e0!3m2!1svi!2svn!4v1711900000000!5m2!1svi!2svn3"
+                                width="100%"
+                                height="450"
+                                style="border:0;"
+                                allowfullscreen=""
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                        </iframe>
+                    </div>
+                </div>
+
+                <div class="col-lg-7">
+                    @if (TempData["Success"] != null)
+                    {
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <i class="fas fa-check-circle me-2"></i> @TempData["Success"]
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    }
+
+                    <form asp-controller="Home" asp-action="SendMessage" method="post" class="">
+                        <div class="mb-4">
+                            <input type="text" asp-for="Name" class="w-100 form-control border-0 py-3 shadow-sm" placeholder="Tên của bạn" required>
+                        </div>
+                        <div class="mb-4">
+                            <input type="email" asp-for="Email" class="w-100 form-control border-0 py-3 shadow-sm" placeholder="Địa chỉ Email" required>
+                        </div>
+                        <div class="mb-4">
+                            <textarea asp-for="Message" class="w-100 form-control border-0 mb-4 shadow-sm" rows="5" cols="10" placeholder="Bạn cần hỗ trợ điều gì?" required></textarea>
+                        </div>
+                        <button class="w-100 btn form-control border-secondary py-3 bg-white text-primary fw-bold shadow-sm" type="submit">
+                            <i class="fas fa-paper-plane me-2"></i>Gửi ngay
+                        </button>
+                    </form>
+                </div>
+
+                <div class="col-lg-5">
+                    <div class="d-flex p-4 rounded mb-4 bg-white shadow-sm border-start border-primary border-4">
+                        <i class="fas fa-map-marker-alt fa-2x text-primary me-4"></i>
+                        <div>
+                            <h4>Địa chỉ</h4>
+                            <p class="mb-2 text-muted">Trương Định, Hai Bà Trưng, Hà Nội</p>
+                        </div>
+                    </div>
+                    <div class="d-flex p-4 rounded mb-4 bg-white shadow-sm border-start border-primary border-4">
+                        <i class="fas fa-envelope fa-2x text-primary me-4"></i>
+                        <div>
+                            <h4>Email</h4>
+                            <p class="mb-2 text-muted">contact@lgwatch.com</p>
+                        </div>
+                    </div>
+                    <div class="d-flex p-4 rounded bg-white shadow-sm border-start border-primary border-4">
+                        <i class="fa fa-phone-alt fa-2x text-primary me-4"></i>
+                        <div>
+                            <h4>Điện thoại</h4>
+                            <p class="mb-2 text-muted">0912 345 678</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

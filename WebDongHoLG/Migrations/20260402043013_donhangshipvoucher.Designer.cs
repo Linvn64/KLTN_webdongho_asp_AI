@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebDongHoLG.Data;
 
@@ -11,9 +12,11 @@ using WebDongHoLG.Data;
 namespace WebDongHoLG.Migrations
 {
     [DbContext(typeof(ShopDongHoDbContext))]
-    partial class ShopDongHoDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260402043013_donhangshipvoucher")]
+    partial class donhangshipvoucher
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

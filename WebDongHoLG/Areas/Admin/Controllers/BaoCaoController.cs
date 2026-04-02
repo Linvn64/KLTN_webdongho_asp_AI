@@ -17,11 +17,9 @@ namespace WebDongHoLG.Areas.Admin.Controllers
 
         public async Task<IActionResult> TaiChinh(DateTime? tuNgay, DateTime? denNgay)
         {
-            // Nếu không chọn, mặc định lấy từ đầu tháng đến hiện tại
             DateTime vTuNgay = tuNgay ?? new DateTime(DateTime.Now.Year, DateTime.Now.Month, 1);
             DateTime vDenNgay = denNgay ?? DateTime.Now;
 
-            // Lấy đơn hàng trong khoảng ngày đã chọn (lưu ý lấy đến hết ngày DenNgay)
             var donHangs = await _context.DonHangs
                 .Include(d => d.ChiTietDonHangs).ThenInclude(ct => ct.MaBienTheNavigation)
                 .Where(d => d.NgayDat >= vTuNgay && d.NgayDat <= vDenNgay.AddDays(1).AddTicks(-1) && d.TrangThai == "Hoàn thành")
@@ -34,9 +32,12 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                 TuNgay = vTuNgay,
                 DenNgay = vDenNgay,
                 TongSoLuongTon = tatCaBienThe.Sum(x => x.Khos.Sum(k => k.SoLuongTon ?? 0)),
-                TongVonTonKho = (decimal)tatCaBienThe.Sum(x => (x.Khos.Sum(k => k.SoLuongTon ?? 0)) * (x.GiaNhap ?? 0)),
-                TienVao = donHangs.Sum(d => d.TongTien ?? 0),
-                TienRa = donHangs.SelectMany(d => d.ChiTietDonHangs).Sum(ct => (decimal)(ct.SoLuong * (ct.MaBienTheNavigation?.GiaNhap ?? 0))),
+                TongVonTonKho = tatCaBienThe.Sum(x => (x.Khos.Sum(k => k.SoLuongTon ?? 0)) * (x.GiaNhap ?? 0m)),
+                TienVao = donHangs.Sum(d => d.TongTien - d.PhiVanChuyen) ?? 0m,
+
+                TienRa = donHangs.SelectMany(d => d.ChiTietDonHangs)
+                     .Sum(ct => (ct.SoLuong ?? 0) * (ct.MaBienTheNavigation?.GiaNhap ?? 0m)),
+
                 GiaTriBanRaDuKien = (decimal)tatCaBienThe.Sum(x => (x.Khos.Sum(k => k.SoLuongTon ?? 0)) * (x.GiaBan ?? 0)),
                 SanPhamSapHetHang = tatCaBienThe.Count(x => x.Khos.Sum(k => k.SoLuongTon ?? 0) <= 5)
             };

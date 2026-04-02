@@ -20,16 +20,104 @@ namespace WebDongHoLG.Areas.Admin.Controllers
         }
 
         // GET: Admin/Vouchers
-        public async Task<IActionResult> Index()
+        // 1. HÀM INDEX CHÍNH
+        public async Task<IActionResult> Index(DateTime? tuNgay, DateTime? denNgay, string status, string searchName)
         {
-            var list = await _context.Vouchers
-                .OrderByDescending(v => v.IsActive)
-                .ThenByDescending(v => v.NgayBatDau)
-                .ToListAsync();
-            return View(list);
+            // TRUYỀN THÊM tuNgay VÀ denNgay VÀO HÀM LỌC DANH SÁCH
+            var vouchers = await GetFilteredVouchers(tuNgay, denNgay, status, searchName);
+
+            // Lấy ra danh sách ID của các Voucher đang hiển thị trên bảng
+            var currentVoucherIds = vouchers.Select(v => v.MaVoucher).ToList();
+
+            // Tính toán thống kê ngân sách
+            await CalculateVoucherStatistics(tuNgay, denNgay, currentVoucherIds);
+
+            // Gửi các giá trị lọc ngược lại View 
+            ViewBag.TuNgay = tuNgay?.ToString("yyyy-MM-dd");
+            ViewBag.DenNgay = denNgay?.ToString("yyyy-MM-dd");
+            ViewBag.CurrentStatus = status;
+            ViewBag.SearchName = searchName;
+
+            return View(vouchers);
         }
 
-        // GET: Admin/Vouchers/Details/5
+        // 2. HÀM LỌC DANH SÁCH (Cập nhật thêm tham số thời gian)
+        private async Task<List<Voucher>> GetFilteredVouchers(DateTime? tuNgay, DateTime? denNgay, string status, string searchName)
+        {
+            var query = _context.Vouchers.AsQueryable();
+
+            // --- MỚI: LỌC THEO THỜI GIAN TẠO/BẮT ĐẦU VOUCHER ---
+            if (tuNgay.HasValue)
+            {
+                query = query.Where(v => v.NgayBatDau >= tuNgay.Value);
+            }
+
+            if (denNgay.HasValue)
+            {
+                // Bao gồm đến 23:59:59 của ngày được chọn
+                query = query.Where(v => v.NgayBatDau <= denNgay.Value.AddDays(1).AddTicks(-1));
+            }
+            // --------------------------------------------------
+
+            // Lọc theo tên (Mã Voucher)
+            if (!string.IsNullOrEmpty(searchName))
+            {
+                query = query.Where(v => v.TenVoucher.Contains(searchName.ToUpper()));
+            }
+
+            // Lọc theo trạng thái hoạt động phức hợp
+            if (!string.IsNullOrEmpty(status))
+            {
+                DateTime now = DateTime.Now;
+
+                if (status == "active")
+                {
+                    query = query.Where(v =>
+                        v.IsActive == true &&
+                        v.NgayKetThuc >= now &&
+                        (v.SoLuong == null || v.SoLuong == 0 || v.DaDung < v.SoLuong)
+                    );
+                }
+                else if (status == "inactive")
+                {
+                    query = query.Where(v =>
+                        v.IsActive == false ||
+                        v.IsActive == null ||
+                        v.NgayKetThuc < now ||
+                        (v.SoLuong > 0 && v.DaDung >= v.SoLuong)
+                    );
+                }
+            }
+
+            return await query.OrderByDescending(v => v.NgayBatDau).ToListAsync();
+        }
+        // 3. HÀM PHỤ: TÍNH TOÁN NGÂN SÁCH ĐÃ TIÊU
+        private async Task CalculateVoucherStatistics(DateTime? tuNgay, DateTime? denNgay, List<int> currentVoucherIds)
+        {
+            var queryDonHang = _context.DonHangs
+                 .Where(d => d.MaVoucher != null
+                 && currentVoucherIds.Contains(d.MaVoucher.Value)
+                 && d.TrangThai != "Đã hủy");
+
+            // Lọc theo ngày đặt hàng
+            if (tuNgay.HasValue)
+                queryDonHang = queryDonHang.Where(d => d.NgayDat >= tuNgay.Value);
+
+            if (denNgay.HasValue)
+                queryDonHang = queryDonHang.Where(d => d.NgayDat <= denNgay.Value.AddDays(1).AddTicks(-1));
+
+            // Thống kê chi tiết từng mã
+            var thongKeVoucher = await queryDonHang
+                .GroupBy(d => d.MaVoucher)
+                .Select(g => new { MaVoucher = g.Key, TongTienDaGiam = g.Sum(d => d.TienGiamGia) })
+                .ToDictionaryAsync(x => x.MaVoucher, x => x.TongTienDaGiam);
+
+            // Tổng ngân sách toàn bộ các mã đang hiển thị
+            decimal tongNganSach = await queryDonHang.SumAsync(d => d.TienGiamGia);
+
+            ViewBag.ThongKeVoucher = thongKeVoucher;
+            ViewBag.TongNganSachVoucher = tongNganSach;
+        }
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -97,20 +185,22 @@ namespace WebDongHoLG.Areas.Admin.Controllers
         // GET: Admin/Vouchers/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            if (id == null) return NotFound();
 
             var voucher = await _context.Vouchers.FindAsync(id);
-            if (voucher == null)
+            if (voucher == null) return NotFound();
+
+            // --- CHỐT CHẶN BẢO MẬT ---
+            if (voucher.DaDung > 0)
             {
-                return NotFound();
+                TempData["ToastError"] = "Voucher này đã phát sinh giao dịch, không thể chỉnh sửa để bảo toàn dữ liệu lịch sử!";
+                return RedirectToAction(nameof(Index));
             }
+            // -------------------------
+
             voucher.PhanTramGiam = voucher.PhanTramGiam * 100;
             return View(voucher);
         }
-
         // POST: Admin/Vouchers/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
@@ -120,11 +210,18 @@ namespace WebDongHoLG.Areas.Admin.Controllers
         {
             if (id != voucher.MaVoucher) return NotFound();
 
+            // Bên trong hàm Edit [HttpPost], ngay sau dòng kiểm tra (id != voucher.MaVoucher) em thêm:
+            var currentData = await _context.Vouchers.AsNoTracking().FirstOrDefaultAsync(v => v.MaVoucher == id);
+            if (currentData.DaDung > 0)
+            {
+                TempData["ToastError"] = "Thao tác thất bại! Voucher đã được sử dụng.";
+                return RedirectToAction(nameof(Index));
+            }
+
             if (ModelState.IsValid)
             {
                 try
                 {
-                    var currentData = await _context.Vouchers.AsNoTracking().FirstOrDefaultAsync(v => v.MaVoucher == id);
                     voucher.DaDung = currentData.DaDung;
 
                     voucher.SoLuong = SoLuongCu + SoLuongTangThem;
@@ -159,6 +256,11 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                 return NotFound();
             }
 
+            if (voucher.DaDung > 0)
+            {
+                TempData["ToastError"] = "Không thể xóa Voucher đã có người sử dụng. Hãy dùng chức năng Ngừng hoạt động (Tắt)!";
+                return RedirectToAction(nameof(Index));
+            }
             return View(voucher);
         }
 
@@ -170,10 +272,15 @@ namespace WebDongHoLG.Areas.Admin.Controllers
             var voucher = await _context.Vouchers.FindAsync(id);
             if (voucher != null)
             {
-                _context.Vouchers.Remove(voucher);
+                if (voucher.DaDung > 0)
+                {
+                    TempData["ToastError"] = "Cố tình xóa thất bại! Voucher đã phát sinh giao dịch.";
+                    return RedirectToAction(nameof(Index));
+                }
+                _context.Vouchers.Remove(voucher); // Lệnh này sẽ xóa hẳn khỏi DB
+                await _context.SaveChangesAsync();
+                TempData["ToastSuccess"] = "Đã xóa vĩnh viễn Voucher khỏi hệ thống!";
             }
-
-            await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

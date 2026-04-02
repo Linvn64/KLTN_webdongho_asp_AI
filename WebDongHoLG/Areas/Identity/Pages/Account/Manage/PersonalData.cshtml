@@ -1,24 +1,45 @@
 ﻿@page
 @model PersonalDataModel
 @{
-    ViewData["Title"] = "Personal Data";
+    ViewData["Title"] = "Dữ liệu cá nhân";
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h3>@ViewData["Title"]</h3>
+<h4 class="mb-4 font-weight-bold text-primary border-bottom pb-2">
+    <i class="fas fa-database me-2"></i>@ViewData["Title"]
+</h4>
 
 <div class="row">
-    <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
-        <p>
-            <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
-        </p>
-        <form id="download-data" asp-page="DownloadPersonalData" method="post">
-            <button class="btn btn-primary" type="submit">Download</button>
-        </form>
-        <p>
-            <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger">Delete</a>
-        </p>
+    <div class="col-md-12">
+        <div class="alert alert-info border-0 shadow-sm mb-4" style="border-left: 5px solid #b29c6e !important; background-color: #fcf9f2;">
+            <p class="mb-0 text-dark">
+                Tài khoản của bạn chứa các thông tin cá nhân mà bạn đã cung cấp cho chúng tôi. Trang này cho phép bạn tải xuống hoặc yêu cầu xóa dữ liệu đó.
+            </p>
+        </div>
+
+        <div class="row g-4">
+            <div class="col-md-6">
+                <div class="p-4 border rounded shadow-sm bg-white h-100">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-download me-2"></i>Tải về dữ liệu</h5>
+                    <p class="small text-muted">Trích xuất toàn bộ thông tin cá nhân của bạn thành tệp tin để lưu trữ.</p>
+                    <form id="download-data" asp-page="DownloadPersonalData" method="post">
+                        <button class="btn btn-primary w-100 fw-bold py-2" type="submit" style="border-radius: 8px;">
+                            TẢI XUỐNG (.JSON)
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="p-4 border rounded shadow-sm bg-white h-100">
+                    <h5 class="fw-bold mb-3 text-danger"><i class="fas fa-user-slash me-2"></i>Xóa tài khoản</h5>
+                    <p class="small text-muted">Hành động này sẽ xóa vĩnh viễn tài khoản và dữ liệu không thể khôi phục.</p>
+                    <a id="delete" asp-page="DeletePersonalData" class="btn btn-danger w-100 fw-bold py-2" style="border-radius: 8px;">
+                        ĐI ĐẾN TRANG XÓA
+                    </a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 

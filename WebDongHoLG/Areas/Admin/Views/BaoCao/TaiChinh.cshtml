@@ -19,7 +19,6 @@
                 </div>
             </div>
 
-            @* Bộ lọc Ngày và Xuất PDF bên phải *@
             <div class="col-auto ms-auto d-flex gap-2">
                 <form asp-action="TaiChinh" method="get" class="d-flex align-items-center gap-2">
                     <div class="input-icon">
@@ -52,10 +51,10 @@
 
             @* --- CÁC THẺ CON SỐ (GIỮ NGUYÊN LINK) --- *@
             <div class="col-md-6 col-lg-3">
-                <a asp-controller="SanPham" asp-action="Index" class="card card-sm border-start-3 border-azure text-decoration-none">
+                <a asp-controller="Khoes" asp-action="Index" class="card card-sm border-start-3 border-azure text-decoration-none">
                     <div class="card-body">
                         <div class="subheader text-azure">Vốn hàng tồn kho</div>
-                        <div class="h2 text-dark">@Model.TongVonTonKho.ToString("N0") ₫</div>
+                        <div class="h2 fw-bold text-azure mb-0">@Model.TongVonTonKho.ToString("N0") ₫</div>
                         <div class="text-muted small">Kho: <strong>@Model.TongSoLuongTon</strong> cái <i class="ti ti-chevron-right float-end"></i></div>
                     </div>
                 </a>
@@ -65,27 +64,30 @@
                 <a asp-controller="QuanLyDonHang" asp-action="Index" class="card card-sm border-start-3 border-green text-decoration-none">
                     <div class="card-body">
                         <div class="subheader text-green">Tiền vào (Doanh thu)</div>
-                        <div class="h2 text-dark">@Model.TienVao.ToString("N0") ₫</div>
+                        <div class="h2 fw-bold text-green mb-0">@Model.TienVao.ToString("N0") ₫</div>
                         <div class="text-muted small">Xem đơn hàng kỳ này <i class="ti ti-chevron-right float-end"></i></div>
                     </div>
                 </a>
             </div>
 
             <div class="col-md-6 col-lg-3">
-                <div class="card card-sm border-start-3 border-red">
+                <a href="/Admin/QuanLyDonHang?status=Hoàn thành&showAll=True" class="card card-sm border-start-3 border-red text-decoration-none">
                     <div class="card-body">
                         <div class="subheader text-red">Tiền ra (Giá vốn)</div>
-                        <div class="h2 text-dark">- @Model.TienRa.ToString("N0") ₫</div>
-                        <div class="text-muted small">Hàng đã bán kỳ này</div>
+                        <div class="h2 fw-bold text-red mb-0">- @Model.TienRa.ToString("N0") ₫</div>
+                        <div class="text-muted small">
+                            Hàng đã bán kỳ này
+                            <i class="ti ti-external-link float-end"></i> 
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
 
             <div class="col-md-6 col-lg-3">
                 <div class="card card-sm border-start-3 border-primary shadow-sm bg-primary-lt">
                     <div class="card-body">
                         <div class="subheader text-primary fw-bold">Lợi nhuận gộp</div>
-                        <div class="h2 text-primary">@Model.LoiNhuanGop.ToString("N0") ₫</div>
+                        <div class="h1 fw-bold text-primary mb-0">@Model.LoiNhuanGop.ToString("N0") ₫</div>
                         <div class="text-muted small">Lãi ròng thực tế</div>
                     </div>
                 </div>

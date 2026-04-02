@@ -1,5 +1,16 @@
 ﻿@model WebDongHoLG.ViewModels.ChiTietSanPhamVM
 
+<style>
+    .review-content-html img {
+        max-width: 150px; 
+        height: auto;
+        border-radius: 8px;
+        margin-top: 10px;
+        display: block;
+        border: 1px solid #eee;
+    }
+</style>
+
 <div class="rating-filter mb-4 p-3 bg-light rounded d-flex align-items-center gap-2 flex-wrap">
     <span class="fw-bold me-2">Bộ lọc:</span>
     <button class="btn btn-sm btn-outline-danger filter-btn active" data-star="all">Tất cả</button>
@@ -35,7 +46,9 @@
                         <small class="text-muted ms-2 fw-normal">| Phân loại: @dg.TenBienThe</small>
                     }
                 </div>
-                <p class="mb-0 text-secondary" style="font-size: 14px;">@dg.NoiDung</p>
+                <div class="review-content-html mb-0 text-secondary" style="font-size: 14px;">
+                    @Html.Raw(dg.NoiDung)
+                </div>
             </div>
         }
     }

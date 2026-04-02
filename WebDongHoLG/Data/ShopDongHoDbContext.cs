@@ -236,6 +236,16 @@ public partial class ShopDongHoDbContext : IdentityDbContext<IdentityUser, Ident
                 .HasMaxLength(50)
                 .HasColumnName("trangThai");
 
+            entity.Property(e => e.PhiVanChuyen)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("phiVanChuyen")
+                .HasDefaultValue(0); // Mặc định là 0 nếu freeship
+
+            entity.Property(e => e.TienGiamGia)
+                .HasColumnType("decimal(18, 2)")
+                .HasColumnName("tienGiamGia")
+                .HasDefaultValue(0);
+
             entity.HasOne(d => d.MaDiaChiNavigation).WithMany(p => p.DonHangs)
                 .HasForeignKey(d => d.MaDiaChi)
                 .HasConstraintName("FK__DonHang__maDiaCh__59FA5E80");

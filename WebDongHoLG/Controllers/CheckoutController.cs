@@ -170,25 +170,39 @@ namespace WebDongHoLG.Controllers
             if (model.MaVoucherChon.HasValue)
             {
                 var v = await _context.Vouchers.FindAsync(model.MaVoucherChon);
+
                 if (v != null && v.IsActive == true && (v.DaDung ?? 0) < (v.SoLuong ?? 0))
                 {
-                    giamGia = tongTienHang * (double)v.PhanTramGiam;
-                    v.DaDung = (v.DaDung ?? 0) + 1;
+
+                    if (tongTienHang >= (double)v.GiaTriToiThieu)
+                    {
+                        giamGia = tongTienHang * (double)v.PhanTramGiam;
+                        v.DaDung = (v.DaDung ?? 0) + 1;
+                    }
+                    else
+                    {
+                        double toiThieu = (double)v.GiaTriToiThieu;
+                        TempData["ToastError"] = $"Đơn hàng chưa đủ {toiThieu:N0}đ để áp dụng voucher này!";
+
+                        return RedirectToAction("Index", "GioHangs");
+                    }
                 }
             }
-
             var maDiaChi = user.DiaChiGiaoHangs
                 .OrderByDescending(d => d.MaDiaChi)
                 .Select(d => d.MaDiaChi)
                 .FirstOrDefault();
 
-            double tongThanhToan = tongTienHang - giamGia + model.PhiVanChuyen;
+            double phiShip = (tongTienHang >= 5000000) ? 0 : 30000;
+            double tongThanhToan = tongTienHang - giamGia + phiShip;
 
             var donHang = new DonHang
             {
                 MaNguoiDung = user.MaNguoiDung,
                 NgayDat = DateTime.Now,
                 TongTien = (decimal)tongThanhToan,
+                PhiVanChuyen = (decimal)phiShip,
+                TienGiamGia = (decimal)giamGia,
                 TrangThai = CachThanhToan == "COD" ? "Chờ xử lý" : "Chờ thanh toán",
                 MaVoucher = model.MaVoucherChon,
                 MaDiaChi = maDiaChi

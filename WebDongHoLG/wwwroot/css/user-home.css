@@ -1,4 +1,69 @@
-﻿/* Hiệu ứng trượt liên tục không khựng cho Logo */
+﻿/* =======================================================
+   LG WATCH - LUXURY CUSTOM SYSTEM (CLEAN VERSION)
+   ======================================================= */
+
+/* 1. ĐỊNH NGHĨA BIẾN MÀU TOÀN CỤC */
+:root {
+    --luxury-gold: #b29c6e;
+    --luxury-dark: #111111;
+    --bs-primary: #b29c6e !important;
+    --bs-secondary: #111 !important;
+}
+
+/* 2. THIẾT LẬP CHUNG CHO BODY & TIÊU ĐỀ */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #f8f9fa;
+}
+
+h1, h2, h3, h4, .navbar-brand {
+    font-family: 'Raleway', sans-serif;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--luxury-dark);
+}
+
+/* 3. NHUỘM MÀU GOLD CHO CÁC THÀNH PHẦN CHÍNH (NÚT, CHỮ, PHÂN TRANG) */
+.text-primary, .nav-link.active, .breadcrumb-item a, .fa-shopping-bag {
+    color: var(--luxury-gold) !important;
+}
+
+.bg-primary, .btn-primary, .btn-shopee, .back-to-top, .pagination .active, .btn-buy-now {
+    background-color: var(--luxury-gold) !important;
+    border-color: var(--luxury-gold) !important;
+    color: #ffffff !important;
+}
+
+/* Hiệu ứng hover cho nút */
+.btn:hover {
+    filter: brightness(0.9) !important;
+    transition: 0.3s;
+}
+
+/* 4. TẠO VIỀN (BORDER) SANG TRỌNG CHO CARD & BOX NỘI DUNG */
+/* Chỉ áp dụng cho các khối tĩnh, không đụng vào Swiper/Slider để tránh lỗi đứng hình */
+main .card,
+main .order-card,
+main .product-box,
+main .bg-light.rounded:not(.swiper-slide),
+.shopee-tabs,
+.rating-filter {
+    border: 1px solid #e5e5e5 !important;
+    border-radius: 12px !important;
+    background-color: #ffffff !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03) !important;
+    overflow: hidden;
+}
+
+/* 5. SỬA LỖI NÚT KHÔNG BẤM ĐƯỢC (ƯU TIÊN LỚP HIỂN THỊ) */
+.btn, button, a, .shopee-tab-item {
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    position: relative;
+    z-index: 10; /* Luôn nằm trên các lớp viền và đổ bóng */
+}
+
+/* 6. HIỆU ỨNG SLIDER & LOGO (GIỮ NGUYÊN LOGIC CỦA GIANG) */
 .brand-logo-slider .swiper-wrapper {
     transition-timing-function: linear !important;
 }
@@ -9,12 +74,11 @@
     transition: 0.3s;
 }
 
-.brand-logo-slider img:hover {
-    filter: grayscale(0%);
-    opacity: 1;
-}
+    .brand-logo-slider img:hover {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
 
-/* Banner to đầu trang */
 .pri-slider img {
     height: auto;
     max-height: 650px;
@@ -22,7 +86,16 @@
     object-fit: cover;
 }
 
-/* Hiệu ứng zoom ảnh Top Thương Hiệu */
+.pri-slider .swiper-button-next, .pri-slider .swiper-button-prev {
+    color: var(--luxury-gold) !important;
+}
+
+.pri-slider .swiper-pagination-bullet-active {
+    background: var(--luxury-gold) !important;
+    width: 25px;
+    border-radius: 5px;
+}
+
 .transition-zoom {
     transition: transform 0.8s ease;
 }
@@ -31,84 +104,89 @@
     transform: scale(1.05);
 }
 
-/* Sản phẩm New Arrival */
-.product-box {
-    transition: 0.3s;
-    border-radius: 8px;
-}
-
-.product-box:hover {
-    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-    transform: translateY(-5px);
-}
-
-.fix-title h2 {
-    letter-spacing: 2px;
-    font-weight: 800;
-
-}
-/* Đổi màu 2 nút mũi tên trái phải của Banner chính */
-.pri-slider .swiper-button-next, 
-.pri-slider .swiper-button-prev {
-    color: #b29c6e !important; /* Màu Gold */
-}
-
-/* Đổi màu các dấu chấm (Pagination) bên dưới ảnh */
-.pri-slider .swiper-pagination-bullet {
-    background: #ccc !important; /* Màu xám cho các chấm chưa chọn */
-    opacity: 1;
-}
-
-.pri-slider .swiper-pagination-bullet-active {
-    background: #b29c6e !important; /* Màu Gold cho chấm đang hiển thị */
-    width: 25px; /* Làm cho chấm đang chọn dài ra nhìn cho sang */
-    border-radius: 5px;
-}
-
-/* Ép thêm màu cho nút Back-to-top nếu nó vẫn lỳ lợm màu xanh */
-.back-to-top, .back-to-top i {
-    background-color: #b29c6e !important;
-    border-color: #b29c6e !important;
-    color: white !important;
-}
-
-/* Ép khung ảnh về tỉ lệ 1:1 hoặc khung đứng cố định */
+/* 7. TIỆN ÍCH HÌNH ẢNH SẢN PHẨM */
 .product-image-container {
     width: 100%;
-    height: 250px; /* Chiều cao cố định cho khung ảnh */
+    height: 250px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    background-color: #f9f9f9; /* Nền xám nhẹ cho chuyên nghiệp */
-    border-radius: 4px;
+    background-color: #f9f9f9;
 }
 
     .product-image-container img {
         max-width: 90%;
         max-height: 90%;
-        object-fit: contain; /* Giúp ảnh không bị méo, hiện trọn vẹn sản phẩm */
+        object-fit: contain;
         transition: transform 0.5s ease;
     }
 
-/* Hiệu ứng khi rê chuột vào khung ảnh */
 .product-box:hover .product-image-container img {
     transform: scale(1.1);
 }
 
-/* Chỉnh lại font cho tiêu đề sản phẩm */
 .product-title {
-    min-height: 40px; /* Đảm bảo tên dài hay ngắn thì khung vẫn bằng nhau */
+    min-height: 40px;
     line-height: 1.4;
 }
 
-.btn-buy-now {
-    letter-spacing: 1px;
-    font-size: 11px;
-    transition: 0.3s;
+/* 8. KEYFRAMES HIỆU ỨNG TRƯỢT */
+@keyframes slideIn {
+    from {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
-    .btn-buy-now:hover {
-        background-color: #b29c6e; /* Đổi sang màu Gold khi hover */
-        border-color: #b29c6e;
+@keyframes slideOut {
+    from {
+        transform: translateX(0);
+        opacity: 1;
     }
+
+    to {
+        transform: translateX(120%);
+        opacity: 0;
+    }
+}
+
+/* Đặc trị cho menu dropdown người dùng */
+.user-dropdown:hover .dropdown-menu {
+    display: block;
+    position: absolute;
+    top: 100%;
+    right: 0;
+    z-index: 1000;
+}
+
+
+
+/* --- FIX THANH BÊN IDENTITY --- */
+.nav-pills.flex-column {
+    display: flex !important;
+    flex-direction: column !important;
+    padding: 10px;
+}
+
+.nav-pills.flex-column .nav-link {
+        color: var(--luxury-gold) !important; 
+        border-radius: 8px !important;
+        margin-bottom: 5px;
+        transition: 0.3s;
+        font-weight: 600;
+}
+
+.nav-pills.flex-column .nav-link.active {
+            background-color: var(--luxury-gold) !important; 
+            color: white !important;
+}
+
+.nav-pills.flex-column .nav-link:hover {
+            background-color: #f8f1e5;
+}

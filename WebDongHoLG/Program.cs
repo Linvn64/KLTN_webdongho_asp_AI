@@ -1,4 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;  
 using WebDongHoLG.Data;
@@ -6,7 +6,7 @@ using WebDongHoLG.Services.Vnpay;
 using WebDongHoLG.ViewModels.momo;
 using WebDongHoLG.Services.Momo;
 using WebDongHoLG.Services.Chatbot;
-
+using WebDongHoLG.Services.Email;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +16,8 @@ builder.Services.AddScoped<IMomoService, MomoService>();
 
 builder.Services.AddDbContext<ShopDongHoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ShopDongHoDbContext>();
 
 
 // connnect vpn
@@ -72,12 +74,15 @@ builder.Services.AddAuthentication()
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
-builder.Services.AddSingleton<IEmailSender, NoOpEmailSender>();
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Identity/Account/Login";
     options.AccessDeniedPath = "/Identity/Account/AccessDenied";
 });
+
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+
 var app = builder.Build();
 
 

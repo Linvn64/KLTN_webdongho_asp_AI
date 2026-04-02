@@ -2120,10 +2120,6 @@ wwwroot\hinhanhbienthe\rolex\garmin-epix.jpg
 wwwroot\hinhanhbienthe\rolex\gmw.jpg
 wwwroot\hinhanhbienthe\rolex\gt4.jpg
 wwwroot\hinhanhbienthe\rolex\guess.jpg
-wwwroot\home\404.html
-wwwroot\home\cart.html
-wwwroot\home\chackout.html
-wwwroot\home\contact.html
 wwwroot\home\css\bootstrap.min.css
 wwwroot\home\css\style.css
 wwwroot\home\img\avatar.jpg
@@ -2157,7 +2153,6 @@ wwwroot\home\img\vegetable-item-3.png
 wwwroot\home\img\vegetable-item-4.jpg
 wwwroot\home\img\vegetable-item-5.jpg
 wwwroot\home\img\vegetable-item-6.jpg
-wwwroot\home\index.html
 wwwroot\home\js\main.js
 wwwroot\home\lib\easing\easing.js
 wwwroot\home\lib\easing\easing.min.js
@@ -2180,8 +2175,6 @@ wwwroot\home\lib\owlcarousel\owl.carousel.js
 wwwroot\home\lib\owlcarousel\owl.carousel.min.js
 wwwroot\home\lib\waypoints\links.php
 wwwroot\home\lib\waypoints\waypoints.min.js
-wwwroot\home\LICENSE.txt
-wwwroot\home\READ-ME.txt
 wwwroot\home\scss\bootstrap.scss
 wwwroot\home\scss\bootstrap\scss\bootstrap-grid.scss
 wwwroot\home\scss\bootstrap\scss\bootstrap-reboot.scss
@@ -2264,9 +2257,6 @@ wwwroot\home\scss\bootstrap\scss\_transitions.scss
 wwwroot\home\scss\bootstrap\scss\_type.scss
 wwwroot\home\scss\bootstrap\scss\_utilities.scss
 wwwroot\home\scss\bootstrap\scss\_variables.scss
-wwwroot\home\shop-detail.html
-wwwroot\home\shop.html
-wwwroot\home\testimonial.html
 wwwroot\images\default-avatar.jpg
 wwwroot\images\home\chopard-luxshopping2.png.webp
 wwwroot\images\home\omega-luxshopping5.png.webp
@@ -2312,7 +2302,6 @@ wwwroot\js\auth.js
 wwwroot\js\bienthe.js
 wwwroot\js\chat-app.js
 wwwroot\js\giohang.js
-wwwroot\js\home.js
 wwwroot\js\layout.js
 wwwroot\js\nguoidung\checkout.js
 wwwroot\js\nguoidung\giohang.js
@@ -2385,3 +2374,4 @@ wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\dist\libs\countup.js\.vscode\tasks.json
+wwwroot\js\home.js

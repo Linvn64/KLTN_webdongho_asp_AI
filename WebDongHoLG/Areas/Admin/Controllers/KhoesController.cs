@@ -50,12 +50,14 @@ namespace WebDongHoLG.Areas.Admin.Controllers
             var sanPhams = await query.OrderBy(s => s.TenSanPham).ToListAsync();
 
             // Thống kê tổng quan
+
             var tatCaKho = await _context.Khos.ToListAsync();
             ViewBag.TongBienThe = tatCaKho.Count;
             ViewBag.TongTon = tatCaKho.Sum(k => k.SoLuongTon ?? 0);
             ViewBag.SapHetHang = tatCaKho.Count(k => k.SoLuongTon <= NGUONG_CANH_BAO);
             ViewBag.HetHang = tatCaKho.Count(k => k.SoLuongTon <= 0);
             ViewBag.ThuongHieus = await _context.ThuongHieus.ToListAsync();
+            ViewBag.TongGiaTriTon = tatCaKho.Sum(k => (k.SoLuongTon ?? 0) * (k.MaBienTheNavigation?.GiaNhap ?? 0m));
             ViewBag.NguongCanhBao = NGUONG_CANH_BAO;
             ViewBag.CurrentSearch = searchString;
             ViewBag.CurrentThuongHieu = thuongHieuId;

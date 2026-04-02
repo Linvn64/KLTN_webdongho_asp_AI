@@ -13,18 +13,48 @@
 
     <div class="card shadow-sm mx-auto mb-4" style="max-width:600px;">
         <div class="card-body text-start">
-            <h5 class="fw-bold mb-3">Sản phẩm đã đặt</h5>
+            <h5 class="fw-bold mb-3 border-bottom pb-2">Chi tiết thanh toán</h5>
+
             @foreach (var ct in Model.ChiTietDonHangs)
             {
-                <div class="d-flex justify-content-between mb-2">
+                <div class="d-flex justify-content-between mb-2 text-secondary">
                     <span>@ct.MaBienTheNavigation.MaSpNavigation.TenSanPham x @ct.SoLuong</span>
-                    <span class="text-danger fw-bold">@(((ct.DonGiaTaiThoiDiem ?? 0) * (ct.SoLuong ?? 0)).ToString("#,##0")) ₫</span>
+                    <span>@(((ct.DonGiaTaiThoiDiem ?? 0) * (ct.SoLuong ?? 0)).ToString("#,##0")) ₫</span>
                 </div>
             }
-            <hr>
-            <div class="d-flex justify-content-between">
-                <strong>Tổng cộng</strong>
-                <strong class="text-danger">@((Model.TongTien ?? 0).ToString("#,##0")) ₫</strong>
+
+            <hr class="my-3">
+
+            @{
+                var tienHang = Model.ChiTietDonHangs.Sum(ct => (ct.DonGiaTaiThoiDiem ?? 0) * (ct.SoLuong ?? 0));
+            }
+
+            <div class="d-flex justify-content-between mb-2">
+                <span>Tổng tiền hàng:</span>
+                <span class="fw-bold">@tienHang.ToString("#,##0") ₫</span>
+            </div>
+
+            @if (Model.TienGiamGia > 0)
+            {
+                <div class="d-flex justify-content-between mb-2 text-success">
+                    <span>Giảm giá Voucher:</span>
+                    <span class="fw-bold">- @Model.TienGiamGia.ToString("#,##0") ₫</span>
+                </div>
+            }
+
+            <div class="d-flex justify-content-between mb-2">
+                <span>Phí vận chuyển:</span>
+                <span class="fw-bold">
+                    @(Model.PhiVanChuyen > 0 ? "+" + Model.PhiVanChuyen.ToString("#,##0") + " ₫" : "Miễn phí")
+                </span>
+            </div>
+
+            <hr class="my-2">
+
+            @* --- Tổng cộng cuối cùng khách phải trả --- *@
+            <div class="d-flex justify-content-between mt-3">
+                <strong class="h5">Tổng thanh toán:</strong>
+                <strong class="text-danger h4">@(((decimal)Model.TongTien).ToString("#,##0")) ₫</strong>
             </div>
         </div>
     </div>

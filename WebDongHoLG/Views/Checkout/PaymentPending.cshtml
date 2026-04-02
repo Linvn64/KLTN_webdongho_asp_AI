@@ -15,17 +15,32 @@
 
             <div class="card shadow-sm mb-4">
                 <div class="card-body">
-                    <h5 class="fw-bold mb-3">Sản phẩm</h5>
+                    <h5 class="fw-bold mb-3 border-bottom pb-2">Tóm tắt đơn hàng</h5>
                     @foreach (var ct in Model.ChiTietDonHangs)
                     {
                         <div class="d-flex justify-content-between mb-2">
                             <span>
                                 @ct.MaBienTheNavigation.MaSpNavigation.TenSanPham
-                                <span class="text-muted">x@ct.SoLuong</span>
+                                <span class="text-muted small">x@ct.SoLuong</span>
                             </span>
-                            <span class="text-danger fw-bold">
-                                @((ct.DonGiaTaiThoiDiem * ct.SoLuong)?.ToString("#,##0")) ₫
-                            </span>
+                            <span class="fw-bold">@((ct.DonGiaTaiThoiDiem * ct.SoLuong)?.ToString("#,##0")) ₫</span>
+                        </div>
+                    }
+
+                    <hr class="my-2">
+
+                    <div class="d-flex justify-content-between small mb-1">
+                        <span class="text-muted">Phí vận chuyển:</span>
+                        <span>@(Model.PhiVanChuyen > 0 ? "+" + Model.PhiVanChuyen.ToString("#,##0") + " ₫" : "Miễn phí")</span>
+                    </div>
+                    @if (Model.TienGiamGia > 0)
+                    {
+                        <div class="d-flex justify-content-between small mb-1 text-success">
+                            <span>Giảm giá Voucher:</span>
+                            @if (Model.TienGiamGia > 0)
+                            {
+                                <span>- @Model.TienGiamGia.ToString("#,##0") ₫</span>
+                            }
                         </div>
                     }
                 </div>
@@ -33,46 +48,18 @@
 
             <form asp-controller="Checkout" asp-action="RetryPayment" method="post">
                 <input type="hidden" name="maDonHang" value="@Model.MaDonHang" />
-
                 <div class="card shadow-sm mb-4">
                     <div class="card-body">
                         <h5 class="fw-bold mb-3">
                             <i class="fas fa-credit-card me-2 text-primary"></i>
                             Chọn phương thức thanh toán
                         </h5>
-                        <div class="form-check mb-3 p-3 border rounded">
-                            <input class="form-check-input" type="radio" name="CachThanhToan"
-                                   id="payCOD" value="COD" checked>
-                            <label class="form-check-label" for="payCOD">
-                                <i class="fas fa-truck me-2 text-success"></i>
-                                <strong>Thanh toán khi nhận hàng (COD)</strong>
-                                <div class="text-muted small mt-1">Miễn phí, thanh toán khi nhận hàng</div>
-                            </label>
-                        </div>
-                        <div class="form-check mb-3 p-3 border rounded">
-                            <input class="form-check-input" type="radio" name="CachThanhToan"
-                                   id="payVNPAY" value="VNPAY">
-                            <label class="form-check-label" for="payVNPAY">
-                                <i class="fas fa-credit-card me-2 text-primary"></i>
-                                <strong>Thanh toán qua VNPay</strong>
-                                <div class="text-muted small mt-1">ATM, Visa, QR Code</div>
-                            </label>
-                        </div>
-                        <div class="form-check mb-3 p-3 border rounded">
-                            <input class="form-check-input" type="radio" name="CachThanhToan"
-                                   id="payMomo" value="MOMO">
-                            <label class="form-check-label" for="payMomo">
-                                <i class="fas fa-wallet me-2" style="color: #ae2070;"></i>
-                                <strong>Thanh toán qua Ví MoMo</strong>
-                                <div class="text-muted small mt-1">Thanh toán nhanh chóng qua ứng dụng MoMo</div>
-                            </label>
-                        </div>
                     </div>
                 </div>
 
-                <button type="submit" class="btn w-100 py-3 fw-bold text-white"
+                <button type="submit" class="btn w-100 py-3 fw-bold text-white shadow"
                         style="background-color:#ee4d2d;">
-                    <i class="fas fa-lock me-2"></i>Xác nhận thanh toán
+                    <i class="fas fa-lock me-2"></i>XÁC NHẬN THANH TOÁN
                 </button>
                 <a asp-controller="Home" asp-action="Index"
                    class="btn btn-outline-secondary w-100 mt-2 py-2">

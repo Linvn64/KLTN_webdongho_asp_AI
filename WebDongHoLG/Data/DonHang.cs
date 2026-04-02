@@ -19,6 +19,8 @@ public partial class DonHang
     public string? TrangThai { get; set; }
 
     public int? MaVoucher { get; set; }
+    public decimal PhiVanChuyen { get; set; }
+    public decimal TienGiamGia { get; set; }
 
     public virtual ICollection<ChiTietDonHang> ChiTietDonHangs { get; set; } = new List<ChiTietDonHang>();
 

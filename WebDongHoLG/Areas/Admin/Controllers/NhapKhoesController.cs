@@ -5,8 +5,8 @@ using WebDongHoLG.Data;
 
 namespace WebDongHoLG.Areas.Admin.Controllers
 {
-    [Area("Admin")]  // ← đặt đây, bên ngoài class
-    public class NhapKhoController : Controller  // ← chỉ 1 class duy nhất, bỏ NhapKhoesController
+    [Area("Admin")]  
+    public class NhapKhoController : Controller 
     {
         private readonly ShopDongHoDbContext _context;
         private readonly UserManager<IdentityUser> _userManager;
@@ -98,6 +98,13 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                     NgayNhap = ngayNhap,
                     NguoiNhap = nguoiNhap
                 });
+
+                var bienThe = await _context.BienTheSanPhams.FindAsync(maBienThe);
+                if (bienThe != null)
+                {
+                    bienThe.GiaNhap = giaNhap;
+                    _context.Update(bienThe);
+                }
 
                 var kho = await _context.Khos.FirstOrDefaultAsync(k => k.MaBienThe == maBienThe);
                 if (kho != null)

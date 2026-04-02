@@ -174,8 +174,9 @@ namespace WebDongHoLG.Areas.Admin.Controllers
                 _context.Khos.Add(new Kho
                 {
                     MaBienThe = bienThe.MaBienThe,
-                    SoLuongTon = 0
+                    SoLuongTon = 0 
                 });
+
                 await _context.SaveChangesAsync();
             }
 

@@ -1,57 +1,69 @@
 ﻿@page
 @model EmailModel
 @{
-    ViewData["Title"] = "Manage Email";
+    ViewData["Title"] = "Quản lý Email";
     ViewData["ActivePage"] = ManageNavPages.Email;
 }
 
-<h3>@ViewData["Title"]</h3>
+<h4 class="mb-4 font-weight-bold text-primary border-bottom pb-2">
+    <i class="fas fa-envelope-open-text me-2"></i>@ViewData["Title"]
+</h4>
+
 <partial name="_StatusMessage" for="StatusMessage" />
 
 @if (Model.IsLinkedGoogle)
 {
-    <div class="alert alert-warning">
-        <i class="fas fa-exclamation-triangle"></i>
+    <div class="alert alert-warning border-0 shadow-sm" style="border-left: 5px solid #ffb524 !important;">
+        <i class="fas fa-exclamation-triangle me-2"></i>
         <strong>Tài khoản đang liên kết Google.</strong> Để đổi email, bạn cần:
         <ol class="mb-0 mt-2">
-            <li><a asp-page="./SetPassword">Tạo mật khẩu trước</a></li>
-            <li>Sau đó vào <a asp-page="./ExternalLogins">Liên kết tài khoản Google</a> để ngắt liên kết</li>
+            <li><a asp-page="./SetPassword" class="text-primary fw-bold">Tạo mật khẩu trước</a></li>
+            <li>Sau đó vào <a asp-page="./ExternalLogins" class="text-primary fw-bold">Liên kết tài khoản Google</a> để ngắt liên kết</li>
             <li>Quay lại đây để đổi email</li>
         </ol>
     </div>
 }
 
 <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-12">
         <form id="email-form" method="post">
-            <div asp-validation-summary="All" class="text-danger" role="alert"></div>
+            <div asp-validation-summary="All" class="text-danger small" role="alert"></div>
+
             @if (Model.IsEmailConfirmed)
             {
-                <div class="form-floating mb-3 input-group">
-                    <input asp-for="Email" class="form-control" placeholder="Please enter your email." disabled />
-                    <div class="input-group-append">
-                        <span class="h-100 input-group-text text-success font-weight-bold">✓</span>
-                    </div>
-                    <label asp-for="Email" class="form-label"></label>
+                <div class="form-floating mb-3 input-group shadow-sm">
+                    <input asp-for="Email" class="form-control bg-light" placeholder="Email hiện tại" disabled style="border-radius: 8px 0 0 8px;" />
+                    <span class="input-group-text bg-light border-start-0" style="border-radius: 0 8px 8px 0;">
+                        <i class="fas fa-check-circle text-primary"></i> @* Đổi text-success thành text-primary (vàng Gold) *@
+                    </span>
+                    <label asp-for="Email">Email hiện tại</label>
                 </div>
             }
             else
             {
-                <div class="form-floating mb-3">
-                    <input asp-for="Email" class="form-control" placeholder="Please enter your email." disabled />
-                    <label asp-for="Email" class="form-label"></label>
-                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail" class="btn btn-link">Send verification email</button>
+                <div class="form-floating mb-3 shadow-sm">
+                    <input asp-for="Email" class="form-control bg-light" placeholder="Email chưa xác thực" disabled style="border-radius: 8px;" />
+                    <label asp-for="Email">Email hiện tại</label>
+                    <button id="email-verification" type="submit" asp-page-handler="SendVerificationEmail"
+                            class="btn btn-link text-primary p-0 mt-1 shadow-none fw-bold">
+                        <i class="fas fa-paper-plane me-1"></i>Gửi email xác thực
+                    </button>
                 </div>
             }
 
             @if (!Model.IsLinkedGoogle)
             {
-                <div class="form-floating mb-3">
-                    <input asp-for="Input.NewEmail" class="form-control" autocomplete="email" aria-required="true" placeholder="Please enter new email." />
-                    <label asp-for="Input.NewEmail" class="form-label"></label>
-                    <span asp-validation-for="Input.NewEmail" class="text-danger"></span>
+                <div class="form-floating mb-4 shadow-sm">
+                    <input asp-for="Input.NewEmail" class="form-control border-primary-focus" autocomplete="email" aria-required="true" placeholder="Nhập email mới" style="border-radius: 8px;" />
+                    <label asp-for="Input.NewEmail">Địa chỉ Email mới</label>
+                    <span asp-validation-for="Input.NewEmail" class="text-danger small"></span>
                 </div>
-                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail" class="w-100 btn btn-lg btn-primary">Change email</button>
+
+                <button id="change-email-button" type="submit" asp-page-handler="ChangeEmail"
+                        class="w-100 btn btn-lg btn-primary text-white fw-bold py-3 shadow-sm"
+                        style="border-radius: 10px; letter-spacing: 1px;">
+                    <i class="fas fa-sync-alt me-2"></i> XÁC NHẬN ĐỔI EMAIL
+                </button>
             }
         </form>
     </div>

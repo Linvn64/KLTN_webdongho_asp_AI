@@ -1,31 +1,47 @@
 ﻿@page
 @model DeletePersonalDataModel
 @{
-    ViewData["Title"] = "Delete Personal Data";
+    ViewData["Title"] = "Xóa dữ liệu cá nhân";
     ViewData["ActivePage"] = ManageNavPages.PersonalData;
 }
 
-<h3>@ViewData["Title"]</h3>
+<h4 class="mb-4 font-weight-bold text-danger border-bottom pb-2">
+    <i class="fas fa-user-times me-2"></i>@ViewData["Title"]
+</h4>
 
-<div class="alert alert-warning" role="alert">
-    <p>
-        <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
+@* <partial name="_StatusMessage" for="StatusMessage" /> *@
+<div class="alert alert-warning border-0 shadow-sm mb-4" style="border-left: 5px solid #dc3545 !important;">
+    <p class="mb-0 text-dark">
+        <i class="fas fa-exclamation-triangle me-2 text-danger"></i>
+        <strong>Cảnh báo:</strong> Việc xóa dữ liệu này sẽ xóa vĩnh viễn tài khoản của bạn và hành động này <strong>không thể khôi phục</strong>. Toàn bộ lịch sử đơn hàng và ưu đãi sẽ bị mất.
     </p>
 </div>
 
-<div>
-    <form id="delete-user" method="post">
-        <div asp-validation-summary="ModelOnly" class="text-danger" role="alert"></div>
-        @if (Model.RequirePassword)
-        {
-            <div class="form-floating mb-3">
-                <input asp-for="Input.Password" class="form-control" autocomplete="current-password" aria-required="true" placeholder="Please enter your password." />
-                <label asp-for="Input.Password" class="form-label"></label>
-                <span asp-validation-for="Input.Password" class="text-danger"></span>
+<div class="row">
+    <div class="col-md-12">
+        <form id="delete-user" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3" role="alert"></div>
+
+            @if (Model.RequirePassword)
+            {
+                <div class="form-floating mb-4 shadow-sm">
+                    <input asp-for="Input.Password" class="form-control border-primary-focus" autocomplete="current-password" aria-required="true" placeholder="Nhập mật khẩu để xác nhận" style="border-radius: 8px;" />
+                    <label asp-for="Input.Password">Mật khẩu xác nhận</label>
+                    <span asp-validation-for="Input.Password" class="text-danger small"></span>
+                </div>
+            }
+
+            <div class="d-grid gap-3">
+                <button class="btn btn-lg btn-danger fw-bold py-3 shadow-sm" type="submit" style="border-radius: 10px; letter-spacing: 1px;">
+                    <i class="fas fa-trash-alt me-2"></i> XÁC NHẬN XÓA TÀI KHOẢN VÀ DỮ LIỆU
+                </button>
+
+                <a asp-page="./Index" class="btn btn-outline-dark py-2 border-0">
+                    <i class="fas fa-arrow-left me-2"></i> Quay lại hồ sơ
+                </a>
             </div>
-        }
-        <button class="w-100 btn btn-lg btn-danger" type="submit">Delete data and close my account</button>
-    </form>
+        </form>
+    </div>
 </div>
 
 @section Scripts {
