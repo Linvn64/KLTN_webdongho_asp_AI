@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity.UI.Services;  
 using WebDongHoLG.Data;
@@ -7,6 +7,7 @@ using WebDongHoLG.ViewModels.momo;
 using WebDongHoLG.Services.Momo;
 using WebDongHoLG.Services.Chatbot;
 using WebDongHoLG.Services.Email;
+using WebDongHoLG.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,9 +51,9 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
 .AddDefaultTokenProviders();                    
 
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
-{
-    options.IdleTimeout = TimeSpan.FromMinutes(10);
+
+builder.Services.AddSession(options => {
+    options.IdleTimeout = TimeSpan.FromMinutes(30); 
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
 });
@@ -81,6 +82,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddTransient<IEmailSender, EmailSender>();
+
+builder.Services.AddScoped<GemmaService>();
 
 
 var app = builder.Build();

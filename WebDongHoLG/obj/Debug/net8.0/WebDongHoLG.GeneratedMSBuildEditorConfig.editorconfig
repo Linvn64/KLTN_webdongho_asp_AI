@@ -352,6 +352,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = QXJlYXNcSWRlbnRpdHlcUGFnZXNcX1ZpZXdTdGFydC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/Chat/Index.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hhdFxJbmRleC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/Checkout/BankTransfer.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2hlY2tvdXRcQmFua1RyYW5zZmVyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
@@ -438,10 +442,6 @@ build_metadata.AdditionalFiles.CssScope =
 
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/Shared/_AuthLayout.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9BdXRoTGF5b3V0LmNzaHRtbA==
-build_metadata.AdditionalFiles.CssScope = 
-
-[C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/Shared/_Chatgiaodien.cshtml]
-build_metadata.AdditionalFiles.TargetPath = Vmlld3NcU2hhcmVkXF9DaGF0Z2lhb2RpZW4uY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Admin/ANH LINH/.NET/WebDongHoLG/WebDongHoLG/Views/Shared/_Footer.cshtml]

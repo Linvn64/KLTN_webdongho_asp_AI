@@ -182,7 +182,7 @@ namespace WebDongHoLG.Areas.Identity.Pages.Account
                     if (message.Contains("Email"))
                         message = "Email đã tồn tại hoặc không hợp lệ.";
 
-                    if (message.Contains("UserName"))
+                    if (message.Contains("Username"))
                         message = "Tên đăng nhập đã tồn tại.";
 
                     ModelState.AddModelError(string.Empty, message);

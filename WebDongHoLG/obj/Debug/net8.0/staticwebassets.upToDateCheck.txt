@@ -1,11 +1,15 @@
 wwwroot\avatarUploads\08c8f452-b3ab-4d5b-a657-b19f5b2a3046_watch.jpg
 wwwroot\avatarUploads\50d68f64-a941-48ae-b3f1-89ec90b9608c_default-avatar.jpg
 wwwroot\avatarUploads\72e7e873-10be-47e0-8fea-07e810fd068f_default-avatar.jpg
+wwwroot\avatarUploads\a47f7221-c2a4-4038-b6e5-114b7ed523e2_meme.jpg
 wwwroot\avatarUploads\bfcdd884-c0a6-4977-b0d3-42798e98c2d0.jpeg
 wwwroot\avatarUploads\f20c27fa-8f2e-490e-90d2-157d3281bcc9_uwp4922231.jpeg
 wwwroot\avatarUploads\f615f2c9-374a-4876-8c65-b4aa63c55d71_relexdatejust.jpg
+wwwroot\chat\chatbot.css
+wwwroot\chat\chatbot.js
 wwwroot\css\auth\login.css
 wwwroot\css\chat-style.css
+wwwroot\css\chatbot.css
 wwwroot\css\sanphamdetail.css
 wwwroot\css\site.css
 wwwroot\css\user-home.css
@@ -2300,8 +2304,8 @@ wwwroot\img\watch.jpg
 wwwroot\js\admin-setting.js
 wwwroot\js\auth.js
 wwwroot\js\bienthe.js
-wwwroot\js\chat-app.js
 wwwroot\js\giohang.js
+wwwroot\js\home.js
 wwwroot\js\layout.js
 wwwroot\js\nguoidung\checkout.js
 wwwroot\js\nguoidung\giohang.js
@@ -2374,4 +2378,3 @@ wwwroot\lib\jquery\dist\jquery.min.js
 wwwroot\lib\jquery\dist\jquery.min.map
 wwwroot\lib\jquery\LICENSE.txt
 wwwroot\dist\libs\countup.js\.vscode\tasks.json
-wwwroot\js\home.js

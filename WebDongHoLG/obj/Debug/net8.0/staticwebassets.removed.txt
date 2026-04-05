@@ -1,0 +1,5 @@
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\chat\assets\chat.js
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\chat\favicon.svg
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\chat\icons.svg
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\chat\index.html
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\wwwroot\chat\assets\chat.css

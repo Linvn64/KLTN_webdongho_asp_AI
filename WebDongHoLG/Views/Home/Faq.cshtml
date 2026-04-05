@@ -1,89 +1,159 @@
 ﻿@model IEnumerable<WebDongHoLG.Data.Faq>
-
 @{
     ViewData["Title"] = "Câu hỏi thường gặp";
-    // Layout tùy thuộc vào giao diện người dùng của bạn
-    // Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8 col-md-10">
+<div class="faq-luxury-section py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
 
-            <div class="text-center mb-5">
-                <h1 class="display-6 fw-bold text-dark mb-3">Chúng tôi có thể giúp gì cho bạn?</h1>
-                <p class="text-secondary">Dưới đây là tổng hợp các câu hỏi thường gặp nhất từ khách hàng.</p>
-            </div>
+                <div class="text-center mb-5">
+                    <h6 class="text-uppercase tracking-widest text-gold mb-2" style="letter-spacing: 3px; font-size: 0.8rem;">Hỗ trợ tận tâm</h6>
+                    <h1 class="display-5 mb-3">Giải Đáp Thắc Mắc</h1>
+                    <div class="gold-divider mx-auto mb-4"></div>
+                    <p class="text-muted lead mx-auto" style="max-width: 600px; font-size: 1rem;">
+                        Chào mừng quý khách đến với trung tâm hỗ trợ của <strong>LG WATCH</strong>.
+                        Chúng tôi luôn sẵn sàng giải đáp mọi câu hỏi của bạn.
+                    </p>
+                </div>
 
-            @if (Model != null && Model.Any())
-            {
-                <div class="accordion accordion-flush shadow-sm rounded-4 bg-white border" id="faqAccordion">
-                    @foreach (var item in Model)
-                    {
-                        <div class="accordion-item border-bottom">
-                            <h2 class="accordion-header" id="heading-@item.IdFaq">
-                                <button class="accordion-button collapsed fw-bold fs-5 py-4 text-dark"
-                                        type="button"
-                                        data-bs-toggle="collapse"
-                                        data-bs-target="#collapse-@item.IdFaq"
-                                        aria-expanded="false"
-                                        aria-controls="collapse-@item.IdFaq">
-                                    @item.CauHoi
-                                </button>
-                            </h2>
-                            <div id="collapse-@item.IdFaq"
-                                 class="accordion-collapse collapse"
-                                 aria-labelledby="heading-@item.IdFaq"
-                                 data-bs-parent="#faqAccordion">
-                                <div class="accordion-body text-secondary lh-lg pt-0 pb-4 faq-user-content">
-                                    @* Dùng Html.Raw để hiển thị định dạng và ảnh từ Summernote *@
-                                    @Html.Raw(item.CauTraLoi)
+                @if (Model != null && Model.Any())
+                {
+                    <div class="accordion custom-luxury-faq" id="faqAccordion">
+                        @foreach (var item in Model)
+                        {
+                            <div class="accordion-item shadow-sm mb-4">
+                                <h2 class="accordion-header" id="heading-@item.IdFaq">
+                                    <button class="accordion-button collapsed px-4 py-4"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#collapse-@item.IdFaq"
+                                            aria-expanded="false"
+                                            aria-controls="collapse-@item.IdFaq">
+                                        <span class="faq-icon-wrapper me-3">
+                                            <i class="fas fa-question-circle"></i>
+                                        </span>
+                                        @item.CauHoi
+                                    </button>
+                                </h2>
+                                <div id="collapse-@item.IdFaq"
+                                     class="accordion-collapse collapse"
+                                     aria-labelledby="heading-@item.IdFaq"
+                                     data-bs-parent="#faqAccordion">
+                                    <div class="accordion-body px-5 pb-5 pt-2 text-dark faq-content-render">
+                                        <div class="content-inner p-4 rounded-3 bg-light-gold-subtle">
+                                            @Html.Raw(item.CauTraLoi)
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    }
-                </div>
-            }
-            else
-            {
-                <div class="text-center py-5 bg-light rounded-4">
-                    <p class="text-muted mb-0">Hiện tại chưa có câu hỏi nào được cập nhật.</p>
-                </div>
-            }
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="text-center py-5 bg-white luxury-card rounded-4">
+                        <i class="fas fa-box-open fa-3x text-muted mb-3 opacity-20"></i>
+                        <p class="text-muted">Dữ liệu hiện đang được cập nhật...</p>
+                    </div>
+                }
 
+            </div>
         </div>
     </div>
 </div>
 
+
 <style>
-    /* Làm đẹp cho khối Accordion */
-    .accordion-button:not(.collapsed) {
-        color: #0d6efd; /* Đổi màu xanh khi câu hỏi được mở ra */
-        background-color: #f8f9fa; /* Nền xám nhạt khi mở */
+    /* 1. MÀU SẮC & BIẾN */
+    :root {
+        --luxury-gold: #b29c6e;
+        --luxury-dark: #111111;
+        --soft-gold: #f8f1e5;
+    }
+
+    /* 2. CHUNG CHO SECTION */
+    .faq-luxury-section {
+        background-color: #f8f9fa;
+        min-height: 80vh;
+    }
+
+    .text-gold {
+        color: var(--luxury-gold);
+    }
+
+    /* Thanh gạch ngang trang trí tiêu đề */
+    .gold-divider {
+        width: 60px;
+        height: 3px;
+        background: var(--luxury-gold);
+        border-radius: 2px;
+    }
+
+    /* 3. CUSTOM ACCORDION */
+    .custom-luxury-faq .accordion-item {
+        border: none !important;
+        background: #ffffff;
+        border-radius: 15px !important; /* Bo góc cực mềm */
+        overflow: hidden;
+        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+        .custom-luxury-faq .accordion-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(178, 156, 110, 0.1) !important; /* Đổ bóng màu Gold nhạt */
+        }
+
+    /* Nút bấm câu hỏi */
+    .custom-luxury-faq .accordion-button {
+        font-family: 'Raleway', sans-serif;
+        font-weight: 700;
+        color: var(--luxury-dark);
+        font-size: 1.15rem;
+        background-color: #ffffff;
         box-shadow: none;
+        border: none;
     }
 
-    .accordion-button:focus {
-        box-shadow: none;
-        border-color: rgba(0,0,0,.125);
+        /* Khi mở câu hỏi */
+        .custom-luxury-faq .accordion-button:not(.collapsed) {
+            color: var(--luxury-gold);
+            background-color: #ffffff;
+        }
+
+    /* Icon Question trước câu hỏi */
+    .faq-icon-wrapper {
+        color: var(--luxury-gold);
+        font-size: 1.2rem;
     }
 
-    .accordion-item:last-child {
-        border-bottom: none !important;
+    /* Nội dung trả lời */
+    .faq-content-render {
+        font-family: 'Open Sans', sans-serif;
+        font-size: 1rem;
+        line-height: 1.8;
+        color: #333 !important; /* Chữ đen đậm để dễ nhìn */
     }
 
-    /* Đảm bảo ảnh chèn từ Admin không bị tràn khung ở trang người dùng */
-    .faq-user-content img {
+    /* Khung nền mờ bên trong câu trả lời */
+    .bg-light-gold-subtle {
+        background-color: rgba(178, 156, 110, 0.03);
+        border-left: 4px solid var(--luxury-gold);
+    }
+
+    /* Tùy chỉnh ảnh trong nội dung từ Summernote */
+    .faq-content-render img {
         max-width: 100%;
         height: auto;
-        border-radius: 8px;
-        margin: 15px 0;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border-radius: 10px;
+        margin: 20px 0;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.08);
     }
 
-    /* Căn chỉnh lại các list (danh sách) nếu có chèn từ editor */
-    .faq-user-content ul, .faq-user-content ol {
-        padding-left: 1.5rem;
-        margin-bottom: 1rem;
+    /* Mũi tên Accordion */
+    .custom-luxury-faq .accordion-button::after {
+        filter: sepia(100%) saturate(300%) hue-rotate(10deg); /* Biến mũi tên thành màu Gold */
+        background-size: 1.2rem;
     }
 </style>

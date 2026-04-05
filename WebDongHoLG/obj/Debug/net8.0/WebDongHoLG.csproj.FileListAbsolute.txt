@@ -306,3 +306,10 @@ C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Microsoft.
 C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Microsoft.Extensions.Diagnostics.dll
 C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Microsoft.Extensions.Http.dll
 C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Microsoft.Extensions.Options.ConfigurationExtensions.dll
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Google.Apis.dll
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Google.Apis.Auth.dll
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Google.Apis.Core.dll
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Google.GenAI.dll
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\Microsoft.Extensions.AI.Abstractions.dll
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\System.Management.dll
+C:\Users\Admin\ANH LINH\.NET\WebDongHoLG\WebDongHoLG\bin\Debug\net8.0\runtimes\win\lib\net7.0\System.Management.dll

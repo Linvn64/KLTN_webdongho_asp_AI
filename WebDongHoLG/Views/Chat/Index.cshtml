@@ -1,0 +1,33 @@
+﻿<div class="chat-window" style="max-width: 500px; margin: auto; border: 1px solid #ccc; padding: 20px; border-radius: 10px;">
+    <div id="chat-box" style="height: 400px; overflow-y: auto; background: #f4f4f4; padding: 10px; margin-bottom: 10px;"></div>
+    <div class="input-group">
+        <input type="text" id="msgInput" class="form-control" placeholder="Nhập câu hỏi...">
+        <button onclick="send()" class="btn btn-primary">Gửi</button>
+    </div>
+</div>
+
+<script>
+    async function send() {
+        const input = document.getElementById('msgInput');
+        const box = document.getElementById('chat-box');
+        const message = input.value;
+        if(!message) return;
+
+        box.innerHTML += `<div><b>Bạn:</b> ${message}</div>`;
+        input.value = '';
+
+        const response = await fetch('/Chat/SendMessage', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+            body: `message=${encodeURIComponent(message)}`
+        });
+
+        const data = await response.json();
+        box.innerHTML += `<div><b>AI:</b> ${data.answer}</div>`;
+
+        if(data.action === 'view') {
+            box.innerHTML += `<div class="card">Sản phẩm: ${data.productName} - Giá: ${data.productPrice}</div>`;
+        }
+        box.scrollTop = box.scrollHeight;
+    }
+</script>
