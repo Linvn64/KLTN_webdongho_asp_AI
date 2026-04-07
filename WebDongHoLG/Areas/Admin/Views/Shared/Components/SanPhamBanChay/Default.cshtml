@@ -11,12 +11,19 @@
             <tbody>
                 @foreach (var sp in Model)
                 {
+                    var anhUrl = sp.AnhSP ?? "/images/no-image.png";
                     <tr>
                         <td class="w-1">
-                            <span class="avatar avatar-sm" style="background-image: url(@sp.AnhSP)"></span>
+                            <!-- ✅ Thêm dấu nháy đơn bọc URL -->
+                            <span class="avatar avatar-sm"
+                                  style="background-image: url('@anhUrl')">
+                            </span>
                         </td>
                         <td class="td-truncate">
-                            <div class="text-reset d-block text-truncate" style="max-width: 150px;">@sp.TenSP</div>
+                            <div class="text-reset d-block text-truncate"
+                                 style="max-width: 150px;">
+                                @sp.TenSP
+                            </div>
                         </td>
                         <td class="text-nowrap text-secondary">
                             <span class="badge bg-orange-lt">@sp.SoLuongBan đã bán</span>

@@ -62,9 +62,25 @@ let _maBienTheChon = null;
 let _tonKhoChon = 0;
 window.isBuyNowFlow = false
 // --- PHẦN HÀM XỬ LÝ MUA NGAY ---
+//function moModalMuaNgay(maSp) {
+//    _maBienTheGioHangCu = null;
+//    window.isBuyNowFlow = true;
+//    _moModal(maSp);
+//}
+
+
+// --- PHẦN HÀM XỬ LÝ MUA NGAY ---
 function moModalMuaNgay(maSp) {
-    _maBienTheGioHangCu = null; // Nếu chưa có biến này thì khai báo thêm let _maBienTheGioHangCu = null; ở đầu
+    _maBienTheGioHangCu = null;
     window.isBuyNowFlow = true;
+
+    // --- THÊM ĐOẠN NÀY ĐỂ ĐỔI CHỮ ---
+    const btnXacNhan = document.getElementById("modalBtnThem");
+    if (btnXacNhan) {
+        btnXacNhan.innerHTML = '<i class="fa fa-shopping-bag me-2"></i>Mua ngay';
+    }
+    // -------------------------------
+
     _moModal(maSp);
 }
 

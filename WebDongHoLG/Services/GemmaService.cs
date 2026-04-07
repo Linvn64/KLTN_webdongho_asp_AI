@@ -16,17 +16,14 @@ namespace WebDongHoLG.Services
         private readonly string _model = "gemma-4-31b-it";
         private readonly ShopDongHoDbContext _db;
 
-        // ✅ Inject IConfiguration đúng cách — xoá "private object _configuration" cũ đi
         public GemmaService(ShopDongHoDbContext db, IConfiguration configuration)
         {
             _db = db;
 
-            // ✅ SỬA TẠI ĐÂY: Lấy đúng đường dẫn Gemini:ApiKey
             var apiKey = configuration["Gemini:ApiKey"];
 
             if (string.IsNullOrEmpty(apiKey))
             {
-                // Ném lỗi rõ ràng để bạn dễ debug nếu cấu hình sai
                 throw new Exception("Lỗi: Không tìm thấy 'Gemini:ApiKey' trong cấu hình appsettings.json hoặc User Secrets!");
             }
 
@@ -73,11 +70,9 @@ namespace WebDongHoLG.Services
 
                 foreach (var bt in sp.BienTheSanPhams.Where(b => b.IsActive))
                 {
-                    // Tính tồn kho của riêng biến thể này
                     int tonKhoBienThe = bt.Khos.Sum(k => k.SoLuongTon ?? 0);
                     string tinhTrang = tonKhoBienThe > 0 ? $"Còn hàng ({tonKhoBienThe} chiếc)" : "Hết hàng";
 
-                    // Ghi chi tiết từng biến thể để AI đọc
                     sb.AppendLine($"  + Phiên bản: Màu {bt.MauSac}, Size {bt.DuongKinhMat}mm, Dây {bt.ChatLieuDay}");
                     sb.AppendLine($"    | Giá: {bt.GiaBan?.ToString("N0") ?? "Liên hệ"}đ");
                     sb.AppendLine($"    | Tình trạng: {tinhTrang}");
@@ -123,7 +118,7 @@ namespace WebDongHoLG.Services
             1. ƯU TIÊN FAQ: Nếu câu hỏi nằm trong danh sách FAQ (như cách chọn size, bảo hành, chống nước), hãy trả lời theo đúng nội dung FAQ đó.
             2. TRA CỨU SẢN PHẨM: Đối chiếu chính xác Màu/Size và Tình trạng kho. Nếu hết hàng phải báo khách.
             3. GOOGLE SEARCH: Nếu khách hỏi về các kiến thức đồng hồ nằm ngoài dữ liệu trên (ví dụ: lịch sử thương hiệu Rolex, cách phân biệt thật giả, xu hướng năm 2026), hãy sử dụng công cụ Google Search để cung cấp thông tin chính xác nhất.
-            4. KHÔNG HIỂN THỊ PHẦN SUY NGHĨ (THINKING).
+            4. KHÔNG HIỂN THỊ PHẦN SUY NGHĨ (THINKING), TUYỆT ĐỐI KHÔNG ĐƯỢC HIỂN THỊ SUY NGHĨ NHÉ. 
             5. TRÌNH BÀY CỰC GỌN: Dùng gạch đầu dòng (•) và in đậm (**).
             6. XUẤT CARD: Khi gợi ý sản phẩm cụ thể, luôn kèm tag: [CARD:ID|Tên sản phẩm|Giá|Ảnh]
             7. Trả lời bằng tiếng Việt thân thiện.";
@@ -174,7 +169,7 @@ namespace WebDongHoLG.Services
 
     public class ChatMessage
     {
-        public string Role { get; set; } = "user"; // "user" | "model"
+        public string Role { get; set; } = "user";
         public string Content { get; set; } = "";
     }
 }

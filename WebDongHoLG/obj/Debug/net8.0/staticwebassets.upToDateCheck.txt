@@ -1,3 +1,4 @@
+wwwroot\avatarUploads\04b0024b-73a1-4a7a-ad59-fb3672602cb3_meme.jpg
 wwwroot\avatarUploads\08c8f452-b3ab-4d5b-a657-b19f5b2a3046_watch.jpg
 wwwroot\avatarUploads\50d68f64-a941-48ae-b3f1-89ec90b9608c_default-avatar.jpg
 wwwroot\avatarUploads\72e7e873-10be-47e0-8fea-07e810fd068f_default-avatar.jpg
@@ -2037,6 +2038,10 @@ wwwroot\hinhanhbienthe\omega-seamaster-nam\omega-seamaster-nam-vang-thep\shoppin
 wwwroot\hinhanhbienthe\omega-seamaster-nam\omega-seamaster-nam-vang-thep\shopping (2).webp
 wwwroot\hinhanhbienthe\omega-seamaster-nam\omega-seamaster-nam-vang-thep\shopping (3).webp
 wwwroot\hinhanhbienthe\omega-seamaster-nam\omega-seamaster-nam-vang-thep\shopping.webp
+wwwroot\hinhanhbienthe\omega-seamaster-nam\omega-seamaster-nam-xanh-duong-bac\220 (1).webp
+wwwroot\hinhanhbienthe\omega-seamaster-nam\omega-seamaster-nam-xanh-duong-bac\220 (2).webp
+wwwroot\hinhanhbienthe\omega-seamaster-nam\omega-seamaster-nam-xanh-duong-bac\220 (3).webp
+wwwroot\hinhanhbienthe\omega-seamaster-nam\omega-seamaster-nam-xanh-duong-bac\220.webp
 wwwroot\hinhanhbienthe\omega-speedmaster-moonwatch-professional-nam\omega-speedmaster-moonwatch-professional-nam-bac-thep\shopping (1).webp
 wwwroot\hinhanhbienthe\omega-speedmaster-moonwatch-professional-nam\omega-speedmaster-moonwatch-professional-nam-bac-thep\shopping (2).webp
 wwwroot\hinhanhbienthe\omega-speedmaster-moonwatch-professional-nam\omega-speedmaster-moonwatch-professional-nam-bac-thep\shopping (3).webp
@@ -2300,6 +2305,7 @@ wwwroot\images\products\sunmoon.jpg
 wwwroot\images\products\swarovski.jpg
 wwwroot\images\products\t-race.jpg
 wwwroot\images\products\tissot-viso.jpg
+wwwroot\img\payment.png
 wwwroot\img\watch.jpg
 wwwroot\js\admin-setting.js
 wwwroot\js\auth.js

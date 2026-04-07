@@ -7,9 +7,12 @@ using WebDongHoLG.Services;
 
 namespace WebDongHoLG.Controllers
 {
-    [ApiController]
-    [Route("api/[controller]")] // → /api/Chat
-    public class ChatController : ControllerBase
+    //[ApiController]
+    //[Route("api/[controller]")] // → /api/Chat
+
+
+    [Route("api/[controller]")]
+    public class ChatController : Controller
     {
         private readonly GemmaService _gemmaService;
 
@@ -17,6 +20,14 @@ namespace WebDongHoLG.Controllers
         {
             _gemmaService = gemmaService;
         }
+
+        [HttpGet("/Chat")]
+        public IActionResult Index()
+        {
+            return View(); // Nó sẽ tìm file Index.cshtml trong Views/Chat/
+        }
+
+
 
         // ─────────────────────────────────────────────────────────────
         // GET /api/Chat/stream?question=...&historyJson=...

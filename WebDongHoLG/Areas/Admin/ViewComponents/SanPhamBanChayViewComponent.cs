@@ -14,12 +14,19 @@ namespace WebDongHoLG.Areas.Admin.ViewComponents
             var topSanPhams = await _context.ChiTietDonHangs
                 .Where(ct => ct.MaDonHangNavigation.TrangThai == "Hoàn thành")
                 .GroupBy(ct => new {
-                    ct.MaBienTheNavigation.MaSpNavigation.TenSanPham,
-                    ct.MaBienTheNavigation.ImageUrl
+                    ct.MaBienTheNavigation.MaSp,
+                    ct.MaBienTheNavigation.MaSpNavigation.TenSanPham
                 })
                 .Select(g => new {
                     TenSP = g.Key.TenSanPham,
-                    AnhSP = g.Key.ImageUrl,
+                    AnhSP = g.Select(x => x.MaBienTheNavigation.ImageUrl)
+                              .Where(url => url != null)
+                              .FirstOrDefault()
+                          ?? g.Select(x => x.MaBienTheNavigation.HinhAnhBienThes
+                                            .Where(h => h.LaAnhChinh == true)
+                                            .Select(h => h.ImageUrl)
+                                            .FirstOrDefault())
+                              .FirstOrDefault(),
                     SoLuongBan = g.Sum(x => x.SoLuong)
                 })
                 .OrderByDescending(x => x.SoLuongBan)

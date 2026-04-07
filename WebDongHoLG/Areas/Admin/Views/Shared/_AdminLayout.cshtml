@@ -76,8 +76,8 @@
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <h1 class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-                    <a href="/Admin/Home">
-                        <i class="ti ti-watch fs-1 text-primary me-2"></i> WATCHSHOP AI
+                    <a href="#">
+                        <i class="ti ti-watch fs-1 text-primary me-2"></i> LGWATCH
                     </a>
                 </h1>
                 <div class="navbar-nav flex-row order-md-last">
@@ -221,7 +221,7 @@
                                     }
                                     
                                     
-                                    @* --- AI --- *@
+                                    @* --- AI ---
                                     @if (User.IsInRole("Admin") || User.HasClaim("MenuAccess", "AI"))
                                     {
                                         <li class="nav-item @(currentController == "AI" ? "active" : "")">
@@ -230,7 +230,7 @@
                                                 <span class="nav-link-title">Dự báo AI</span>
                                             </a>
                                         </li>
-                                    }
+                                    } *@
 
                                 </ul>
                             </div>

@@ -187,8 +187,8 @@
 
     /* FIX: Title màu nâu vàng đậm, dễ đọc hơn trên nền trắng */
     .wc-header-info h3 {
-        font-family: var(--font-d);
-        font-size: 15.5px;
+/*        font-family: var(--font-d);
+        font-size: 15.5px;*/
         font-weight: 600;
         letter-spacing: 0.8px;
         color: #8b6120;
@@ -200,7 +200,6 @@
 
     .wc-header-info p {
         font-size: 10px;
-        color: var(--c-dim);
         margin-top: 4px;
         letter-spacing: .4px;
         font-weight: 300;
