@@ -37,6 +37,7 @@ namespace WebDongHoLG.Areas.Admin.Controllers
           
             var queryThongKe = query.Where(d => d.TrangThai.Trim() == "Hoàn thành" || d.TrangThai.Trim() == "Đã giao hàng");
 
+
             decimal tongCoShip = await queryThongKe.SumAsync(d => (decimal?)d.TongTien) ?? 0m;
             decimal tongPhiShip = await queryThongKe.SumAsync(d => (decimal?)d.PhiVanChuyen) ?? 0m;
             decimal tongVoucher = await queryThongKe.SumAsync(d => (decimal?)d.TienGiamGia) ?? 0m;

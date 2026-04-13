@@ -1,9 +1,18 @@
-﻿let globalActiveIdx = 0;
+﻿/* =======================================================
+   LG WATCH - FILE: sanphamdetail.js
+   ======================================================= */
+
+let globalActiveIdx = 0;
 let currentThumbScroll = 0;
-const THUMB_STEP = 80; 
+const THUMB_STEP = 80;
 const VISIBLE_COUNT = 5;
 
-// --- 1. HÀM CỐT LÕI: CẬP NHẬT GIAO DIỆN THEO INDEX ẢNH ---
+let luachon_mau = '';
+let luachon_size = '';
+let luachon_day = '';
+
+
+// --- 1. CẬP NHẬT GIAO DIỆN THEO INDEX ẢNH (ảnh nhỏ + ảnh chính) ---
 function activeImageByIndex(index) {
     const items = document.querySelectorAll(".thumb-item");
     if (index < 0 || index >= items.length) return;
@@ -14,28 +23,28 @@ function activeImageByIndex(index) {
     const maBT = parseInt(target.getAttribute("data-mabienthe"));
 
     const imgChinh = document.getElementById("imgChinh");
-    imgChinh.style.opacity = "0.5";
-    setTimeout(() => {
-        imgChinh.src = src;
-        imgChinh.style.opacity = "1";
-    }, 100);
+    if (imgChinh) {
+        imgChinh.style.opacity = "0.5";
+        setTimeout(() => { imgChinh.src = src; imgChinh.style.opacity = "1"; }, 100);
+    }
 
-    const imgModal = document.getElementById("imgPhongTo");
-    if (imgModal) imgModal.src = src;
-
-    document.querySelectorAll(".thumb-item").forEach(item => item.classList.remove("active"));
+    items.forEach(item => item.classList.remove("active"));
     target.classList.add("active");
-
     syncScroll(index);
 
-    const bt = bienThes.find(b => b.MaBienThe === maBT);
-    if (bt) {
-        capNhatThongTin(bt);
-        dongBoButtons(bt.MauSac, bt.DuongKinhMat, bt.ChatLieuDay);
+    if (typeof bienThes !== 'undefined') {
+        const bt = bienThes.find(b => b.MaBienThe === maBT);
+        if (bt) {
+            capNhatThongTin(bt);
+            luachon_mau = bt.MauSac || '';
+            luachon_size = bt.DuongKinhMat?.toString() || '';
+            luachon_day = bt.ChatLieuDay || '';
+            capNhatTrangThaiNut();
+        }
     }
 }
 
-// --- 2. LOGIC ĐIỀU HƯỚNG ---
+// --- 2. ĐIỀU HƯỚNG ẢNH NHỎ ---
 function scrollThumbs(dir) {
     const items = document.querySelectorAll(".thumb-item");
     const maxScroll = items.length - VISIBLE_COUNT;
@@ -51,229 +60,274 @@ function syncScroll(index) {
 
 function chonThumb(index) { activeImageByIndex(index); }
 
-function chuyenAnhMuiTen(dir) {
-    const total = document.querySelectorAll(".thumb-item").length;
+
+// --- 3. PHÓNG TO ẢNH ---
+function phongToAnh() {
+    const src = document.getElementById("imgChinh")?.src;
+    const imgModal = document.getElementById("imgPhongTo");
+    if (!src || !imgModal) return;
+
+    imgModal.src = src;
+    const modalEl = document.getElementById('modalPhongTo');
+    if (modalEl) {
+        const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+        modal.show();
+    }
+}
+
+// Chuyển ảnh TRONG MODAL (không động vào ảnh nhỏ bên ngoài)
+function chuyenAnhModal(dir) {
+    const items = document.querySelectorAll(".thumb-item");
+    const total = items.length;
     let next = globalActiveIdx + dir;
     if (next < 0) next = total - 1;
     if (next >= total) next = 0;
-    activeImageByIndex(next);
+
+    globalActiveIdx = next;
+    const imgModal = document.getElementById("imgPhongTo");
+    if (imgModal) imgModal.src = items[next].getAttribute("data-src");
 }
 
-function phongToAnh() {
-    const activeThumb = document.querySelector(".thumb-item.active img");
-    const src = activeThumb ? activeThumb.src : document.getElementById("imgChinh").src;
-
-    document.getElementById("imgPhongTo").src = src;
-
-    new bootstrap.Modal(document.getElementById('modalPhongTo')).show();
-}
-
-document.addEventListener("keydown", (e) => {
-    if (e.key === "ArrowLeft") chuyenAnhMuiTen(-1);
-    else if (e.key === "ArrowRight") chuyenAnhMuiTen(1);
-    else if (e.key === "Escape") {
-        const modal = bootstrap.Modal.getInstance(document.getElementById('modalPhongTo'));
-        if (modal) modal.hide();
-    }
+// Khi đóng modal: đồng bộ lại ảnh nhỏ theo ảnh đang xem
+document.addEventListener("DOMContentLoaded", () => {
+    document.getElementById('modalPhongTo')?.addEventListener('hidden.bs.modal', () => {
+        activeImageByIndex(globalActiveIdx);
+    });
 });
 
+// Phím mũi tên & ESC trong modal
+document.addEventListener("keydown", (e) => {
+    const modalEl = document.getElementById('modalPhongTo');
+    if (!modalEl?.classList.contains('show')) return;
+    if (e.key === "ArrowLeft") chuyenAnhModal(-1);
+    else if (e.key === "ArrowRight") chuyenAnhModal(1);
+    else if (e.key === "Escape") bootstrap.Modal.getInstance(modalEl)?.hide();
+});
+
+
+// --- 4. KIỂM TRA ĐỦ ĐIỀU KIỆN MUA ---
+function kiemTraDuDieuKienMua() {
+    const coMau = document.querySelectorAll('.chon-mau').length > 0;
+    const coSize = document.querySelectorAll('.chon-size').length > 0;
+    const coDay = document.querySelectorAll('.chon-day').length > 0;
+
+    const duDieuKien = !(coMau && !luachon_mau) && !(coSize && !luachon_size) && !(coDay && !luachon_day);
+
+    [
+        document.querySelector('button[onclick*="themVaoGio"]'),
+        document.querySelector('button[onclick*="muaNgay"]')
+    ].forEach(btn => {
+        if (!btn) return;
+        btn.disabled = !duDieuKien;
+        btn.style.opacity = duDieuKien ? '1' : '0.4';
+    });
+}
+
+
+// --- 5. LÀM MỜ BIẾN THỂ & CẬP NHẬT TRẠNG THÁI NÚT ---
+function capNhatTrangThaiNut() {
+    if (typeof bienThes === 'undefined') return;
+
+    // Làm mờ size không hợp lệ theo màu đang chọn
+    if (luachon_mau) {
+        const sizeHopLe = [...new Set(bienThes.filter(bt => bt.MauSac === luachon_mau).map(bt => bt.DuongKinhMat?.toString()))];
+        document.querySelectorAll('.chon-size').forEach(btn =>
+            btn.classList.toggle('btn-mmo', !sizeHopLe.includes(btn.getAttribute('data-size')))
+        );
+    }
+
+    // Làm mờ dây không hợp lệ theo màu + size đang chọn
+    if (luachon_mau && luachon_size) {
+        const dayHopLe = [...new Set(
+            bienThes.filter(bt => bt.MauSac === luachon_mau && bt.DuongKinhMat?.toString() === luachon_size).map(bt => bt.ChatLieuDay)
+        )];
+        document.querySelectorAll('.chon-day').forEach(btn =>
+            btn.classList.toggle('btn-mmo', !dayHopLe.includes(btn.getAttribute('data-day')))
+        );
+    }
+
+    // Đổi màu nút đang chọn
+    const highlight = (selector, attr, value) => {
+        document.querySelectorAll(selector).forEach(b => {
+            b.classList.remove('btn-primary');
+            b.classList.add('btn-outline-secondary');
+            if (b.getAttribute(attr) === value) b.classList.replace('btn-outline-secondary', 'btn-primary');
+        });
+    };
+    highlight('.chon-mau', 'data-mau', luachon_mau);
+    highlight('.chon-size', 'data-size', luachon_size);
+    highlight('.chon-day', 'data-day', luachon_day);
+
+    // Cập nhật text hiển thị
+    const el = id => document.getElementById(id);
+    if (el("mauDangChon")) el("mauDangChon").innerText = luachon_mau || '...';
+    if (el("sizeDangChon")) el("sizeDangChon").innerText = luachon_size ? luachon_size + ' mm' : '...';
+    if (el("dayDangChon")) el("dayDangChon").innerText = luachon_day || '...';
+
+    kiemTraDuDieuKienMua();
+}
+
+
+// --- 6. CẬP NHẬT THÔNG TIN BIẾN THỂ TRÊN GIAO DIỆN ---
 function capNhatThongTin(bt) {
-    document.getElementById("giaHienTai").innerText = bt.GiaBan ? parseInt(bt.GiaBan).toLocaleString("vi-VN") + " ₫" : "Liên hệ";
-    document.getElementById("skuHienTai").innerText = bt.MaSku;
-    document.getElementById("maBienTheChon").value = bt.MaBienThe;
-    document.getElementById("mauDangChon").innerText = bt.MauSac;
-    document.getElementById("sizeDangChon").innerText = bt.DuongKinhMat + " mm";
-    document.getElementById("dayDangChon").innerText = bt.ChatLieuDay;
+    const el = id => document.getElementById(id);
 
-    // Cập nhật Tab thông số
-    document.getElementById("tab-mau").innerText = bt.MauSac;
-    document.getElementById("tab-day").innerText = bt.ChatLieuDay;
-    document.getElementById("tab-size").innerText = bt.DuongKinhMat + " mm";
+    el("giaHienTai").innerText = bt.GiaBan ? parseInt(bt.GiaBan).toLocaleString("vi-VN") + " ₫" : "Liên hệ";
+    el("skuHienTai").innerText = bt.MaSku || "--";
+    el("maBienTheChon").value = bt.MaBienThe;
 
-    // Lấy các DOM elements của nút bấm
-    const btnThemVaoGio = document.querySelector('button[onclick="themVaoGio()"]');
-    const btnMuaNgay = document.querySelector('button[onclick="muaNgay()"]');
-    const txtSoLuong = document.getElementById("txtSoLuong");
+    if (el("tab-mau")) el("tab-mau").innerText = bt.MauSac;
+    if (el("tab-day")) el("tab-day").innerText = bt.ChatLieuDay;
+    if (el("tab-size")) el("tab-size").innerText = bt.DuongKinhMat + " mm";
+
+    const txtSoLuong = el("txtSoLuong");
     const btnMinus = document.querySelector(".btn-minus");
     const btnPlus = document.querySelector(".btn-plus");
+    const conHang = bt.SoLuongTon > 0;
 
-    // Xử lý bật/tắt nút dựa vào tồn kho
-    if (bt.SoLuongTon > 0) {
-        document.getElementById("tonKhoHienTai").innerHTML = `<span class="text-success"><i class="fa fa-check-circle me-1"></i>Còn <strong>${bt.SoLuongTon}</strong> sản phẩm</span>`;
+    el("tonKhoHienTai").innerHTML = conHang
+        ? `<span class="text-success"><i class="fa fa-check-circle me-1"></i>Còn <strong>${bt.SoLuongTon}</strong> sản phẩm</span>`
+        : `<span class="text-danger"><i class="fa fa-times-circle me-1"></i>Hết hàng</span>`;
 
-        // Mở khóa các nút
-        if (btnThemVaoGio) btnThemVaoGio.disabled = false;
-        if (btnMuaNgay) btnMuaNgay.disabled = false;
-        if (txtSoLuong) txtSoLuong.disabled = false;
-        if (btnMinus) btnMinus.disabled = false;
-        if (btnPlus) btnPlus.disabled = false;
+    [txtSoLuong, btnMinus, btnPlus].forEach(el => { if (el) el.disabled = !conHang; });
 
-        // Nếu số lượng nhập đang lớn hơn tồn kho thì đưa về max tồn kho
-        if (parseInt(txtSoLuong.value) > bt.SoLuongTon) {
-            txtSoLuong.value = bt.SoLuongTon;
-        }
-    } else {
-        document.getElementById("tonKhoHienTai").innerHTML = `<span class="text-danger"><i class="fa fa-times-circle me-1"></i>Hết hàng</span>`;
-
-        // Khóa các nút
-        if (btnThemVaoGio) btnThemVaoGio.disabled = true;
-        if (btnMuaNgay) btnMuaNgay.disabled = true;
-        if (txtSoLuong) {
-            txtSoLuong.disabled = true;
-            txtSoLuong.value = 1; // Reset số lượng hiển thị về 1
-        }
-        if (btnMinus) btnMinus.disabled = true;
-        if (btnPlus) btnPlus.disabled = true;
-    }
-}
-function chonMau(mau, btn) {
-    const bt = bienThes.find(b => b.MauSac === mau);
-    if (bt) {
-        const thumbIdx = Array.from(document.querySelectorAll(".thumb-item")).findIndex(t => t.getAttribute("data-mabienthe") == bt.MaBienThe);
-        if (thumbIdx !== -1) activeImageByIndex(thumbIdx);
+    if (txtSoLuong) {
+        if (!conHang) txtSoLuong.value = 1;
+        else if (parseInt(txtSoLuong.value) > bt.SoLuongTon) txtSoLuong.value = bt.SoLuongTon;
     }
 }
 
-function chonSize(size, btn) {
-    const bt = bienThes.find(b => b.MauSac === document.getElementById("mauDangChon").innerText && b.DuongKinhMat == size);
-    if (bt) {
-        const thumbIdx = Array.from(document.querySelectorAll(".thumb-item")).findIndex(t => t.getAttribute("data-mabienthe") == bt.MaBienThe);
-        if (thumbIdx !== -1) activeImageByIndex(thumbIdx);
+
+// --- 7. XỬ LÝ CHỌN MÀU / SIZE / DÂY ---
+function xuLyChonBienThe(loai, giaTri, btn) {
+    if (loai === 'mau') {
+        if (luachon_mau === giaTri) return;
+        luachon_mau = giaTri;
+        luachon_size = '';
+        luachon_day = '';
+        const bt = bienThes.find(b => b.MauSac === giaTri);
+        if (bt) jumpToThumb(bt.MaBienThe);
+    } else if (loai === 'size') {
+        const sizeStr = giaTri.toString();
+        if (luachon_size === sizeStr) return;
+        luachon_size = sizeStr;
+        luachon_day = '';
+        const bt = bienThes.find(b => b.MauSac === luachon_mau && b.DuongKinhMat?.toString() === sizeStr);
+        if (bt) jumpToThumb(bt.MaBienThe);
+    } else if (loai === 'day') {
+        if (luachon_day === giaTri) return;
+        luachon_day = giaTri;
+        const bt = bienThes.find(b => b.MauSac === luachon_mau && b.DuongKinhMat?.toString() === luachon_size && b.ChatLieuDay === giaTri);
+        if (bt) jumpToThumb(bt.MaBienThe);
     }
+    capNhatTrangThaiNut();
 }
 
-function chonDay(day, btn) {
-    const bt = bienThes.find(b => b.MauSac === document.getElementById("mauDangChon").innerText && b.ChatLieuDay == day);
-    if (bt) {
-        const thumbIdx = Array.from(document.querySelectorAll(".thumb-item")).findIndex(t => t.getAttribute("data-mabienthe") == bt.MaBienThe);
-        if (thumbIdx !== -1) activeImageByIndex(thumbIdx);
-    }
+function jumpToThumb(maBienThe) {
+    const idx = Array.from(document.querySelectorAll(".thumb-item"))
+        .findIndex(t => t.getAttribute("data-mabienthe") == maBienThe);
+    if (idx !== -1) activeImageByIndex(idx);
 }
 
-function dongBoButtons(mau, size, day) {
-    document.querySelectorAll(".chon-mau").forEach(b => b.classList.toggle("btn-primary", b.getAttribute("data-mau") === mau));
-    document.querySelectorAll(".chon-size").forEach(b => b.classList.toggle("btn-primary", b.getAttribute("data-size") == size));
-    document.querySelectorAll(".chon-day").forEach(b => b.classList.toggle("btn-primary", b.getAttribute("data-day") === day));
-}
 
+// --- 8. KHỞI TẠO ---
 document.addEventListener("DOMContentLoaded", () => {
-    // Xử lý nút Cộng
+    // Gán giá trị mặc định từ biến thể đầu tiên
+    const maBTMd = document.getElementById("maBienTheChon")?.value;
+    if (maBTMd && typeof bienThes !== 'undefined') {
+        const bt = bienThes.find(b => b.MaBienThe == maBTMd);
+        if (bt) {
+            luachon_mau = bt.MauSac || '';
+            luachon_size = bt.DuongKinhMat?.toString() || '';
+            luachon_day = bt.ChatLieuDay || '';
+        }
+    }
+    capNhatTrangThaiNut();
+
+    // Nút +/-
     document.querySelector(".btn-plus")?.addEventListener("click", () => {
         const input = document.getElementById("txtSoLuong");
-        const maBT = document.getElementById("maBienTheChon").value;
-        const bt = bienThes.find(b => b.MaBienThe == maBT); // Tìm biến thể hiện tại
-
-        let currentVal = parseInt(input.value);
-        if (bt && currentVal < bt.SoLuongTon) {
-            input.value = currentVal + 1;
-        } else if (bt && currentVal >= bt.SoLuongTon) {
-            Swal.fire("Thông báo", "Số lượng sản phẩm trong kho chỉ còn " + bt.SoLuongTon, "info");
-        }
+        const bt = bienThes.find(b => b.MaBienThe == document.getElementById("maBienTheChon").value);
+        const val = parseInt(input.value);
+        if (bt && val < bt.SoLuongTon) input.value = val + 1;
+        else if (bt) Swal.fire("Thông báo", "Kho chỉ còn " + bt.SoLuongTon + " sản phẩm", "info");
     });
 
-    // Xử lý nút Trừ
     document.querySelector(".btn-minus")?.addEventListener("click", () => {
         const input = document.getElementById("txtSoLuong");
         if (parseInt(input.value) > 1) input.value = parseInt(input.value) - 1;
     });
 
-    // Xử lý khi người dùng tự gõ số vào ô input (chặn nhập tào lao)
     document.getElementById("txtSoLuong")?.addEventListener("change", function () {
-        const maBT = document.getElementById("maBienTheChon").value;
-        const bt = bienThes.find(b => b.MaBienThe == maBT);
-
+        const bt = bienThes.find(b => b.MaBienThe == document.getElementById("maBienTheChon").value);
         let val = parseInt(this.value);
-        if (isNaN(val) || val < 1) val = 1; // Nếu nhập chữ hoặc < 1 thì về 1
-
+        if (isNaN(val) || val < 1) val = 1;
         if (bt && val > bt.SoLuongTon) {
-            val = bt.SoLuongTon; // Nếu gõ số lớn hơn tồn kho thì ép về số tồn kho lớn nhất
-            Swal.fire("Thông báo", "Số lượng sản phẩm trong kho chỉ còn " + bt.SoLuongTon, "info");
+            val = bt.SoLuongTon;
+            Swal.fire("Thông báo", "Kho chỉ còn " + bt.SoLuongTon + " sản phẩm", "info");
         }
         this.value = val;
     });
+
+    // Đồng bộ ảnh nhỏ khi đóng modal
+    document.getElementById('modalPhongTo')?.addEventListener('hidden.bs.modal', () => {
+        activeImageByIndex(globalActiveIdx);
+    });
 });
 
+
+// --- 9. MUA HÀNG ---
 function themVaoGio() {
-    if (!isLoggedIn) {
+    if (typeof isLoggedIn !== 'undefined' && !isLoggedIn) {
         Swal.fire({
             title: 'Bạn chưa đăng nhập',
             text: "Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!",
             icon: 'info',
             showCancelButton: true,
-            confirmButtonColor: '#ee4d2d',
+            confirmButtonColor: '#6a4010',
             cancelButtonColor: '#6c757d',
             confirmButtonText: 'Đăng nhập ngay',
             cancelButtonText: 'Để sau'
-        }).then((result) => {
-            if (result.isConfirmed) {
-                window.location.href = `/Identity/Account/Login?ReturnUrl=${window.location.pathname}`;
-            }
-        });
+        }).then(r => { if (r.isConfirmed) window.location.href = `/Identity/Account/Login?ReturnUrl=${window.location.pathname}`; });
         return;
     }
-
     const maBT = document.getElementById("maBienTheChon").value;
-    const qty = document.getElementById("txtSoLuong").value;
-
-    if (!maBT || maBT === "0") {
-        Swal.fire("Thông báo", "Vui lòng chọn Màu sắc / Kích thước!", "warning");
-        return;
-    }
-
-    window.location.href = `/GioHangs/AddToCart?id=${maBT}&quantity=${qty}`;
+    if (!maBT || maBT === "0") { Swal.fire("Thông báo", "Vui lòng chọn đầy đủ Màu sắc / Kích thước!", "warning"); return; }
+    window.location.href = `/GioHangs/AddToCart?id=${maBT}&quantity=${document.getElementById("txtSoLuong").value}`;
 }
 
 function muaNgay() {
-    if (!isLoggedIn) {
-        window.location.href = `/Identity/Account/Login?ReturnUrl=${window.location.pathname}`;
-        return;
+    if (typeof isLoggedIn !== 'undefined' && !isLoggedIn) {
+        window.location.href = `/Identity/Account/Login?ReturnUrl=${window.location.pathname}`; return;
     }
-
     const maBT = document.getElementById("maBienTheChon").value;
-    const qty = document.getElementById("txtSoLuong").value;
-
     if (!maBT || maBT === "0") {
-        Swal.fire({
-            title: "Thông báo",
-            text: "Vui lòng chọn Màu sắc / Kích thước trước khi mua!",
-            icon: "warning",
-            confirmButtonColor: "#b29c6e" 
-        });
+        Swal.fire({ title: "Thông báo", text: "Vui lòng chọn đầy đủ Màu sắc / Kích thước trước khi mua!", icon: "warning", confirmButtonColor: "#6a4010" });
         return;
     }
-
-    // 4. Chuyển hướng đến trang thanh toán với tham số mua ngay
-    window.location.href = `/Checkout/Index?selectedIds=${maBT}&qty=${qty}&isBuyNow=true`;
+    window.location.href = `/Checkout/Index?selectedIds=${maBT}&qty=${document.getElementById("txtSoLuong").value}&isBuyNow=true`;
 }
 
 
+// --- 10. LỌC ĐÁNH GIÁ SAO ---
 function locSao(sao) {
     document.querySelectorAll('[id^="btn-sao-"]').forEach(btn => {
         btn.classList.remove('active', 'btn-warning');
         btn.classList.add('btn-outline-warning');
     });
-
     const btnActive = document.getElementById('btn-sao-' + sao);
-    btnActive.classList.add('active');
-    if (sao !== 0) btnActive.classList.remove('btn-outline-warning'), btnActive.classList.add('btn-warning');
+    if (btnActive) {
+        btnActive.classList.add('active');
+        if (sao !== 0) { btnActive.classList.remove('btn-outline-warning'); btnActive.classList.add('btn-warning'); }
+    }
 
-    const items = document.querySelectorAll('.dg-item'); 
     let count = 0;
-
-    items.forEach(item => {
-        const itemSao = parseInt(item.getAttribute('data-sao'));
-        if (sao === 0 || itemSao === sao) {
-            item.style.setProperty('display', 'block', 'important');
-            count++;
-        } else {
-            item.style.setProperty('display', 'none', 'important');
-        }
+    document.querySelectorAll('.dg-item').forEach(item => {
+        const hien = sao === 0 || parseInt(item.getAttribute('data-sao')) === sao;
+        item.style.setProperty('display', hien ? 'block' : 'none', 'important');
+        if (hien) count++;
     });
 
     const noReviewMsg = document.getElementById('khong-co-dg');
-    if (count === 0) {
-        noReviewMsg.style.display = 'block';
-    } else {
-        noReviewMsg.style.display = 'none';
-    }
+    if (noReviewMsg) noReviewMsg.style.display = count === 0 ? 'block' : 'none';
 }

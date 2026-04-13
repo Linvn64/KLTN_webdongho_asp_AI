@@ -25,6 +25,7 @@ namespace WebDongHoLG.Controllers
                 .Include(s => s.BienTheSanPhams)
                 .ThenInclude(bt => bt.Khos)
                 .Where(s => s.IsActive == true)
+                .Take(8)
                 .ToListAsync();
 
             return View(listProduct);

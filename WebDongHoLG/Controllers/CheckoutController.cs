@@ -119,7 +119,7 @@ namespace WebDongHoLG.Controllers
             if (string.IsNullOrEmpty(selectedIds)) return RedirectToAction("Index", "GioHangs");
 
             var ids = selectedIds.Split(',').Select(int.Parse).ToList();
-            double tongTienHang = 0;
+            decimal tongTienHang = 0;
             var chiTietList = new List<ChiTietDonHang>();
 
             if (isBuyNow)
@@ -129,7 +129,7 @@ namespace WebDongHoLG.Controllers
                     var bt = await _context.BienTheSanPhams.FindAsync(btId);
                     if (bt == null) continue;
                     var sl = model.DanhSachSanPham?.FirstOrDefault(x => x.MaBienThe == btId)?.SoLuong ?? 1;
-                    tongTienHang += (double)(bt.GiaBan ?? 0) * sl;
+                    tongTienHang += (bt.GiaBan ?? 0) * sl;
                     chiTietList.Add(new ChiTietDonHang
                     {
                         MaBienThe = btId,
@@ -152,7 +152,7 @@ namespace WebDongHoLG.Controllers
                     var items = gioHang.ChiTietGioHangs.Where(c => ids.Contains(c.MaBienThe)).ToList();
                     foreach (var item in items)
                     {
-                        tongTienHang += (double)(item.MaBienTheNavigation.GiaBan ?? 0) * (item.SoLuong ?? 0);
+                        tongTienHang += (item.MaBienTheNavigation.GiaBan ?? 0) * (item.SoLuong ?? 0);
                         chiTietList.Add(new ChiTietDonHang
                         {
                             MaBienThe = item.MaBienThe,
@@ -166,7 +166,7 @@ namespace WebDongHoLG.Controllers
                 }
             }
 
-            double giamGia = 0;
+            decimal giamGia = 0;
             if (model.MaVoucherChon.HasValue)
             {
                 var v = await _context.Vouchers.FindAsync(model.MaVoucherChon);
@@ -174,16 +174,15 @@ namespace WebDongHoLG.Controllers
                 if (v != null && v.IsActive == true && (v.DaDung ?? 0) < (v.SoLuong ?? 0))
                 {
 
-                    if (tongTienHang >= (double)v.GiaTriToiThieu)
+                    if (tongTienHang >= (decimal)v.GiaTriToiThieu)
                     {
-                        giamGia = tongTienHang * (double)v.PhanTramGiam;
+                        giamGia = tongTienHang * (decimal)v.PhanTramGiam;
                         v.DaDung = (v.DaDung ?? 0) + 1;
                     }
                     else
                     {
-                        double toiThieu = (double)v.GiaTriToiThieu;
+                        decimal toiThieu = (decimal)v.GiaTriToiThieu;
                         TempData["ToastError"] = $"Đơn hàng chưa đủ {toiThieu:N0}đ để áp dụng voucher này!";
-
                         return RedirectToAction("Index", "GioHangs");
                     }
                 }
@@ -193,16 +192,20 @@ namespace WebDongHoLG.Controllers
                 .Select(d => d.MaDiaChi)
                 .FirstOrDefault();
 
-            double phiShip = (tongTienHang >= 5000000) ? 0 : 30000;
-            double tongThanhToan = tongTienHang - giamGia + phiShip;
+            // Lấy địa chỉ để tính phí ship đúng
+            var diaChi = await _context.DiaChiGiaoHangs.FindAsync(maDiaChi);
+            decimal phiShip = (diaChi != null && diaChi.GhiChu == "Hà Nội")
+                ? 0
+                : (tongTienHang >= 5000000 ? 0 : 30000);
+            decimal tongThanhToan = tongTienHang - giamGia + phiShip;
 
             var donHang = new DonHang
             {
                 MaNguoiDung = user.MaNguoiDung,
                 NgayDat = DateTime.Now,
-                TongTien = (decimal)tongThanhToan,
-                PhiVanChuyen = (decimal)phiShip,
-                TienGiamGia = (decimal)giamGia,
+                TongTien = tongThanhToan,
+                PhiVanChuyen = phiShip,
+                TienGiamGia = giamGia,
                 TrangThai = CachThanhToan == "COD" ? "Chờ xử lý" : "Chờ thanh toán",
                 MaVoucher = model.MaVoucherChon,
                 MaDiaChi = maDiaChi
@@ -235,7 +238,7 @@ namespace WebDongHoLG.Controllers
                 var payModel = new PaymentInformationModel
                 {
                     OrderType = "other",
-                    Amount = tongThanhToan,
+                    Amount = (double)tongThanhToan,
                     OrderDescription = $"Thanh toan don hang #{donHang.MaDonHang}",
                     Name = user.HoTen ?? "Khách hàng"
                 };
@@ -243,7 +246,7 @@ namespace WebDongHoLG.Controllers
                 return Redirect(url);
             }
 
-            // Trong PlaceOrder — thêm sau block VNPAY
+            // Trong PlaceOrder
             if (CachThanhToan == "MOMO")
             {
                 HttpContext.Session.SetInt32("PendingOrderId", donHang.MaDonHang);
@@ -353,33 +356,46 @@ namespace WebDongHoLG.Controllers
             return Json(new { success = true });
         }
 
+        [HttpGet]
         public async Task<IActionResult> SelectAddress(int maDc)
         {
             var user = await GetCurrentUser();
             if (user == null) return Json(new { success = false });
 
-            var dc = user.DiaChiGiaoHangs.FirstOrDefault(d => d.MaDiaChi == maDc);
+            // Load thẳng từ DB thay vì dùng cache
+            var dc = await _context.DiaChiGiaoHangs
+                .FirstOrDefaultAsync(d => d.MaDiaChi == maDc && d.MaNguoiDung == user.MaNguoiDung);
+
             if (dc == null) return Json(new { success = false });
 
+            // Lưu thông tin lại trước khi xóa
+            var nguoiDung = dc.MaNguoiDung;
+            var diaChi = dc.DiaChi;
+            var sdt = dc.SdtNhanHang;
+            var ghiChu = dc.GhiChu;
+
             _context.DiaChiGiaoHangs.Remove(dc);
+            await _context.SaveChangesAsync(); // Lưu xóa trước
+
             _context.DiaChiGiaoHangs.Add(new DiaChiGiaoHang
             {
-                MaNguoiDung = dc.MaNguoiDung,
-                DiaChi = dc.DiaChi,
-                SdtNhanHang = dc.SdtNhanHang,
-                GhiChu = dc.GhiChu
+                MaNguoiDung = nguoiDung,
+                DiaChi = diaChi,
+                SdtNhanHang = sdt,
+                GhiChu = ghiChu
             });
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync(); // Lưu thêm sau
+
             return Json(new { success = true });
         }
-
         // HELPER
         private async Task<DonHangVM> BuildDonHangVM(NguoiDung user, List<GioHangVM> cartItems)
         {
             var dc = user.DiaChiGiaoHangs.OrderByDescending(d => d.MaDiaChi).FirstOrDefault();
             double tongTienHang = (double)cartItems.Sum(x => x.ThanhTien);
-            double phiShip = dc != null && dc.GhiChu != "Hà Nội"
-                ? Math.Max(30000, Math.Min(300000, tongTienHang * 0.1)) : 0;
+
+            double phiShip = (dc != null && dc.GhiChu == "Hà Nội") ? 0
+                     : (tongTienHang >= 5000000 ? 0 : 30000);
 
             var today = DateTime.Now;
             var dsVoucher = await _context.Vouchers
@@ -399,8 +415,12 @@ namespace WebDongHoLG.Controllers
                 PhiVanChuyen = phiShip,
                 DanhSachDiaChi = user.DiaChiGiaoHangs.OrderByDescending(d => d.MaDiaChi).ToList(),
                 DanhSachVoucher = dsVoucher,
-                GiamGiaVoucher = vMacDinh != null ? tongTienHang * (double)vMacDinh.PhanTramGiam : 0,
-                MaVoucherChon = vMacDinh?.MaVoucher,
+                GiamGiaVoucher = (vMacDinh != null && tongTienHang >= (double)vMacDinh.GiaTriToiThieu)
+                ? tongTienHang * (double)vMacDinh.PhanTramGiam
+                : 0,
+                            MaVoucherChon = (vMacDinh != null && tongTienHang >= (double)vMacDinh.GiaTriToiThieu)
+                ? vMacDinh.MaVoucher
+                : null,
                 NgayHeThong = today
             };
         }
@@ -421,6 +441,12 @@ namespace WebDongHoLG.Controllers
         [HttpPost]
         public async Task<IActionResult> RetryPayment(int maDonHang, string CachThanhToan)
         {
+            if (string.IsNullOrEmpty(CachThanhToan))
+            {
+                TempData["ToastError"] = "Vui lòng chọn phương thức thanh toán!";
+                return RedirectToAction("PaymentPending", new { maDonHang });
+            }
+
             var user = await GetCurrentUser();
             if (user == null) return RedirectToAction("Login", "Account");
 

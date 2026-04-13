@@ -8,22 +8,22 @@
 :root {
     /* Surface Colors */
     --c-bg-0: #ffffff;
-    --c-bg-1: #f8f9fa;
+    --c-bg-1: #fcf9f2;
     --c-bg-2: #ffffff;
-    --c-bg-3: #f1f3f5;
-    --c-bg-4: #e9ecef;
-    /* Gold Ramp */
-    --c-gold: #b5893f;
-    --c-gold-mid: #d4a84b;
-    --c-gold-bright: #f0d080;
-    --c-gold-glow: rgba(212,168,75,.09);
-    --c-gold-border: rgba(181,137,63,0.15);
+    --c-bg-3: #fcf9f2;
+    --c-bg-4: #ddd0b8;
+    /* Brown Ramp (thay Gold) */
+    --c-gold: #6a4010;
+    --c-gold-mid: #6a4010;
+    --c-gold-bright: #c8823a;
+    --c-gold-glow: rgba(106,64,16,.09);
+    --c-gold-border: rgba(106,64,16,0.18);
     /* Text Colors */
-    --c-text: #1a1a1a;
-    --c-muted: #6c757d;
+    --c-text: #2c1f0e; /* luxury-dark */
+    --c-muted: #8a7055;
     --c-dim: #adb5bd;
-    --c-dark-text: #1a1712;
-    --c-dark-sub: #5c5347;
+    --c-dark-text: #2c1f0e; /* luxury-dark */
+    --c-dark-sub: #8a7055;
     /* Fonts */
     --font-d: 'Cormorant Garamond', Georgia, serif;
     --font-b: 'Outfit', system-ui, sans-serif;
@@ -31,10 +31,9 @@
     --r-panel: 22px;
     --r-bubble: 17px;
     /* Shadows */
-    --sh-fab: 0 4px 12px rgba(0,0,0,0.1), 0 1px 3px rgba(0,0,0,0.08), 0 0 0 1px rgba(181,137,63,0.1);
-    --sh-panel: 0 12px 30px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.05), 0 0 0 1px rgba(181,137,63,0.05);
+    --sh-fab: 0 4px 12px rgba(106,64,16,0.15), 0 1px 3px rgba(106,64,16,0.1), 0 0 0 1px rgba(106,64,16,0.12);
+    --sh-panel: 0 24px 70px rgba(44,31,14,0.35), 0 10px 30px rgba(106,64,16,0.22), 0 0 0 1px rgba(106,64,16,0.15);
 }
-
 #wc-wrapper * {
     box-sizing: border-box;
     margin: 0;
@@ -52,9 +51,9 @@
     height: 54px;
     border-radius: 50%;
     background: var(--c-bg-2);
-    border: 1px solid var(--c-gold-border);
-    color: var(--c-gold-mid);
-    font-size: 18px;
+    color: var(--lg-primary); /* đậm hơn */
+    font-size: 20px;
+    border: 1.5px solid rgba(106,64,16,0.3);
     cursor: pointer;
     z-index: 9999;
     outline: none;
@@ -187,11 +186,11 @@
 
     /* FIX: Title màu nâu vàng đậm, dễ đọc hơn trên nền trắng */
     .wc-header-info h3 {
-/*        font-family: var(--font-d);
+        /*        font-family: var(--font-d);
         font-size: 15.5px;*/
         font-weight: 600;
         letter-spacing: 0.8px;
-        color: #8b6120;
+        color: var(--lg-primary);
         line-height: 1;
         white-space: nowrap;
         overflow: hidden;
@@ -218,7 +217,7 @@
     width: 30px;
     height: 30px;
     border-radius: 7px;
-    color: #6c757d;
+    color: #5a3a10;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -344,7 +343,7 @@
     }
 
     .wc-msg:not(.user) .wc-bubble b {
-        color: #8b6120;
+        color: var(--lg-primary);
         font-weight: 500;
     }
 
@@ -410,14 +409,14 @@
 
 .wc-chip {
     background: var(--c-bg-2);
-    border: 1px solid var(--c-gold-border);
+    border: 1px solid rgba(106,64,16,0.25);
     border-radius: 20px;
     padding: 4px 12px;
     font-size: 11px;
-    font-weight: 300;
+    font-weight: 500; 
     font-family: var(--font-b);
     cursor: pointer;
-    color: var(--c-muted);
+    color: var(--lg-primary); 
     letter-spacing: .3px;
     transition: all .2s;
     white-space: nowrap;
@@ -452,22 +451,25 @@
     outline: none;
     resize: none;
     font-size: 13px;
-    font-weight: 300;
+    font-weight: 400;
+    color: var(--luxury-dark);
     line-height: 1.5;
     font-family: var(--font-b);
-    color: var(--c-text);
     transition: border-color .25s, background .25s;
     max-height: 90px;
     overflow-y: auto;
+    box-shadow: 0 2px 8px rgba(106,64,16,0.15), inset 0 1px 3px rgba(106,64,16,0.06);
 }
 
     .wc-textarea::placeholder {
-        color: var(--c-dim);
+        color: #8a7055; 
+        font-weight: 400;
     }
 
     .wc-textarea:focus {
         border-color: rgba(181,137,63,.45);
         background: var(--c-bg-3);
+        box-shadow: 0 4px 14px rgba(106,64,16,0.22), inset 0 1px 3px rgba(106,64,16,0.08);
     }
 
     .wc-textarea::-webkit-scrollbar {
@@ -564,7 +566,7 @@
     font-family: var(--font-d);
     font-size: 12.5px;
     font-weight: 500;
-    color: #8b6120;
+    color: var(--lg-primary);
     letter-spacing: .3px;
 }
 

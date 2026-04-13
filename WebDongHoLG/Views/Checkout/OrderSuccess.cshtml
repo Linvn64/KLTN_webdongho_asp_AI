@@ -5,15 +5,20 @@
 
 <div class="container py-5 text-center">
     <div class="mb-4">
-        <i class="fas fa-check-circle fa-5x text-success"></i>
+        <i class="fas fa-check-circle fa-5x" style="color:var(--lg-primary);"></i>
     </div>
-    <h2 class="fw-bold text-success mb-2">Đặt hàng thành công!</h2>
+    <h2 class="fw-bold mb-2" style="color:var(--lg-primary);">Đặt hàng thành công!</h2>
     <p class="text-muted mb-1">Mã đơn hàng: <strong>#@Model.MaDonHang</strong></p>
-    <p class="text-muted mb-4">Trạng thái: <span class="badge bg-warning text-dark">@Model.TrangThai</span></p>
+    <p class="text-muted mb-4">
+        Trạng thái:
+        <span class="badge" style="background-color:var(--lg-primary);">@Model.TrangThai</span>
+    </p>
 
-    <div class="card shadow-sm mx-auto mb-4" style="max-width:600px;">
+    <div class="card shadow-sm mx-auto mb-4" style="max-width:600px; border-top: 4px solid var(--lg-primary);">
         <div class="card-body text-start">
-            <h5 class="fw-bold mb-3 border-bottom pb-2">Chi tiết thanh toán</h5>
+            <h5 class="fw-bold mb-3 border-bottom pb-2" style="color:var(--lg-primary);">
+                Chi tiết thanh toán
+            </h5>
 
             @foreach (var ct in Model.ChiTietDonHangs)
             {
@@ -36,7 +41,7 @@
 
             @if (Model.TienGiamGia > 0)
             {
-                <div class="d-flex justify-content-between mb-2 text-success">
+                <div class="d-flex justify-content-between mb-2" style="color:var(--lg-primary);">
                     <span>Giảm giá Voucher:</span>
                     <span class="fw-bold">- @Model.TienGiamGia.ToString("#,##0") ₫</span>
                 </div>
@@ -51,15 +56,18 @@
 
             <hr class="my-2">
 
-            @* --- Tổng cộng cuối cùng khách phải trả --- *@
             <div class="d-flex justify-content-between mt-3">
                 <strong class="h5">Tổng thanh toán:</strong>
-                <strong class="text-danger h4">@(((decimal)Model.TongTien).ToString("#,##0")) ₫</strong>
+                <strong class="h4" style="color:var(--lg-primary);">
+                    @(((decimal)Model.TongTien).ToString("#,##0")) ₫
+                </strong>
             </div>
         </div>
     </div>
 
-    <a asp-controller="SanPhams" asp-action="Index" class="btn btn-primary rounded-pill px-5 me-2">
+    <a asp-controller="SanPhams" asp-action="Index"
+       class="btn fw-bold rounded-pill px-5 me-2 text-white"
+       style="background-color:var(--lg-primary);">
         Tiếp tục mua sắm
     </a>
 </div>

@@ -1,0 +1,61 @@
+﻿@model WebDongHoLG.ViewModels.DonHangVM
+
+<div class="col-12 mb-4">
+    <h4 class="fw-bold mb-4">
+        <i class="fas fa-shopping-basket me-2" style="color: var(--lg-primary);"></i>Sản phẩm thanh toán
+    </h4>
+    <div class="table-responsive shadow-sm rounded">
+        <table class="table table-checkout bg-white mb-0">
+            <thead>
+                <tr>
+                    <th style="width:50%">Sản phẩm</th>
+                    <th class="text-center">Đơn giá</th>
+                    <th class="text-center">Số lượng</th>
+                    <th class="text-end">Thành tiền</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (int i = 0; i < Model.DanhSachSanPham.Count; i++)
+                {
+                    var item = Model.DanhSachSanPham[i];
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                <input type="hidden" name="DanhSachSanPham[@i].MaBienThe" value="@item.MaBienThe" />
+                                <input type="hidden" name="DanhSachSanPham[@i].SoLuong" value="@item.SoLuong" />
+                                <img src="@(item.Hinh ?? "/home/img/no-image.jpg")"
+                                     class="img-product-large border" alt="@item.TenSp">
+                                <div>
+                                    <h6 class="fw-bold mb-1">@item.TenSp</h6>
+                                    @if (!string.IsNullOrEmpty(item.TenThuongHieu))
+                                    {
+                                        <small class="text-muted d-block">@item.TenThuongHieu</small>
+                                    }
+                                    <div class="d-flex flex-wrap gap-1 mt-1">
+                                        @if (!string.IsNullOrEmpty(item.MauSac))
+                                        {
+                                            <span class="badge" style="background-color:var(--lg-primary);font-size:10px;">@item.MauSac</span>
+                                        }
+                                        @if (item.DuongKinhMat.HasValue)
+                                        {
+                                            <span class="badge" style="background-color:var(--lg-primary);font-size:10px;">@item.DuongKinhMat mm</span>
+                                        }
+                                        @if (!string.IsNullOrEmpty(item.ChatLieuDay))
+                                        {
+                                            <span class="badge" style="background-color:var(--lg-primary);font-size:10px;">@item.ChatLieuDay</span>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-center">@item.DonGia.ToString("#,##0") ₫</td>
+                        <td class="text-center fw-bold">x @item.SoLuong</td>
+                        <td class="text-end fw-bold" style="color:var(--lg-primary);">
+                            @item.ThanhTien.ToString("#,##0") ₫
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

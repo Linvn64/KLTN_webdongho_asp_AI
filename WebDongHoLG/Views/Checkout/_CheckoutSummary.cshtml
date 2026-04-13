@@ -1,0 +1,69 @@
+﻿@model WebDongHoLG.ViewModels.DonHangVM
+
+<div class="card p-4 shadow-sm border-0 position-sticky"
+     style="top:20px; background-color:var(--lg-bg); border:1px solid var(--lg-border) !important;">
+
+    <h5 class="fw-bold mb-4 pb-2" style="border-bottom:2px solid var(--lg-border); color:var(--luxury-dark);">
+        Chi tiết thanh toán
+    </h5>
+
+    <input type="hidden" id="valTongTienHang" value="@Model.TongTienHang" />
+    <input type="hidden" id="valPhiShip" value="@Model.PhiVanChuyen" />
+
+    <div class="d-flex justify-content-between mb-2">
+        <span>Tiền hàng</span>
+        <span>@Model.TongTienHang.ToString("#,##0") ₫</span>
+    </div>
+    <div class="d-flex justify-content-between mb-2" style="color:var(--luxury-gold);">
+        <span>Voucher giảm</span>
+        <span id="displayGiamGia">- @Model.GiamGiaVoucher.ToString("#,##0") ₫</span>
+    </div>
+    <div class="d-flex justify-content-between mb-3">
+        <span>Phí vận chuyển</span>
+        <span id="displayPhiShip" class="fw-bold">
+            @(Model.PhiVanChuyen == 0 ? "Miễn phí" : Model.PhiVanChuyen.ToString("#,##0") + " ₫")
+        </span>
+    </div>
+
+    <div class="mb-4">
+        <h6 class="fw-bold mb-3" style="color:var(--luxury-dark);">
+            <i class="fas fa-credit-card me-2" style="color:var(--lg-primary);"></i>Phương thức thanh toán
+        </h6>
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="CachThanhToan" id="payCOD" value="COD" checked>
+            <label class="form-check-label" for="payCOD">Thanh toán khi nhận hàng (COD)</label>
+        </div>
+        <div class="form-check mb-2">
+            <input class="form-check-input" type="radio" name="CachThanhToan" id="payVNPAY" value="VNPAY">
+            <label class="form-check-label" for="payVNPAY">Thanh toán Online qua VNPAY</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="CachThanhToan" id="payMomo" value="MOMO">
+            <input type="hidden" name="Amount" value="@Model.TongThanhToan" />
+            <input type="hidden" name="OrderInfo" value="Thanh toán Momo cho đơn hàng tại DonghoLG" />
+            <input type="hidden" name="FullName" value="DonghoLG" />
+            <label class="form-check-label" for="payMomo">Thanh toán bằng Momo</label>
+        </div>
+    </div>
+
+    <hr style="border-color:var(--lg-border);">
+    <div class="d-flex justify-content-between mb-4">
+        <h5 class="fw-bold" style="color:var(--luxury-dark);">Tổng cộng</h5>
+        <h4 class="fw-bold" id="displayTongThanhToan" style="color:var(--lg-primary);">
+            @Model.TongThanhToan.ToString("#,##0") ₫
+        </h4>
+    </div>
+
+    <button type="submit"
+            class="btn w-100 py-3 fw-bold border-0 text-uppercase text-white shadow"
+            style="background-color:var(--lg-primary);"
+            @(Model.DiaChiChiTiet == "Chưa có địa chỉ giao hàng" ? "disabled" : "")>
+        <i class="fas fa-lock me-2"></i>Đặt hàng ngay
+    </button>
+
+    <a asp-controller="GioHangs" asp-action="Index"
+       class="btn w-100 py-3 fw-bold text-uppercase shadow-sm mt-2"
+       style="background-color:#f5ede0; color:var(--lg-primary); border:1px solid var(--lg-border);">
+        <i class="fas fa-arrow-left me-2"></i>Hủy / Quay lại Giỏ hàng
+    </a>
+</div>

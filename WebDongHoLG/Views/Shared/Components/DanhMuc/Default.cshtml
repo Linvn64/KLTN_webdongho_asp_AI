@@ -1,35 +1,70 @@
 ﻿@model IEnumerable<WebDongHoLG.ViewModels.DanhMucVM>
-
 @{
     var currentDoiTuong = Context.Request.Query["doiTuong"].ToString();
+    var currentDanhMuc = Context.Request.Query["danhmuc"].ToString();
 }
 
-<div class="col-lg-12">
-    <div class="mb-3">
-        <h4 class="mb-2">Lọc theo đối tượng</h4>
+<style>
+    /* CSS để Sidebar đồng bộ với user-home.css */
+    .sidebar-link {
+        color: var(--luxury-dark, #2c1f0e) !important;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        padding: 5px 0;
+    }
+
+        .sidebar-link:hover {
+            color: var(--luxury-gold, #c8823a) !important;
+            transform: translateX(5px); /* Hiệu ứng đẩy nhẹ khi hover cho sang */
+        }
+
+        .sidebar-link.active {
+            color: var(--lg-primary, #6a4010) !important;
+            font-weight: 700 !important;
+        }
+
+    .sidebar-title {
+        color: var(--luxury-dark);
+        border-bottom: 2px solid var(--lg-border);
+        padding-bottom: 10px;
+        text-transform: uppercase;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+    }
+
+    .category-count {
+        color: var(--lg-text-muted, #8a7055);
+        font-size: 0.9em;
+    }
+</style>
+
+<div class="col-lg-12 mb-4">
+    <div class="mb-4">
+        <h4 class="sidebar-title mb-3">Lọc theo đối tượng</h4>
 
         <div class="mb-2">
-            <a class="text-decoration-none @(string.IsNullOrEmpty(currentDoiTuong) ? "fw-bold text-primary" : "text-dark")"
+            <a class="text-decoration-none sidebar-link @(string.IsNullOrEmpty(currentDoiTuong) ? "active" : "")"
                href="/SanPhams">
-                <i class="fa fa-circle me-2 @(string.IsNullOrEmpty(currentDoiTuong) ? "text-primary" : "text-muted")"></i>Tất cả
+                <i class="far @(string.IsNullOrEmpty(currentDoiTuong) ? "fa-dot-circle" : "fa-circle") me-2"></i>Tất cả
             </a>
         </div>
         <div class="mb-2">
-            <a class="text-decoration-none @(currentDoiTuong == "Nam" ? "fw-bold text-primary" : "text-dark")"
+            <a class="text-decoration-none sidebar-link @(currentDoiTuong == "Nam" ? "active" : "")"
                href="/SanPhams?doiTuong=Nam">
-                <i class="fa fa-circle me-2 @(currentDoiTuong == "Nam" ? "text-primary" : "text-muted")"></i>Nam
+                <i class="far @(currentDoiTuong == "Nam" ? "fa-dot-circle" : "fa-circle") me-2"></i>Nam
             </a>
         </div>
         <div class="mb-2">
-            <a class="text-decoration-none @(currentDoiTuong == "Nữ" ? "fw-bold text-primary" : "text-dark")"
+            <a class="text-decoration-none sidebar-link @(currentDoiTuong == "Nữ" ? "active" : "")"
                href="/SanPhams?doiTuong=N%E1%BB%AF">
-                <i class="fa fa-circle me-2 @(currentDoiTuong == "Nữ" ? "text-primary" : "text-muted")"></i>Nữ
+                <i class="far @(currentDoiTuong == "Nữ" ? "fa-dot-circle" : "fa-circle") me-2"></i>Nữ
             </a>
         </div>
         <div class="mb-2">
-            <a class="text-decoration-none @(currentDoiTuong == "Unisex" ? "fw-bold text-primary" : "text-dark")"
+            <a class="text-decoration-none sidebar-link @(currentDoiTuong == "Unisex" ? "active" : "")"
                href="/SanPhams?doiTuong=Unisex">
-                <i class="fa fa-circle me-2 @(currentDoiTuong == "Unisex" ? "text-primary" : "text-muted")"></i>Unisex
+                <i class="far @(currentDoiTuong == "Unisex" ? "fa-dot-circle" : "fa-circle") me-2"></i>Unisex
             </a>
         </div>
     </div>
@@ -37,29 +72,27 @@
 
 <div class="col-lg-12">
     <div class="mb-3">
-        <h4>Danh Mục Sản Phẩm</h4>
-        @{
-            var currentDanhMuc = Context.Request.Query["danhmuc"].ToString();
-        }
-        <ul class="list-unstyled fruite-categorie">
-            <li>
-                <div class="d-flex justify-content-between fruite-name">
-                    <a class="@(string.IsNullOrEmpty(currentDanhMuc) ? "fw-bold text-primary" : "")"
+        <h4 class="sidebar-title mb-3">Danh Mục Sản Phẩm</h4>
+
+        <ul class="list-unstyled">
+            <li class="mb-2">
+                <div class="d-flex justify-content-between align-items-center">
+                    <a class="text-decoration-none sidebar-link @(string.IsNullOrEmpty(currentDanhMuc) ? "active" : "")"
                        asp-controller="SanPhams" asp-action="Index">
-                        <i class="fa fa-clock me-2"></i>Tất cả
+                        <i class="fas fa-history me-2"></i>Tất cả
                     </a>
                 </div>
             </li>
             @foreach (var item in Model)
             {
-                <li>
-                    <div class="d-flex justify-content-between fruite-name">
-                        <a class="@(currentDanhMuc == item.MaDanhMuc.ToString() ? "fw-bold text-primary" : "")"
+                <li class="mb-2">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <a class="text-decoration-none sidebar-link @(currentDanhMuc == item.MaDanhMuc.ToString() ? "active" : "")"
                            asp-controller="SanPhams" asp-action="Index"
                            asp-route-danhmuc="@item.MaDanhMuc">
-                            <i class="fa fa-clock me-2"></i>@item.TenDanhMuc
+                            <i class="fas fa-history me-2"></i>@item.TenDanhMuc
                         </a>
-                        <span>(@item.SoLuong)</span>
+                        <span class="category-count">(@item.SoLuong)</span>
                     </div>
                 </li>
             }

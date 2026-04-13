@@ -1,0 +1,81 @@
+﻿@model WebDongHoLG.ViewModels.DonHangVM
+
+<div class="p-0 border rounded bg-white mb-4 shadow-sm overflow-hidden">
+    <div class="p-4 d-flex justify-content-between align-items-center"
+         style="background-color:var(--lg-bg); cursor:pointer;"
+         data-bs-toggle="collapse" data-bs-target="#collapseVoucher">
+        <h6 class="fw-bold mb-0" style="color:var(--lg-primary);">
+            <i class="fas fa-ticket-alt me-2"></i>Shop Voucher
+        </h6>
+        <div class="text-muted small">
+            Bấm để chọn mã giảm giá <i class="fas fa-chevron-down ms-1"></i>
+        </div>
+    </div>
+    <div class="collapse" id="collapseVoucher">
+        <div class="p-4 border-top">
+            @if (Model.DanhSachVoucher != null && Model.DanhSachVoucher.Any())
+            {
+                @foreach (var v in Model.DanhSachVoucher)
+                {
+                    var conLai = (v.SoLuong ?? 0) - (v.DaDung ?? 0);
+                    double donToiThieu = Convert.ToDouble(v.GiaTriToiThieu);
+                    bool duDieuKienTien = Model.TongTienHang >= donToiThieu;
+                    bool dungNgay = Model.NgayHeThong >= v.NgayBatDau && Model.NgayHeThong <= v.NgayKetThuc;
+                    bool isActive = (v.IsActive == true) && dungNgay && (conLai > 0) && duDieuKienTien;
+
+                    <div class="form-check d-flex align-items-center p-3 border rounded mb-2"
+                         style="background-color:@(isActive ? "#fff" : "#fdfdfd");
+                                        border-color:@(isActive ? "var(--lg-primary)" : "#dee2e6") !important;
+                                        border-style:@(isActive ? "solid" : "dashed") !important;">
+
+                        <input class="form-check-input me-2" type="radio"
+                               name="MaVoucherChon" id="v-@v.MaVoucher" value="@v.MaVoucher"
+                               @(isActive ? "" : "disabled")
+                               @(Model.MaVoucherChon == v.MaVoucher && isActive ? "checked" : "")
+                               onchange="updatePriceWithVoucher(@v.PhanTramGiam)"
+                               style="cursor:@(isActive ? "pointer" : "default");">
+
+                        <label class="form-check-label w-100" for="v-@v.MaVoucher"
+                               style="cursor:@(isActive ? "pointer" : "default"); opacity:1 !important;">
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="fw-bold" style="color:@(isActive ? "var(--lg-primary)" : "#333");">
+                                    @v.TenVoucher
+                                </span>
+                                <span class="badge"
+                                      style="background-color:@(isActive ? "var(--lg-primary)" : "#6c757d");">
+                                    Giảm @(v.PhanTramGiam * 100)%
+                                </span>
+                            </div>
+
+                            <div class="mt-1" style="font-size:0.9rem; color:#333;">
+                                <i class="fas fa-shopping-bag me-1"
+                                   style="color:@(duDieuKienTien ? "var(--luxury-gold)" : "#aaa");"></i>
+                                Đơn tối thiểu: <strong>@donToiThieu.ToString("#,##0") ₫</strong>
+                            </div>
+
+                            <small class="text-muted d-block mt-1">
+                                <i class="far fa-clock me-1"></i> Hạn: @v.NgayKetThuc.ToString("dd/MM/yyyy")
+                            </small>
+
+                            @if (!duDieuKienTien)
+                            {
+                                <div class="fw-bold mt-1" style="font-size:0.75rem; color:var(--lg-primary);">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    Mua thêm @((donToiThieu - Model.TongTienHang).ToString("#,##0")) ₫ để dùng mã này
+                                </div>
+                            }
+                            else if (conLai <= 0)
+                            {
+                                <div class="text-muted mt-1" style="font-size:0.75rem;">
+                                    <i class="fas fa-times-circle me-1"></i> Rất tiếc, mã đã hết lượt dùng
+                                </div>
+                            }
+                        </label>
+                    </div>
+                }
+            }
+            <p class="text-muted mb-0">Không có voucher khả dụng.</p>
+        </div>
+    </div>
+</div>

@@ -21,9 +21,16 @@
 }
 function changeDefaultAddress(maDiaChi) {
     fetch(`/Checkout/SelectAddress?maDc=${maDiaChi}`)
-        .then(() => location.reload());
+        .then(r => r.json())
+        .then(res => {
+            if (res.success) {
+                location.reload();
+            } else {
+                showToast("Không thể chọn địa chỉ!", "error");
+            }
+        })
+        .catch(() => showToast("Lỗi kết nối!", "error"));
 }
-
 function showAddForm() {
     const form = document.getElementById("formAddress");
     form.style.display = form.style.display === "none" ? "block" : "none";

@@ -1,0 +1,250 @@
+﻿/* ========== CARD ========== */
+.sp-card {
+    background: var(--bs-white);
+    border-radius: 6px;
+    overflow: visible;
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    box-shadow: 0 4px 16px rgba(80,45,8,0.13), 0 1px 4px rgba(80,45,8,0.08);
+    position: relative;
+}
+
+    .sp-card:hover {
+        transform: translateY(-7px);
+        box-shadow: 0 16px 40px rgba(80,45,8,0.28), 0 4px 12px rgba(80,45,8,0.16);
+    }
+
+/* ========== ẢNH ========== */
+.sp-img-wrap {
+    position: relative;
+    height: 220px;
+    border-radius: 6px 6px 0 0;
+    overflow: visible;
+    background: #f5ede0;
+}
+
+.fruite-img-inner {
+    width: 100%;
+    height: 100%;
+    overflow: hidden; 
+    border-radius: 6px 6px 0 0;
+}
+.fruite-img-inner a {
+        display: block;
+        width: 100%;
+        height: 100%;
+ }
+
+.sp-img-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.35s ease;
+}
+
+.sp-card:hover .sp-img-wrap img {
+    transform: scale(1.06);
+}
+
+/* ========== BADGE MÁC ========== */
+.badge-mac {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+    z-index: 2;
+    letter-spacing: 0.5px;
+}
+
+.badge-moi {
+    background: #2a7a4a; 
+    color: #fff;
+}
+
+.badge-ban-chay {
+    background: #e05c1a;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(224, 92, 26, 0.45);
+    animation: pulse-badge 1.8s ease-in-out infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% {
+        box-shadow: 0 2px 8px rgba(224, 92, 26, 0.45);
+    }
+
+    50% {
+        box-shadow: 0 2px 16px rgba(224, 92, 26, 0.85);
+    }
+}
+
+.badge-moi.second {
+    top: 38px;
+}
+
+.badge-het-hang {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: #7a3030;
+    color: #fde8e8;
+    padding: 4px 10px;
+    border-radius: 3px;
+    font-size: 11px;
+}
+
+/* ========== NỘI DUNG CARD ========== */
+.sp-body {
+    padding: 14px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    border: 0.5px solid #ddd0b8;
+    border-top: none;
+    border-radius: 0 0 6px 6px;
+    background: var(--bs-white);
+}
+
+.sp-brand {
+    font-size: 11px;
+    color: #8a7055;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 4px;
+}
+
+.sp-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: #2c1f0e;
+    margin-bottom: 8px;
+    line-height: 1.4;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.8em;
+}
+
+.sp-tags {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.sp-tag {
+    padding: 2px 9px;
+    border-radius: 3px;
+    font-size: 11px;
+    font-weight: 500;
+}
+
+.tag-nam {
+    background: #dce8f5;
+    color: #1a4a7a;
+}
+
+.tag-nu {
+    background: #f5dce8;
+    color: #7a1a4a;
+}
+
+.tag-unisex {
+    background: #ede8e0;
+    color: #5a4a30;
+}
+
+.sp-price {
+    font-size: 16px;
+    font-weight: 600;
+    color: #8a4a10;
+    margin-bottom: 12px;
+}
+
+/* ========== NÚT ========== */
+.sp-btns {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.btn-detail {
+    display: block;
+    padding: 9px;
+    border: 1.5px solid #c9b08a;
+    border-radius: 4px;
+    background: #fdf5e8;
+    color: #6a4a20;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.22s ease, color 0.22s ease, box-shadow 0.22s ease, transform 0.15s ease;
+    box-shadow: 0 3px 8px rgba(100,65,15,0.14);
+}
+
+    .btn-detail:hover {
+        background: #d4a96a;
+        color: #fff8f0;
+        border-color: #b8883a;
+        box-shadow: 0 6px 18px rgba(100,65,15,0.30);
+        transform: translateY(-2px);
+    }
+
+    .btn-detail:active {
+        background: #b8783a;
+        color: #fff8f0;
+        transform: translateY(0px);
+        box-shadow: 0 2px 6px rgba(100,65,15,0.18);
+    }
+
+.btn-add {
+    display: block;
+    width: 100%;
+    padding: 9px;
+    border: none;
+    border-radius: 4px;
+    background: #6a4010;
+    color: #fdf5e8;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    text-align: center;
+    transition: background 0.22s ease, box-shadow 0.22s ease, transform 0.15s ease;
+    box-shadow: 0 4px 14px rgba(80,40,5,0.32), 0 1px 4px rgba(80,40,5,0.18);
+}
+
+    .btn-add:hover {
+        background: #c8823a;
+        box-shadow: 0 8px 24px rgba(80,40,5,0.38), 0 2px 8px rgba(80,40,5,0.20);
+        transform: translateY(-2px);
+    }
+
+    .btn-add:active {
+        background: #4a2c08;
+        transform: translateY(0px);
+        box-shadow: 0 2px 6px rgba(80,40,5,0.22);
+    }
+
+.btn-disabled {
+    display: block;
+    width: 100%;
+    padding: 9px;
+    border: 1px solid #d8ccc0;
+    border-radius: 4px;
+    background: #f0ebe5;
+    color: #b8a898;
+    font-size: 13px;
+    cursor: not-allowed;
+    text-align: center;
+}
+
+
+.badge-mac, .badge-het-hang {
+    z-index: 20; 
+}

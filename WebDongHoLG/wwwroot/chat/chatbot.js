@@ -17,6 +17,11 @@ const chatbotState = {
 /* ── Session helpers ── */
 function loadFromSession() {
     try {
+        const pending = restoreChatAfterLogin();
+        if (pending && pending.length > 0) {
+            sessionStorage.setItem("lgw_chat_v3", JSON.stringify(pending));
+            return pending;
+        }
         const raw = sessionStorage.getItem("lgw_chat_v3");
         if (raw) return JSON.parse(raw);
     } catch (_) { }
@@ -26,6 +31,32 @@ function loadFromSession() {
         time: now()
     }];
 }
+
+
+
+function saveChatBeforeLogin() {
+    try {
+        const messages = chatbotState.messages || [];
+        localStorage.setItem("lgw_chat_pending", JSON.stringify(messages));
+        localStorage.setItem("lgw_chat_pending_time", Date.now());
+    } catch (_) { }
+}
+
+function restoreChatAfterLogin() {
+    try {
+        const savedTime = localStorage.getItem("lgw_chat_pending_time");
+        if (savedTime && Date.now() - savedTime < 10 * 60 * 1000) {
+            const raw = localStorage.getItem("lgw_chat_pending");
+            if (raw) {
+                localStorage.removeItem("lgw_chat_pending");
+                localStorage.removeItem("lgw_chat_pending_time");
+                return JSON.parse(raw);
+            }
+        }
+    } catch (_) { }
+    return null;
+}
+
 
 function saveToSession() {
     try {
@@ -194,6 +225,41 @@ async function handleSend() {
                 if (data === "[DONE]") break;
                 try {
                     buf += JSON.parse(data).text;
+
+                    // Xử lý chưa đăng nhập
+                    if (buf.includes("[LOGIN_REQUIRED]")) {
+                        chatbotState.messages[aiIdx].content =
+                            "Để nhận mã giảm giá, Quý khách vui lòng **đăng nhập** trước nhé! " +
+                            "<br><button onclick='saveChatBeforeLogin(); window.location.href=\"/Account/Login?returnUrl=/\"' " +
+                            "style='background:#b8960c;color:#fff;border:none;padding:6px 14px;" +
+                            "border-radius:6px;cursor:pointer;margin-top:8px'>" +
+                            "🔐 Đăng nhập ngay</button>";
+                        updateMessages();
+                        return;
+                    }
+
+                    // Xử lý tạo voucher
+                    if (buf.includes("[REQUEST_DISCOUNT:")) {
+                        const match = buf.match(/\[REQUEST_DISCOUNT:(.*?)\|(\d+)\]/);
+                        if (match) {
+                            const maNguoiDung = match[1];
+                            const phanTramGiam = parseInt(match[2]);
+
+                            const result = await fetch("/api/Chat/request-discount", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ maNguoiDung, phanTramGiam })
+                            });
+                            const data = await result.json();
+
+                            chatbotState.messages[aiIdx].content = data.success
+                                ? `🎉 **Tạo mã giảm giá thành công!**<br>• Mã: **${data.maVoucher}**<br>• Giảm: **${data.phanTramGiam}%**<br>• Hết hạn: ${data.ngayHetHan}<br><br>Dùng mã này khi thanh toán nhé Quý khách!`
+                                : `ℹ️ ${data.message}`;
+                            updateMessages();
+                            return;
+                        }
+                    }
+
                     chatbotState.messages[aiIdx].content = buf;
                     updateMessages();
                 } catch (_) { }
@@ -274,3 +340,4 @@ function resetChat() {
     try { sessionStorage.removeItem("lgw_chat_v3"); } catch (_) { }
     updateMessages();
 }
+

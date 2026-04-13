@@ -1,11 +1,15 @@
-﻿
+﻿/* =======================================================
+   CSS CHI TIẾT SẢN PHẨM (ĐÃ CHUẨN HÓA LUXURY THEME)
+   ======================================================= */
+
 .main-img-container {
     aspect-ratio: 1/1;
     position: relative;
-    border: 1px solid #eee;
+    border: 1px solid var(--lg-border, #ddd0b8); /* Đổi viền sang nâu nhạt */
     overflow: hidden;
     cursor: zoom-in;
-    background: #fff;
+    background: #fcf9f2; /* Nền vàng ngà cực nhẹ */
+    border-radius: 6px;
 }
 
 #imgChinh {
@@ -13,6 +17,7 @@
     height: 100%;
     object-fit: contain;
     transition: opacity 0.2s ease;
+    padding: 15px; /* Thêm padding để ảnh không bị sát viền */
 }
 
 .thumb-track-container {
@@ -33,18 +38,21 @@
     flex-shrink: 0;
     cursor: pointer;
     border: 2px solid transparent;
-    border-radius: 2px;
+    border-radius: 4px; /* Bo góc nhẹ 4px cho sang */
     overflow: hidden;
+    background: #f5ede0; /* Đổ nền ấm cho ảnh nhỏ */
 }
 
     .thumb-item img {
         width: 100%;
         height: 100%;
-        object-fit: cover;
+        object-fit: contain; /* Sửa thành contain để thấy trọn ảnh */
+        padding: 2px;
     }
 
+    /* ĐÃ FIX: Viền khi chọn ảnh nhỏ chuyển sang màu Nâu Đồng */
     .thumb-item.active {
-        border-color: #ee4d2d !important;
+        border-color: var(--lg-primary, #6a4010) !important;
     }
 
 .nav-btn {
@@ -55,17 +63,21 @@
     height: 28px;
     border-radius: 50%;
     background: #fff;
-    border: 1px solid #ddd;
+    border: 1px solid #ddd0b8; /* Viền nâu nhạt */
     z-index: 5;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(80,45,8,0.1); /* Đổ bóng ngả nâu */
+    color: #8a7055;
+    transition: all 0.2s;
 }
 
+    /* ĐÃ FIX: Hover nút điều hướng chuyển sang màu Cam Nâu sáng */
     .nav-btn:hover {
-        color: #ee4d2d;
+        color: var(--luxury-gold, #c8823a);
+        border-color: var(--luxury-gold, #c8823a);
     }
 
     .nav-btn.prev {
@@ -76,9 +88,9 @@
         right: 0;
     }
 
-/* Modal */
+/* Modal Phóng To Ảnh */
 .modal-content.bg-dark-custom {
-    background-color: rgba(0,0,0,0.9);
+    background-color: rgba(20, 15, 10, 0.95); /* Đổi màng đen tuyền thành màng đen ngả nâu ấm */
 }
 
 .btn-nav-modal {
@@ -90,11 +102,11 @@
     transition: 0.3s;
 }
 
+    /* ĐÃ FIX: Hover nút chuyển ảnh to sang Cam Nâu sáng */
     .btn-nav-modal:hover {
         opacity: 1;
-        color: #ee4d2d;
+        color: var(--luxury-gold, #c8823a);
     }
-
 
 .zoom-wrapper {
     width: 500px;
@@ -121,4 +133,48 @@
     border: none !important;
 }
 
+/* =======================================================
+   TRẠNG THÁI NÚT CHỌN BIẾN THỂ (LÀM MỜ)
+   ======================================================= */
 
+.btn-mmo {
+    opacity: 0.3 !important;
+    pointer-events: none !important;
+    cursor: not-allowed !important;
+    border-style: dashed !important;
+    background-color: #f8f9fa !important;
+}
+
+.btn-chon-bt {
+    border-radius: 4px !important;
+    transition: all 0.2s ease-in-out;
+}
+
+
+
+.nav-tabs {
+    border-bottom: 1px solid var(--lg-border, #ddd0b8) !important;
+}
+
+    .nav-tabs .nav-link {
+        color: #8a7055 !important; 
+        font-weight: 600;
+        font-size: 15px;
+        border: none !important; 
+        border-bottom: 3px solid transparent !important; 
+        border-radius: 0 !important;
+        padding: 10px 20px;
+        background-color: transparent !important;
+        transition: all 0.3s ease;
+    }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--luxury-gold, #c8823a) !important;
+            border-bottom-color: transparent !important;
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--lg-primary, #6a4010) !important; 
+            background-color: transparent !important;
+            border-bottom: 3px solid var(--lg-primary, #6a4010) !important;
+        }

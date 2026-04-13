@@ -2,97 +2,24 @@
 @{
     ViewData["Title"] = "Giỏ hàng";
 }
-<style>
-    .cart-img {
-        width: 80px;
-        height: 80px;
-        object-fit: cover;
-    }
 
-    .qty-wrap {
-        display: inline-flex;
-        align-items: center;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        overflow: hidden;
-    }
-
-    .qty-btn {
-        width: 32px;
-        height: 32px;
-        padding: 0;
-        border: none;
-        background: #f8f9fa;
-        cursor: pointer;
-        font-size: 11px;
-        color: #555;
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-        .qty-btn:hover {
-            background: #e9ecef;
-        }
-
-    .qty-input {
-        width: 42px;
-        height: 32px;
-        text-align: center;
-        border: none;
-        border-left: 1px solid #dee2e6;
-        border-right: 1px solid #dee2e6;
-        font-size: 13px;
-        outline: none;
-        padding: 0;
-    }
-
-    .bien-the-btn {
-        padding: 6px 14px;
-        border: 1px solid #dee2e6;
-        border-radius: 4px;
-        background: white;
-        cursor: pointer;
-        font-size: 13px;
-        transition: 0.15s;
-    }
-
-        .bien-the-btn:hover {
-            border-color: #ee4d2d;
-            color: #ee4d2d;
-        }
-
-        .bien-the-btn.active {
-            border-color: #ee4d2d;
-            color: #ee4d2d;
-            background: #fff5f3;
-            font-weight: 600;
-        }
-
-        .bien-the-btn.het-hang {
-            opacity: 0.4;
-            cursor: not-allowed;
-            text-decoration: line-through;
-        }
-</style>
-
-<div class="container-fluid page-header py-5">
+@* <div class="container-fluid page-header py-5" style="background: var(--lg-primary);">
     <h1 class="text-center text-white display-6">Giỏ hàng</h1>
-</div>
+</div> *@
+
 <div class="container-fluid py-5 mt-5">
     <div class="container py-5">
 
         @if (TempData["Success"] != null)
         {
-            <div class="alert alert-success alert-dismissible fade show">
+            <div class="alert alert-success alert-dismissible fade show" style="background-color: #e8f5ee; border-color: #5a8a6a; color: #1e4b30;">
                 <i class="fa fa-check-circle me-2"></i>@TempData["Success"]
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
         }
         @if (TempData["Error"] != null)
         {
-            <div class="alert alert-danger alert-dismissible fade show">
+            <div class="alert alert-danger alert-dismissible fade show" style="background-color: #fde8e8; border-color: #7a3030; color: #5a1010;">
                 <i class="fa fa-times-circle me-2"></i>@TempData["Error"]
                 <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
             </div>
@@ -100,21 +27,21 @@
 
         @if (!Model.Any())
         {
-            <div class="text-center py-5">
-                <i class="fa fa-shopping-cart fa-4x text-muted mb-3 d-block"></i>
-                <h4 class="text-muted">Giỏ hàng trống</h4>
-                <a asp-controller="SanPhams" asp-action="Index" class="btn btn-primary rounded-pill px-4 mt-3">
+            <div class="text-center py-5 summary-box">
+                <i class="fa fa-shopping-cart fa-4x mb-3 d-block" style="color: var(--lg-border);"></i>
+                <h4 style="color: var(--lg-primary);">Giỏ hàng trống</h4>
+                <a asp-controller="SanPhams" asp-action="Index" class="btn-detail rounded-pill px-5 mt-3 d-inline-block text-decoration-none fw-bold">
                     Tiếp tục mua sắm
                 </a>
             </div>
         }
         else
         {
-            <div class="table-responsive">
-                <table class="table align-middle">
-                    <thead class="table-light">
+            <div class="table-responsive summary-box p-3 mb-4">
+                <table class="table table-cart mb-0">
+                    <thead>
                         <tr>
-                            <th><input type="checkbox" id="checkAll" style="width:18px; height:18px; cursor:pointer;"></th>
+                            <th><input type="checkbox" id="checkAll"></th>
                             <th style="width:90px;">Ảnh</th>
                             <th>Sản phẩm</th>
                             <th class="text-center">Đơn giá</th>
@@ -129,31 +56,24 @@
                             <tr>
                                 <td>
                                     <input type="checkbox" class="item-check"
-                                           value="@item.MaBienThe"
-                                           data-gia="@item.DonGia"
-                                           data-soluong="@item.SoLuong"
-                                           data-tonkho="@item.SoLuongTon"
-                                           style="width:18px; height:18px; cursor:pointer;"
+                                           value="@item.MaBienThe" data-gia="@item.DonGia"
+                                           data-soluong="@item.SoLuong" data-tonkho="@item.SoLuongTon"
                                            @(item.SoLuongTon <= 0 ? "disabled" : "")>
                                 </td>
                                 <td>
                                     <a asp-controller="SanPhams" asp-action="Detail" asp-route-id="@item.MaSpGoc">
-                                        <img src="@(item.Hinh ?? "/home/img/no-image.jpg")"
-                                             class="cart-img rounded border" alt="@item.TenSp">
+                                        <img src="@(item.Hinh ?? "/home/img/no-image.jpg")" class="cart-img" alt="@item.TenSp">
                                     </a>
                                 </td>
                                 <td>
-                                    <p class="fw-bold mb-0">@item.TenSp</p>
+                                    <p class="fw-bold mb-1" style="color: var(--luxury-dark);">@item.TenSp</p>
                                     @if (!string.IsNullOrEmpty(item.TenThuongHieu))
                                     {
-                                        <small class="text-muted">@item.TenThuongHieu</small>
+                                        <small style="color: var(--bs-secondary); text-transform: uppercase; font-weight: 600;">@item.TenThuongHieu</small>
                                     }
 
-                                    <div class="mt-1">
-                                        <button type="button"
-                                                onclick="moModalDoiBienTheGH(@item.MaBienThe, @item.MaSpGoc, @item.SoLuong)"
-                                                class="btn btn-sm bg-light border rounded px-2 py-1 d-inline-flex align-items-center gap-1"
-                                                style="font-size:12px; color:#333;">
+                                    <div class="mt-2">
+                                        <button type="button" onclick="moModalDoiBienTheGH(@item.MaBienThe, @item.MaSpGoc, @item.SoLuong)" class="btn-change-variant d-inline-flex align-items-center gap-1">
                                             @if (!string.IsNullOrEmpty(item.MauSac))
                                             {
                                                 <span>@item.MauSac</span>
@@ -166,47 +86,38 @@
                                             {
                                                 <span>| @item.ChatLieuDay</span>
                                             }
-                                            <i class="fa fa-chevron-down" style="font-size:9px; color:#999;"></i>
+                                            <i class="fa fa-chevron-down ms-1" style="font-size:10px;"></i>
                                         </button>
                                     </div>
 
                                     @if (item.SoLuongTon <= 5 && item.SoLuongTon > 0)
                                     {
-                                        <small class="text-warning d-block mt-1">Còn @item.SoLuongTon sản phẩm</small>
+                                        <small class="d-block mt-2 fw-bold" style="color: var(--luxury-gold);">Còn @item.SoLuongTon sản phẩm</small>
                                     }
                                     @if (item.SoLuongTon == 0)
                                     {
-                                        <small class="text-danger fw-bold d-block mt-1">Hết hàng</small>
+                                        <small class="text-danger fw-bold d-block mt-2">Hết hàng</small>
                                     }
                                 </td>
-                                <td class="text-center text-danger fw-bold">
+                                <td class="text-center fw-bold" style="color: var(--luxury-dark);">
                                     @item.DonGia.ToString("#,##0") ₫
                                 </td>
                                 <td class="text-center">
                                     <div class="qty-wrap" style="margin:auto; width:fit-content;">
-                                        <button type="button" class="qty-btn btn-minus"
-                                                data-id="@item.MaBienThe" data-max="@item.SoLuongTon">
-                                            <i class="fa fa-minus"></i>
-                                        </button>
-                                        <input type="text" class="qty-input"
-                                               value="@item.SoLuong"
-                                               data-id="@item.MaBienThe"
-                                               data-max="@item.SoLuongTon"
-                                               data-gia="@item.DonGia">
-                                        <button type="button" class="qty-btn btn-plus"
-                                                data-id="@item.MaBienThe" data-max="@item.SoLuongTon">
-                                            <i class="fa fa-plus"></i>
-                                        </button>
+                                        <button type="button" class="qty-btn btn-minus" data-id="@item.MaBienThe" data-max="@item.SoLuongTon"><i class="fa fa-minus"></i></button>
+                                        <input type="text" class="qty-input" value="@item.SoLuong" data-id="@item.MaBienThe" data-max="@item.SoLuongTon" data-gia="@item.DonGia">
+                                        <button type="button" class="qty-btn btn-plus" data-id="@item.MaBienThe" data-max="@item.SoLuongTon"><i class="fa fa-plus"></i></button>
                                     </div>
                                 </td>
-                                <td class="text-end fw-bold text-danger" id="thanhTien-@item.MaBienThe">
+                                <td class="text-end fw-bold" id="thanhTien-@item.MaBienThe" style="color: var(--lg-primary); font-size: 1.1rem;">
                                     @item.ThanhTien.ToString("#,##0") ₫
                                 </td>
-                                <td>
+                                <td class="text-center">
                                     <a asp-action="RemoveCart" asp-route-id="@item.MaBienThe"
-                                       class="text-danger" title="Xóa"
+                                       style="color: #b8a898; transition: color 0.2s ease;" title="Xóa"
+                                       onmouseover="this.style.color='#7a3030'" onmouseout="this.style.color='#b8a898'"
                                        onclick="return confirm('Xóa sản phẩm này khỏi giỏ hàng?')">
-                                        <i class="fa fa-trash"></i>
+                                        <i class="fa fa-trash fa-lg"></i>
                                     </a>
                                 </td>
                             </tr>
@@ -217,19 +128,18 @@
 
             <div class="row justify-content-end mt-4">
                 <div class="col-lg-4">
-                    <div class="bg-light rounded p-4">
-                        <h5 class="fw-bold mb-3">Tóm tắt đơn hàng</h5>
-                        <div class="d-flex justify-content-between mb-2">
-                            <span>Đã chọn:</span>
-                            <span class="fw-bold"><span id="selectedCount">0</span> sản phẩm</span>
+                    <div class="summary-box p-4">
+                        <h5 class="fw-bold mb-3" style="color: var(--luxury-dark); border-bottom: 2px solid var(--lg-border); padding-bottom: 10px;">Tóm tắt đơn hàng</h5>
+                        <div class="d-flex justify-content-between mb-3">
+                            <span style="color: var(--bs-secondary);">Đã chọn:</span>
+                            <span class="fw-bold" style="color: var(--luxury-dark);"><span id="selectedCount">0</span> sản phẩm</span>
                         </div>
-                        <div class="d-flex justify-content-between mb-4 border-top pt-3">
-                            <h5 class="text-danger">Tổng thanh toán:</h5>
-                            <h5 class="text-danger fw-bold"><span id="totalPrice">0</span> ₫</h5>
+                        <div class="d-flex justify-content-between mb-4 pt-2">
+                            <h5 class="fw-bold" style="color: var(--luxury-dark);">Tổng thanh toán:</h5>
+                            <h4 class="fw-bold m-0" style="color: var(--lg-primary);"><span id="totalPrice">0</span> ₫</h4>
                         </div>
-                        <button type="button" id="btnMuaHang" onclick="proceedToCheckout()"
-                                class="btn w-100 py-3 fw-bold text-white"
-                                style="background-color:#ee4d2d;" disabled>
+
+                        <button type="button" id="btnMuaHang" onclick="proceedToCheckout()" class="btn-add w-100 py-3 fw-bold fs-6" disabled>
                             Mua hàng (<span id="btnCount">0</span>)
                         </button>
                     </div>
@@ -241,44 +151,40 @@
 
 <div class="modal fade" id="modalChonBienTheGH" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content border-0 shadow">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 8px;">
             <div class="modal-header border-0 pb-0">
                 <div>
-                    <h5 class="fw-bold mb-0" id="modalTenSpGH">Đang tải...</h5>
-                    <small class="text-muted" id="modalThuongHieuGH"></small>
+                    <h5 class="fw-bold mb-0" id="modalTenSpGH" style="color: var(--luxury-dark);">Đang tải...</h5>
+                    <small style="color: var(--bs-secondary); text-transform: uppercase; font-weight: 600;" id="modalThuongHieuGH"></small>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
-            <div class="modal-body pt-2">
+            <div class="modal-body pt-3">
                 <div class="mb-3 text-center">
-                    <img id="modalAnhBienTheGH" src="/home/img/no-image.jpg"
-                         style="width:120px; height:120px; object-fit:cover; border-radius:8px; border:1px solid #eee;">
+                    <img id="modalAnhBienTheGH" src="/home/img/no-image.jpg" style="width:140px; height:140px; object-fit:cover; border-radius:6px; border: 1px solid var(--lg-border); background: var(--lg-bg);">
                 </div>
-                <div class="bg-light rounded p-3 mb-3 text-center">
-                    <h4 class="text-danger fw-bold mb-0" id="modalGiaGH">--</h4>
+                <div class="rounded p-3 mb-4 text-center" style="background-color: var(--lg-bg); border: 1px solid var(--lg-border);">
+                    <h3 class="fw-bold mb-0" id="modalGiaGH" style="color: var(--lg-primary);">--</h3>
                 </div>
-                <div id="modalBienTheListGH" class="d-flex flex-wrap gap-2 mb-3"></div>
-                <div id="modalHetHangGH" class="text-danger text-center fw-bold d-none">
+
+                <div id="modalBienTheListGH" class="d-flex flex-wrap gap-2 mb-4"></div>
+
+                <div id="modalHetHangGH" class="text-danger text-center fw-bold d-none mb-3">
                     <i class="fa fa-times-circle me-1"></i>Biến thể này đã hết hàng
                 </div>
-                <div class="d-flex align-items-center gap-3 mb-3">
-                    <span class="fw-bold">Số lượng:</span>
+
+                <div class="d-flex align-items-center gap-3 mb-2 p-3 rounded" style="background-color: var(--lg-bg); border: 1px dashed var(--lg-border);">
+                    <span class="fw-bold" style="color: var(--luxury-dark);">Số lượng:</span>
                     <div class="qty-wrap">
-                        <button type="button" id="modalBtnMinusGH" class="qty-btn">
-                            <i class="fa fa-minus"></i>
-                        </button>
+                        <button type="button" id="modalBtnMinusGH" class="qty-btn"><i class="fa fa-minus"></i></button>
                         <input type="text" id="modalSoLuongGH" class="qty-input" value="1">
-                        <button type="button" id="modalBtnPlusGH" class="qty-btn">
-                            <i class="fa fa-plus"></i>
-                        </button>
+                        <button type="button" id="modalBtnPlusGH" class="qty-btn"><i class="fa fa-plus"></i></button>
                     </div>
-                    <small class="text-muted" id="modalTonKhoGH"></small>
+                    <small class="fw-bold" style="color: var(--luxury-gold);" id="modalTonKhoGH"></small>
                 </div>
             </div>
-            <div class="modal-footer border-0 pt-0">
-                <button type="button" id="modalBtnXacNhanGH"
-                        class="btn btn-primary rounded-pill px-4 fw-bold flex-grow-1"
-                        onclick="xacNhanDoiBienTheGH()">
+            <div class="modal-footer border-0 pt-0 pb-4 px-4">
+                <button type="button" id="modalBtnXacNhanGH" class="btn-add w-100 py-3 fw-bold fs-6" onclick="xacNhanDoiBienTheGH()">
                     Xác nhận đổi
                 </button>
             </div>

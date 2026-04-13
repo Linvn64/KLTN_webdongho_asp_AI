@@ -2,23 +2,42 @@
 
 <style>
     .review-content-html img {
-        max-width: 150px; 
+        max-width: 150px;
         height: auto;
-        border-radius: 8px;
+        border-radius: 6px;
         margin-top: 10px;
         display: block;
-        border: 1px solid #eee;
+        border: 1px solid var(--lg-border, #ddd0b8); /* Viền màu nâu nhạt */
     }
+
+    /* CSS riêng cho nút lọc đánh giá để chuẩn màu Luxury */
+    .filter-btn {
+        background: #fff;
+        border: 1px solid var(--lg-border, #ddd0b8);
+        color: var(--luxury-dark, #2c1f0e);
+        transition: all 0.2s ease;
+    }
+
+        .filter-btn:hover {
+            background-color: #f5ede0; /* Hover màu nền ấm */
+            color: var(--lg-primary, #6a4010);
+        }
+
+        .filter-btn.active {
+            background-color: var(--lg-primary, #6a4010) !important; /* Khi chọn nền nâu đồng */
+            color: #fff !important;
+            border-color: var(--lg-primary, #6a4010) !important;
+        }
 </style>
 
-<div class="rating-filter mb-4 p-3 bg-light rounded d-flex align-items-center gap-2 flex-wrap">
-    <span class="fw-bold me-2">Bộ lọc:</span>
-    <button class="btn btn-sm btn-outline-danger filter-btn active" data-star="all">Tất cả</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="5">5 Sao</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="4">4 Sao</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="3">3 Sao</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="2">2 Sao</button>
-    <button class="btn btn-sm btn-outline-secondary filter-btn" data-star="1">1 Sao</button>
+<div class="rating-filter mb-4 p-3 rounded d-flex align-items-center gap-2 flex-wrap" style="background-color: #fcf9f2; border: 1px solid var(--lg-border, #ddd0b8);">
+    <span class="fw-bold me-2" style="color: var(--luxury-dark, #2c1f0e);">Bộ lọc:</span>
+    <button class="btn btn-sm filter-btn active" data-star="all">Tất cả</button>
+    <button class="btn btn-sm filter-btn" data-star="5">5 Sao</button>
+    <button class="btn btn-sm filter-btn" data-star="4">4 Sao</button>
+    <button class="btn btn-sm filter-btn" data-star="3">3 Sao</button>
+    <button class="btn btn-sm filter-btn" data-star="2">2 Sao</button>
+    <button class="btn btn-sm filter-btn" data-star="1">1 Sao</button>
 </div>
 
 <div id="danhgia-container">
@@ -30,23 +49,24 @@
     {
         foreach (var dg in Model.DanhGias)
         {
-            @* Thêm class dg-item và data-star để JavaScript xử lý *@
-            <div class="border-bottom mb-3 pb-3 dg-item" data-star="@dg.SoSao" style="display: none;">
+            <div class="border-bottom mb-3 pb-3 dg-item" data-star="@dg.SoSao" style="display: none; border-color: var(--lg-border, #ddd0b8) !important;">
                 <div class="d-flex justify-content-between">
-                    <strong class="text-dark">@dg.TenNguoiDung</strong>
+                    <strong style="color: var(--luxury-dark, #2c1f0e);">@dg.TenNguoiDung</strong>
                     <small class="text-muted">@dg.NgayDanhGia.ToString("dd/MM/yyyy")</small>
                 </div>
-                <div class="text-warning my-1">
+
+                <div class="my-1">
                     @for (int i = 1; i <= 5; i++)
                     {
-                        <i class="fa fa-star @(i <= dg.SoSao ? "fas" : "far text-muted")"></i>
+                        <i class="fa fa-star @(i <= dg.SoSao ? "fas" : "far text-muted")" style="color: @(i <= dg.SoSao ? "var(--luxury-gold, #c8823a)" : "");"></i>
                     }
                     @if (!string.IsNullOrEmpty(dg.TenBienThe))
                     {
                         <small class="text-muted ms-2 fw-normal">| Phân loại: @dg.TenBienThe</small>
                     }
                 </div>
-                <div class="review-content-html mb-0 text-secondary" style="font-size: 14px;">
+
+                <div class="review-content-html mb-0" style="font-size: 14px; color: #4a3a28;">
                     @Html.Raw(dg.NoiDung)
                 </div>
             </div>
@@ -57,7 +77,7 @@
 @if (Model.DanhGias != null && Model.DanhGias.Count > 5)
 {
     <div class="text-center mt-3">
-        <button id="btn-load-more" class="btn btn-outline-danger btn-sm px-4">Xem thêm đánh giá</button>
+        <button id="btn-load-more" class="btn-detail px-4 fw-bold mx-auto" style="width: max-content;">Xem thêm đánh giá</button>
     </div>
 }
 
@@ -84,7 +104,6 @@
                 }
             });
 
-            // Ẩn/hiện nút xem thêm
             const totalFiltered = Array.from(items).filter(item =>
                 currentFilter === 'all' || item.getAttribute('data-star') === currentFilter
             ).length;
@@ -94,14 +113,14 @@
             }
         }
 
-        // Xử lý lọc sao
+        // Xử lý lọc sao (Đã tối ưu lại JS không dùng class Danger nữa)
         document.querySelectorAll('.filter-btn').forEach(btn => {
             btn.addEventListener('click', function () {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.replace('btn-outline-danger', 'btn-outline-secondary'));
-                this.classList.replace('btn-outline-secondary', 'btn-outline-danger');
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
 
                 currentFilter = this.getAttribute('data-star');
-                visibleCount = 5; // Reset về 5 khi đổi lọc
+                visibleCount = 5;
                 updateDisplay();
             });
         });
@@ -114,7 +133,6 @@
             });
         }
 
-        // Chạy lần đầu
         updateDisplay();
     });
 </script>

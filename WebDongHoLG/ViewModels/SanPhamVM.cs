@@ -16,6 +16,8 @@ namespace WebDongHoLG.ViewModels
         public string? DoiTuong { get; set; }
         public int SoBienThe { get; set; }
         public bool ConHang { get; set; }
+        public int LuotBan { get; set; }
+        public DateTime? NgayTao { get; set; }
     }
 
     //public class ChiTietSanPhamVM
@@ -46,6 +48,7 @@ namespace WebDongHoLG.ViewModels
         public string? ImageUrl { get; set; }
         public int SoLuongTon { get; set; }
         public List<string> HinhAnhs { get; set; } = new();
+        
     }
 
     //public class DanhGiaVM

@@ -84,50 +84,53 @@
         @foreach (var item in Model)
         {
             var firstBT = item.BienTheSanPhams?.FirstOrDefault();
-            <div class="col-6 col-md-4 col-lg-3">
-                <div class="product-box bg-white h-100 border-0 text-center position-relative shadow-sm p-3">
-                    <a asp-controller="SanPhams" asp-action="Detail" asp-route-id="@item.MaSp" class="text-decoration-none text-dark">
-                        <div class="product-image-container mb-3">
-                            <img src="@(firstBT?.ImageUrl ?? "/images/no-image.jpg")" class="img-fluid" alt="@item.TenSanPham">
+
+            bool conHangDeBan = item.BienTheSanPhams != null &&
+            item.BienTheSanPhams.Any(bt => bt.Khos != null && bt.Khos.Sum(k => k.SoLuongTon) > 0);
+
+            <div class="col-6 col-md-4 col-lg-3 mb-4">
+                <div class="sp-card h-100">
+
+                    <div class="sp-img-wrap">
+                        <div class="fruite-img-inner">
+                            <a asp-action="Detail" asp-controller="SanPhams" asp-route-id="@item.MaSp">
+                                <img src="@(firstBT?.ImageUrl ?? "/images/no-image.jpg")" alt="@item.TenSanPham">
+                            </a>
                         </div>
-
-                        <div class="product-info">
-                            <p class="text-muted small mb-1 uppercase" style="letter-spacing: 1px;">
-                                @item.ThuongHieuNavigation?.TenThuongHieu
-                            </p>
-                            <h3 class="product-title fs-6 fw-bold text-truncate px-2">@item.TenSanPham</h3>
-                            <p class="product-price mt-2 mb-0">
-                                <span class="sale-price text-danger fw-bold fs-5">
-                                    @(firstBT?.GiaBan?.ToString("N0") ?? "Liên hệ") ₫
-                                </span>
-                            </p>
-                        </div>
-                    </a>
-
-                    @{
-                        bool conHangDeBan = item.BienTheSanPhams != null &&
-                        item.BienTheSanPhams.Any(bt => bt.Khos != null && bt.Khos.Sum(k => k.SoLuongTon) > 0);
-                    }
-
-                    <div class="product-actions mt-3">
-                        @if (conHangDeBan)
-                        {
-                            <button type="button"
-                                    onclick="moModalMuaNgay(@item.MaSp)"
-                                    class="btn btn-primary rounded-pill px-3 py-2 w-100 text-center shadow-sm">
-                                <i class="fa fa-shopping-bag me-1"></i>MUA NGAY
-                            </button>
-                        }
-                        else
-                        {
-                            <button type="button"
-                                    class="btn btn-secondary rounded-pill px-3 py-2 w-100 text-center shadow-sm"
-                                    disabled style="cursor: not-allowed; opacity: 0.6;">
-                                <i class="fa fa-pause-circle me-1"></i>TẠM HẾT HÀNG
-                            </button>
-                        }
                     </div>
 
+                    <div class="sp-body">
+                        @if (item.ThuongHieuNavigation != null)
+                        {
+                            <div class="sp-brand">@item.ThuongHieuNavigation.TenThuongHieu</div>
+                        }
+
+                        <a asp-action="Detail" asp-controller="SanPhams" asp-route-id="@item.MaSp" class="text-decoration-none">
+                            <div class="sp-name">@item.TenSanPham</div>
+                        </a>
+
+                        <div class="mt-auto">
+                            <div class="sp-price">
+                                @(firstBT?.GiaBan?.ToString("N0") ?? "Liên hệ") ₫
+                            </div>
+
+                            <div class="sp-btns">
+                                @if (conHangDeBan)
+                                {
+                                    <button type="button" onclick="moModalMuaNgay(@item.MaSp)" class="btn-add">
+                                        <i class="fa fa-shopping-bag me-1"></i>MUA NGAY
+                                    </button>
+                                }
+                                else
+                                {
+                                    <button type="button" class="btn-disabled" disabled>
+                                        <i class="fa fa-pause-circle me-1"></i>TẠM HẾT HÀNG
+                                    </button>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         }

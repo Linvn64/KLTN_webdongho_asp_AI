@@ -7,91 +7,67 @@
 
 @section Styles {
     <style>
+        /* Đồng bộ tông màu Luxury cho trang Đơn Hàng */
         body {
-            background-color: #f5f5f5;
+            background-color: var(--lg-bg, #fcf9f2);
         }
 
+        /* Tabs phân loại đơn hàng */
         .shopee-tabs {
             display: flex;
-            background: #fff;
-            box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
+            background: var(--bs-white, #fff);
+            border: 1px solid var(--lg-border, #ddd0b8);
+            border-radius: 6px;
             overflow-x: auto;
-            border-radius: 4px;
+            box-shadow: 0 4px 16px rgba(80,45,8,0.05);
         }
 
         .shopee-tab-item {
             flex: 1;
             text-align: center;
             padding: 16px 10px;
-            color: #212121;
+            color: var(--bs-secondary, #8a7055);
             text-decoration: none;
             font-size: 15px;
-            border-bottom: 2px solid transparent;
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
             white-space: nowrap;
-            transition: 0.2s;
+            transition: all 0.3s ease;
         }
 
             .shopee-tab-item.active {
-                color: #ee4d2d;
-                border-bottom: 2px solid #ee4d2d;
+                color: var(--lg-primary, #6a4010);
+                border-bottom-color: var(--lg-primary, #6a4010);
+                font-weight: 700;
             }
 
             .shopee-tab-item:hover {
-                color: #ee4d2d;
+                color: var(--luxury-gold, #c8823a);
+                background-color: #fdf5e8;
             }
 
+        /* Khối hiển thị đơn hàng */
         .order-card {
-            background: #fff;
-            box-shadow: 0 1px 1px 0 rgba(0,0,0,.05);
-            border-radius: 3px;
-            border: 1px solid #eee;
+            background: var(--bs-white, #fff);
+            border-radius: 6px;
+            border: 1px solid var(--lg-border, #ddd0b8);
+            box-shadow: 0 4px 16px rgba(80,45,8,0.05);
         }
 
         .product-img {
             width: 80px;
             height: 80px;
             object-fit: cover;
-            border: 1px solid #eee;
-            border-radius: 2px;
+            border: 1px solid var(--lg-border, #ddd0b8);
+            border-radius: 4px;
+            background-color: var(--lg-bg, #fcf9f2);
         }
-
-        .btn-shopee {
-            background-color: #ee4d2d;
-            color: #fff !important;
-            border: 1px solid #ee4d2d;
-            border-radius: 2px;
-            padding: 8px 20px;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-block;
-            cursor: pointer;
-        }
-
-            .btn-shopee:hover {
-                background-color: #d73211;
-            }
-
-        .btn-shopee-outline {
-            background-color: #fff;
-            color: #555 !important;
-            border: 1px solid #ccc;
-            border-radius: 2px;
-            padding: 8px 20px;
-            font-weight: 500;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-            .btn-shopee-outline:hover {
-                background-color: #f8f9fa;
-                border-color: #999;
-            }
     </style>
 }
 
-<div class="container py-4">
+<div class="container py-5 mt-4">
     @* --- Tab trạng thái --- *@
-    <div class="shopee-tabs mb-3">
+    <div class="shopee-tabs mb-4">
         <a href="/DonHangKhach/Index" class="shopee-tab-item @(string.IsNullOrEmpty(currentStatus) ? "active" : "")">Tất cả</a>
         <a href="/DonHangKhach/Index?status=Chờ thanh toán" class="shopee-tab-item @(currentStatus == "Chờ thanh toán" ? "active" : "")">Chờ thanh toán</a>
         <a href="/DonHangKhach/Index?status=Chờ xác nhận" class="shopee-tab-item @(currentStatus == "Chờ xác nhận" ? "active" : "")">Chờ xác nhận</a>
@@ -102,17 +78,18 @@
     </div>
 
     @* --- Thanh tìm kiếm --- *@
-    <form method="get" action="/DonHangKhach/Index" class="bg-white p-2 mb-3 rounded d-flex align-items-center shadow-sm" style="border: 1px solid #e1e1e1;">
+    <form method="get" action="/DonHangKhach/Index" class="bg-white p-2 mb-4 rounded d-flex align-items-center" style="border: 1px solid var(--lg-border, #ddd0b8); box-shadow: 0 4px 16px rgba(80,45,8,0.05);">
         <input type="hidden" name="status" value="@currentStatus" />
-        <i class="fas fa-search text-muted ms-2 me-2"></i>
-        <input type="text" name="searchString" value="@ViewBag.SearchString" class="border-0 bg-transparent flex-grow-1" style="outline: none;" placeholder="Tìm kiếm theo ID đơn hàng hoặc Tên Sản phẩm">
-        <button type="submit" class="btn btn-sm btn-dark px-3">Tìm kiếm</button>
+        <i class="fas fa-search ms-3 me-2" style="color: var(--bs-secondary, #8a7055);"></i>
+        <input type="text" name="searchString" value="@ViewBag.SearchString" class="border-0 bg-transparent flex-grow-1" style="outline: none; color: var(--luxury-dark);" placeholder="Tìm kiếm theo ID đơn hàng hoặc Tên Sản phẩm">
+        <button type="submit" class="btn btn-add px-4 py-2" style="width: auto;">Tìm kiếm</button>
     </form>
 
     @if (Model == null || !Model.Any())
     {
-        <div class="text-center py-5 bg-white rounded shadow-sm">
-            <h5 class="text-muted">Không tìm thấy đơn hàng nào</h5>
+        <div class="text-center py-5 bg-white rounded" style="border: 1px solid var(--lg-border); box-shadow: 0 4px 16px rgba(80,45,8,0.05);">
+            <i class="fas fa-box-open fa-3x mb-3" style="color: var(--lg-border);"></i>
+            <h5 style="color: var(--bs-secondary);">Không tìm thấy đơn hàng nào</h5>
         </div>
     }
     else
@@ -121,13 +98,13 @@
         {
             var trangThai = (don.TrangThai ?? "").Trim();
 
-            <div class="order-card p-4 mb-3">
-                <div class="d-flex justify-content-between align-items-center border-bottom pb-2 mb-3">
+            <div class="order-card p-4 mb-4">
+                <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3" style="border-color: var(--lg-border) !important;">
                     <div>
-                        <span class="badge bg-danger me-2 text-white px-2 py-1">Mall</span>
-                        <span class="fw-bold text-dark">Mã đơn: #@don.MaDonHang</span>
+                        <span class="badge me-2 text-white px-2 py-1" style="background-color: var(--luxury-gold, #c8823a);">LG Mall</span>
+                        <span class="fw-bold" style="color: var(--luxury-dark);">Mã đơn: #@don.MaDonHang</span>
                     </div>
-                    <div class="text-danger fw-bold text-uppercase d-flex align-items-center">
+                    <div class="fw-bold text-uppercase d-flex align-items-center" style="color: var(--lg-primary, #6a4010);">
                         <i class="fas fa-truck me-2"></i>
                         @trangThai
                     </div>
@@ -138,119 +115,111 @@
                     <div class="d-flex align-items-center mb-3">
                         <img src="@(ct.MaBienTheNavigation?.ImageUrl ?? "/home/img/no-image.jpg")" class="product-img me-3">
                         <div class="flex-grow-1">
-                            <h6 class="mb-1 text-dark fw-bold">@ct.MaBienTheNavigation?.MaSpNavigation?.TenSanPham</h6>
-                            <div class="text-muted" style="font-size: 13px;">
+                            <h6 class="mb-1 fw-bold" style="color: var(--luxury-dark);">@ct.MaBienTheNavigation?.MaSpNavigation?.TenSanPham</h6>
+                            <div style="font-size: 13px; color: var(--bs-secondary);">
                                 Phân loại: @ct.MaBienTheNavigation?.MauSac, @ct.MaBienTheNavigation?.DuongKinhMat mm
                             </div>
-                            <div class="mt-1 text-secondary">x@(ct.SoLuong)</div>
+                            <div class="mt-1" style="color: var(--bs-secondary);">x@(ct.SoLuong)</div>
                         </div>
-                        <div class="text-end text-danger fw-bold">
+                        <div class="text-end fw-bold" style="color: var(--luxury-dark);">
                             @((ct.DonGiaTaiThoiDiem ?? 0).ToString("#,##0"))₫
                         </div>
                     </div>
                 }
 
-                <div class="border-top pt-3 text-end">
+                <div class="border-top pt-3 text-end" style="border-color: var(--lg-border) !important;">
                     <div class="mb-3">
-                        <span class="me-2 text-muted">Thành tiền:</span>
-                        <span class="text-danger fw-bold" style="font-size: 22px;">@((don.TongTien ?? 0).ToString("#,##0"))₫</span>
+                        <span class="me-2" style="color: var(--bs-secondary);">Thành tiền:</span>
+                        <span class="fw-bold" style="font-size: 22px; color: var(--lg-primary, #6a4010);">@((don.TongTien ?? 0).ToString("#,##0"))₫</span>
                     </div>
 
                     <div class="d-flex justify-content-end gap-2 align-items-center">
-                        <div class="d-flex justify-content-end gap-2 align-items-center">
-                            @if (trangThai == "Chờ thanh toán")
+                        @if (trangThai == "Chờ thanh toán")
+                        {
+                            var thoiGianHetHan = don.NgayDat.Value.AddMinutes(15);
+                            var soGiayConLai = (thoiGianHetHan - DateTime.Now).TotalSeconds;
+                            if (soGiayConLai > 0)
                             {
-                                var thoiGianHetHan = don.NgayDat.Value.AddMinutes(15);
-                                var soGiayConLai = (thoiGianHetHan - DateTime.Now).TotalSeconds;
-                                if (soGiayConLai > 0)
-                                {
-                                    <div class="text-warning small me-2">
-                                        <i class="far fa-clock"></i> Thanh toán trong:
-                                        <b class="countdown text-danger" data-seconds="@soGiayConLai">--:--</b>
-                                    </div>
-                                }
-                                <a href="/Checkout/PaymentPending?maDonHang=@don.MaDonHang" class="btn btn-shopee">Thanh toán lại</a>
-                                <button type="button" onclick="confirmHuy(@don.MaDonHang)" class="btn btn-shopee-outline">Hủy đơn</button>
-                            }
-                            else if (trangThai == "Chờ xác nhận" || trangThai == "Chờ xử lý" || trangThai == "Đã thanh toán")
-                            {
-                                if (trangThai == "Đã thanh toán" || trangThai == "Chờ xác nhận")
-                                {
-                                    <span class="text-success small me-2 fw-bold"><i class="fas fa-check-circle"></i> Đã thanh toán</span>
-                                }
-                                <button type="button" onclick="confirmHuy(@don.MaDonHang)" class="btn btn-shopee-outline text-danger">Hủy đơn hàng</button>
-                                <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
-                            }
-                            else if (trangThai == "Đang giao hàng" || trangThai == "Đã giao hàng")
-                            {
-                                var ngayDuocPhepNhan = don.NgayDat.Value.AddDays(3);
-
-                                if (trangThai == "Đã giao hàng" || DateTime.Now >= ngayDuocPhepNhan)
-                                {
-                                    <button type="button" onclick="confirmDaNhan(@don.MaDonHang)" class="btn btn-shopee shadow-sm">
-                                        <i class="fas fa-box-open me-1"></i> Đã nhận được hàng
-                                    </button>
-                                }
-                                else
-                                {
-                                    <div class="text-start me-auto">
-                                        <span class="badge bg-warning-lt text-warning fw-bold border border-warning px-2 py-1">
-                                            <i class="fas fa-truck-moving me-1"></i> Đang vận chuyển...
-                                        </span>
-                                        <div class="small text-muted mt-1" style="font-size: 11px;">Mở nhận hàng ngày: @ngayDuocPhepNhan.ToString("dd/MM")</div>
-                                    </div>
-                                }
-                                <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
-                            }
-                            else if (trangThai == "Hoàn thành")
-                            {
-                                <div class="w-100">
-                                    @foreach (var ct in don.ChiTietDonHangs)
-                                    {
-                                        // 1. Lấy thông tin định danh duy nhất cho từng món hàng
-                                        var maSpNay = ct.MaBienTheNavigation?.MaSp ?? 0;
-                                        var maBienTheNay = ct.MaBienThe;
-                                        var maDonHangNay = don.MaDonHang;
-
-                                        // 2. Tạo Key để check: Phải có cả MaBienThe để phân biệt Vàng/Đen
-                                        // Key này phải khớp với cách Giang viết trong DonHangKhachController
-                                        var key = $"{maSpNay}_{maBienTheNay}_{maDonHangNay}";
-                                        bool daDanhGia = daDanhGiaList.Contains(key);
-
-                                        <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
-                                            <div class="d-flex align-items-center">
-                                                @* Hiện ảnh nhỏ của biến thể để khách không bấm nhầm *@
-                                                <img src="@(ct.MaBienTheNavigation?.ImageUrl ?? "/home/img/no-image.jpg")"
-                                                     style="width:30px; height:30px; object-fit:cover; border-radius:3px;" class="me-2">
-                                                <span class="text-dark" style="font-size:13px;">
-                                                    @ct.MaBienTheNavigation?.MaSpNavigation?.TenSanPham
-                                                    <small class="text-muted">(@ct.MaBienTheNavigation?.MauSac - @ct.MaBienTheNavigation?.DuongKinhMat mm)</small>
-                                                </span>
-                                            </div>
-
-                                            @if (daDanhGia)
-                                            {
-                                                <span class="badge bg-success-lt text-success fw-bold px-2 py-1">
-                                                    <i class="fas fa-check-circle me-1"></i> Đã đánh giá
-                                                </span>
-                                            }
-                                            else
-                                            {
-                                                @* 3. Truyền đủ 3 tham số để trang Create biết chính xác là món nào *@
-                                                <a href="/DanhGia/Create?maSp=@maSpNay&maDonHang=@maDonHangNay&maBienThe=@maBienTheNay"
-                                                   class="btn btn-shopee btn-sm">
-                                                    ⭐ Đánh giá
-                                                </a>
-                                            }
-                                        </div>
-                                    }
-                                    <div class="d-flex justify-content-end gap-2 mt-3">
-                                        <a href="/SanPhams/Detail/@don.ChiTietDonHangs.FirstOrDefault()?.MaBienTheNavigation?.MaSp" class="btn btn-shopee">Mua lại</a>
-                                        <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn btn-shopee-outline">Xem chi tiết</a>
-                                    </div>
+                                <div class="small me-3" style="color: var(--luxury-gold);">
+                                    <i class="far fa-clock"></i> Thanh toán trong:
+                                    <b class="countdown" style="color: #7a3030;" data-seconds="@soGiayConLai">--:--</b>
                                 </div>
                             }
-                        </div>
+                            <a href="/Checkout/PaymentPending?maDonHang=@don.MaDonHang" class="btn-add d-inline-block text-decoration-none px-4" style="width: auto;">Thanh toán lại</a>
+                            <button type="button" onclick="confirmHuy(@don.MaDonHang)" class="btn-detail px-4" style="width: auto;">Hủy đơn</button>
+                        }
+                        else if (trangThai == "Chờ xác nhận" || trangThai == "Chờ xử lý" || trangThai == "Đã thanh toán")
+                        {
+                            if (trangThai == "Đã thanh toán" || trangThai == "Chờ xác nhận")
+                            {
+                                <span class="small me-3 fw-bold" style="color: #5a8a6a;"><i class="fas fa-check-circle"></i> Đã thanh toán</span>
+                            }
+                            <button type="button" onclick="confirmHuy(@don.MaDonHang)" class="btn-detail px-4" style="color: #7a3030; border-color: #d8ccc0; width: auto;">Hủy đơn hàng</button>
+                            <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn-detail d-inline-block text-decoration-none px-4" style="width: auto;">Xem chi tiết</a>
+                        }
+                        else if (trangThai == "Đang giao hàng" || trangThai == "Đã giao hàng")
+                        {
+                            var ngayDuocPhepNhan = don.NgayDat.Value.AddDays(3);
+
+                            if (trangThai == "Đã giao hàng" || DateTime.Now >= ngayDuocPhepNhan)
+                            {
+                                <button type="button" onclick="confirmDaNhan(@don.MaDonHang)" class="btn-add px-4" style="width: auto;">
+                                    <i class="fas fa-box-open me-1"></i> Đã nhận được hàng
+                                </button>
+                            }
+                            else
+                            {
+                                <div class="text-start me-auto ps-2">
+                                    <span class="badge fw-bold px-2 py-1" style="background-color: #fdf5e8; color: var(--luxury-gold); border: 1px solid var(--luxury-gold);">
+                                        <i class="fas fa-truck-moving me-1"></i> Đang vận chuyển...
+                                    </span>
+                                    <div class="small mt-1" style="font-size: 11px; color: var(--bs-secondary);">Mở nhận hàng ngày: @ngayDuocPhepNhan.ToString("dd/MM")</div>
+                                </div>
+                            }
+                            <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn-detail d-inline-block text-decoration-none px-4" style="width: auto;">Xem chi tiết</a>
+                        }
+                        else if (trangThai == "Hoàn thành")
+                        {
+                            <div class="w-100">
+                                @foreach (var ct in don.ChiTietDonHangs)
+                                {
+                                    var maSpNay = ct.MaBienTheNavigation?.MaSp ?? 0;
+                                    var maBienTheNay = ct.MaBienThe;
+                                    var maDonHangNay = don.MaDonHang;
+                                    var key = $"{maSpNay}_{maBienTheNay}_{maDonHangNay}";
+                                    bool daDanhGia = daDanhGiaList.Contains(key);
+
+                                    <div class="d-flex justify-content-between align-items-center py-2 border-bottom" style="border-color: var(--lg-border) !important;">
+                                        <div class="d-flex align-items-center">
+                                            <img src="@(ct.MaBienTheNavigation?.ImageUrl ?? "/home/img/no-image.jpg")"
+                                                 style="width:35px; height:35px; object-fit:cover; border-radius:4px; border: 1px solid var(--lg-border);" class="me-3">
+                                            <span style="font-size:14px; color: var(--luxury-dark);">
+                                                @ct.MaBienTheNavigation?.MaSpNavigation?.TenSanPham
+                                                <small style="color: var(--bs-secondary);">(@ct.MaBienTheNavigation?.MauSac - @ct.MaBienTheNavigation?.DuongKinhMat mm)</small>
+                                            </span>
+                                        </div>
+
+                                        @if (daDanhGia)
+                                        {
+                                            <span class="badge fw-bold px-2 py-1" style="background-color: #e8f5ee; color: #5a8a6a; border: 1px solid #5a8a6a;">
+                                                <i class="fas fa-check-circle me-1"></i> Đã đánh giá
+                                            </span>
+                                        }
+                                        else
+                                        {
+                                            <a href="/DanhGia/Create?maSp=@maSpNay&maDonHang=@maDonHangNay&maBienThe=@maBienTheNay"
+                                               class="btn-add btn-sm d-inline-block text-decoration-none px-3" style="width: auto;">
+                                                ⭐ Đánh giá
+                                            </a>
+                                        }
+                                    </div>
+                                }
+                                <div class="d-flex justify-content-end gap-2 mt-3">
+                                    <a href="/SanPhams/Detail/@don.ChiTietDonHangs.FirstOrDefault()?.MaBienTheNavigation?.MaSp" class="btn-add d-inline-block text-decoration-none px-4" style="width: auto;">Mua lại</a>
+                                    <a href="/DonHangKhach/Details/@don.MaDonHang" class="btn-detail d-inline-block text-decoration-none px-4" style="width: auto;">Xem chi tiết</a>
+                                </div>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>
@@ -274,7 +243,8 @@
                     'Không còn nhu cầu': 'Không còn nhu cầu mua nữa'
                 },
                 showCancelButton: true,
-                confirmButtonColor: '#ee4d2d',
+                confirmButtonColor: '#6a4010', // Đổi màu xác nhận sang Nâu đồng
+                cancelButtonColor: '#8a7055',  // Đổi màu nút hủy sang Nâu xám
                 confirmButtonText: 'Hủy đơn ngay',
                 cancelButtonText: 'Quay lại'
             }).then((result) => {
@@ -290,7 +260,8 @@
                 text: "Bạn đã kiểm tra và hài lòng với sản phẩm?",
                 icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#28a745',
+                confirmButtonColor: '#5a8a6a', // Màu xanh rêu sang trọng
+                cancelButtonColor: '#8a7055',
                 confirmButtonText: 'Đã nhận hàng',
                 cancelButtonText: 'Chưa nhận'
             }).then((result) => {

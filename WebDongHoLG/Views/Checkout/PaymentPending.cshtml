@@ -7,15 +7,17 @@
     <div class="row justify-content-center">
         <div class="col-lg-6">
             <div class="text-center mb-4">
-                <i class="fas fa-clock fa-4x text-warning mb-3"></i>
+                <i class="fas fa-clock fa-4x mb-3" style="color:var(--lg-primary);"></i>
                 <h3 class="fw-bold">Đơn hàng chờ thanh toán</h3>
                 <p class="text-muted">Mã đơn: <strong>#@Model.MaDonHang</strong></p>
-                <h4 class="text-danger fw-bold">@Model.TongTien?.ToString("#,##0") ₫</h4>
+                <h4 class="fw-bold" style="color:var(--lg-primary);">@Model.TongTien?.ToString("#,##0") ₫</h4>
             </div>
 
-            <div class="card shadow-sm mb-4">
+            <div class="card shadow-sm mb-4" style="border-top: 4px solid var(--lg-primary);">
                 <div class="card-body">
-                    <h5 class="fw-bold mb-3 border-bottom pb-2">Tóm tắt đơn hàng</h5>
+                    <h5 class="fw-bold mb-3 border-bottom pb-2" style="color:var(--lg-primary);">
+                        Tóm tắt đơn hàng
+                    </h5>
                     @foreach (var ct in Model.ChiTietDonHangs)
                     {
                         <div class="d-flex justify-content-between mb-2">
@@ -35,12 +37,9 @@
                     </div>
                     @if (Model.TienGiamGia > 0)
                     {
-                        <div class="d-flex justify-content-between small mb-1 text-success">
+                        <div class="d-flex justify-content-between small mb-1" style="color:var(--lg-primary);">
                             <span>Giảm giá Voucher:</span>
-                            @if (Model.TienGiamGia > 0)
-                            {
-                                <span>- @Model.TienGiamGia.ToString("#,##0") ₫</span>
-                            }
+                            <span>- @Model.TienGiamGia.ToString("#,##0") ₫</span>
                         </div>
                     }
                 </div>
@@ -48,21 +47,47 @@
 
             <form asp-controller="Checkout" asp-action="RetryPayment" method="post">
                 <input type="hidden" name="maDonHang" value="@Model.MaDonHang" />
-                <div class="card shadow-sm mb-4">
+                <div class="card shadow-sm mb-4" style="border-top: 4px solid var(--lg-primary);">
                     <div class="card-body">
-                        <h5 class="fw-bold mb-3">
-                            <i class="fas fa-credit-card me-2 text-primary"></i>
+                        <h5 class="fw-bold mb-3" style="color:var(--lg-primary);">
+                            <i class="fas fa-credit-card me-2"></i>
                             Chọn phương thức thanh toán
                         </h5>
+
+                        <div class="d-flex flex-column gap-3">
+
+                            <label class="payment-option border rounded p-3 d-flex align-items-center gap-3"
+                                   style="cursor:pointer;">
+                                <input type="radio" name="CachThanhToan" value="VNPAY" required />
+                                <img src="~/img/vnpay.jpg" style="height:32px;" alt="VNPay" />
+                                <span class="fw-semibold">Thanh toán qua VNPay</span>
+                            </label>
+
+                            <label class="payment-option border rounded p-3 d-flex align-items-center gap-3"
+                                   style="cursor:pointer;">
+                                <input type="radio" name="CachThanhToan" value="MOMO" required />
+                                <img src="~/img/momo.png" style="height:32px;" alt="Momo" />
+                                <span class="fw-semibold">Thanh toán qua Momo</span>
+                            </label>
+
+                            <label class="payment-option border rounded p-3 d-flex align-items-center gap-3"
+                                   style="cursor:pointer;">
+                                <input type="radio" name="CachThanhToan" value="COD" required />
+                                <i class="fas fa-money-bill-wave fa-2x" style="color:var(--lg-primary);"></i>
+                                <span class="fw-semibold">Thanh toán khi nhận hàng (COD)</span>
+                            </label>
+
+                        </div>
                     </div>
                 </div>
 
                 <button type="submit" class="btn w-100 py-3 fw-bold text-white shadow"
-                        style="background-color:#ee4d2d;">
+                        style="background-color:var(--lg-primary);">
                     <i class="fas fa-lock me-2"></i>XÁC NHẬN THANH TOÁN
                 </button>
                 <a asp-controller="Home" asp-action="Index"
-                   class="btn btn-outline-secondary w-100 mt-2 py-2">
+                   class="btn w-100 mt-2 py-2 fw-bold"
+                   style="border: 1px solid var(--lg-primary); color:var(--lg-primary);">
                     Về trang chủ
                 </a>
             </form>
